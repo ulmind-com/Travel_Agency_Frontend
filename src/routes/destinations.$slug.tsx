@@ -388,7 +388,7 @@ function DestinationHero({ d }: { d: DestinationDetail }) {
 const ICONS = { compass: Compass, user: UserRound, sparkles: Sparkles } as const;
 
 function DestinationDetailPage() {
-  const d = Route.useLoaderData();
+  const d = Route.useLoaderData() as DestinationDetail;
 
   const shapeSlots: { key: PlanShapeKey; imageUrl: string }[] = [
     { key: "archTall", imageUrl: d.shapes.arch },
