@@ -208,47 +208,27 @@ export function Navbar() {
 
         {/* Right actions */}
         <div className="hidden items-center gap-4 md:flex">
-          <span
-            className={cn(
-              "h-4 w-px",
-              isScrolled ? "bg-ink-900/10" : "bg-cream-50/20",
-            )}
-          />
+          <span className="h-4 w-px bg-cream-50/20" />
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
               {isAdmin && (
                 <Link
                   to="/account/admin/hero"
-                  className={cn(
-                    "text-[11px] uppercase tracking-widest transition-colors",
-                    isScrolled
-                      ? "text-ink-900/50 hover:text-ink-900"
-                      : "text-cream-50/60 hover:text-cream-50",
-                  )}
+                  className="text-[11px] uppercase tracking-widest transition-colors text-cream-50/60 hover:text-cream-50"
                 >
                   Admin
                 </Link>
               )}
               <Link
                 to="/account"
-                className={cn(
-                  "text-[13px] font-medium transition-colors",
-                  isScrolled
-                    ? "text-ink-900 hover:text-ink-900/70"
-                    : "text-cream-50 hover:text-cream-50/80",
-                )}
+                className="text-[13px] font-medium transition-colors text-cream-50 hover:text-cream-50/80"
               >
                 {user?.name?.split(" ")[0] ?? "Account"}
               </Link>
               <button
                 type="button"
                 onClick={logout}
-                className={cn(
-                  "text-[12px] uppercase tracking-widest transition-colors",
-                  isScrolled
-                    ? "text-ink-900/50 hover:text-ink-900"
-                    : "text-cream-50/60 hover:text-cream-50",
-                )}
+                className="text-[12px] uppercase tracking-widest transition-colors text-cream-50/60 hover:text-cream-50"
               >
                 Sign out
               </button>
@@ -256,12 +236,7 @@ export function Navbar() {
           ) : (
             <Link
               to="/auth/login"
-              className={cn(
-                "rounded-full px-5 py-2 text-[12px] font-medium uppercase tracking-widest ring-1 transition-transform active:scale-95",
-                isScrolled
-                  ? "bg-ink-900 text-cream-50 ring-ink-900"
-                  : "bg-cream-50 text-ink-900 ring-cream-50/30 hover:bg-cream-50/90",
-              )}
+              className="rounded-full px-5 py-2 text-[12px] font-medium uppercase tracking-widest ring-1 transition-transform active:scale-95 bg-transparent text-cream-50 ring-cream-50/30 hover:bg-cream-50/10"
             >
               Inquire
             </Link>
