@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Compass, UserRound } from "lucide-react";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 
 import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
@@ -24,56 +24,79 @@ function useContent(): PlanYourTripContent {
   return data ?? defaultPlanYourTrip;
 }
 
-/**
- * Shape silhouettes matching the reference collage:
- * - archTall: tall tombstone — flat bottom, full semicircular dome top.
- * - dRight:  wide D — flat left edge, semicircle bulging right (top+right+bottom curved).
- * - archBottom: wide inverted arch — flat top, semicircular dome bottom.
- *
- * Radii tuned so the round side is a true semicircle at each aspect ratio.
- */
 export const PLAN_SHAPES = {
   archTall: {
-    aspect: "aspect-[3/5]",
-    // width 3, height 5 → top corners x=w/2=50%, y=w/2/h=30%
-    style: { borderRadius: "50% 50% 0 0 / 30% 30% 0 0" },
+    aspect: "aspect-[1/2]",
+    clipId: "plan-trip-arch-tall",
   },
   dRight: {
-    aspect: "aspect-[6/5]",
-    // width 6, height 5 → right corners x=h/2/w≈42%, y=50%
-    style: { borderRadius: "0 42% 42% 0 / 0 50% 50% 0" },
+    aspect: "aspect-square",
+    clipId: "plan-trip-d-right",
   },
   archBottom: {
-    aspect: "aspect-[6/5]",
-    // width 6, height 5 → bottom corners x=50%, y=w/2/h=60%
-    style: { borderRadius: "0 0 50% 50% / 0 0 60% 60%" },
+    aspect: "aspect-square",
+    clipId: "plan-trip-arch-bottom",
   },
 } as const;
+
+export type PlanShapeKey = keyof typeof PLAN_SHAPES;
+
+export function getPlanShapeClipStyle(shape: PlanShapeKey): CSSProperties {
+  const clipPath = `url(#${PLAN_SHAPES[shape].clipId})`;
+  return { clipPath, WebkitClipPath: clipPath };
+}
+
+export function PlanShapeClipDefs() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="0"
+      height="0"
+      className="pointer-events-none absolute"
+    >
+      <defs>
+        <clipPath id="plan-trip-arch-tall" clipPathUnits="objectBoundingBox">
+          <path d="M0.5,0 C0.22,0 0,0.13 0,0.31 L0,0.78 C0,0.92 0.11,1 0.26,1 L1,1 L1,0.31 C1,0.13 0.78,0 0.5,0 Z" />
+        </clipPath>
+        <clipPath id="plan-trip-d-right" clipPathUnits="objectBoundingBox">
+          <path d="M0,1 L0,0.49 C0,0.22 0.22,0 0.5,0 C0.78,0 1,0.22 1,0.5 C1,0.78 0.78,1 0.5,1 Z" />
+        </clipPath>
+        <clipPath id="plan-trip-arch-bottom" clipPathUnits="objectBoundingBox">
+          <path d="M0.5,0 L1,0 L1,0.5 C1,0.78 0.78,1 0.5,1 C0.22,1 0,0.78 0,0.5 C0,0.22 0.22,0 0.5,0 Z" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
 
 function ShapePhoto({
   imageUrl,
   shape,
 }: {
   imageUrl: string;
-  shape: keyof typeof PLAN_SHAPES;
+  shape: PlanShapeKey;
 }) {
   const s = PLAN_SHAPES[shape];
   return (
     <div
       className={
-        "relative w-full overflow-hidden bg-cream-100 shadow-[0_30px_60px_-30px_rgba(28,25,23,0.35)] ring-1 ring-ink-900/5 " +
+        "relative w-full drop-shadow-[0_30px_35px_rgba(28,25,23,0.18)] " +
         s.aspect
       }
-      style={s.style}
     >
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt=""
-          loading="lazy"
-          className="h-full w-full object-cover"
-        />
-      ) : null}
+      <div
+        className="h-full w-full overflow-hidden bg-cream-100 ring-1 ring-ink-900/5"
+        style={getPlanShapeClipStyle(shape)}
+      >
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt=""
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -84,7 +107,8 @@ export function PlanYourTrip() {
   const content = useContent();
 
   return (
-    <section className="bg-cream-50 py-24 lg:py-32">
+    <section className="relative bg-cream-50 py-24 lg:py-32">
+      <PlanShapeClipDefs />
       <Container>
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center lg:gap-24">
           {/* Collage */}
@@ -94,12 +118,12 @@ export function PlanYourTrip() {
               className="pointer-events-none absolute -left-16 top-10 hidden size-64 rounded-full bg-cream-100/80 blur-3xl lg:block"
             />
 
-            <div className="relative mx-auto grid max-w-[560px] grid-cols-[1.05fr_0.95fr] gap-4 sm:gap-6">
+            <div className="relative mx-auto grid max-w-[620px] grid-cols-2 gap-4 sm:gap-5">
               <FadeUp>
                 <ShapePhoto imageUrl={content.slots.arch} shape="archTall" />
               </FadeUp>
 
-              <div className="flex flex-col gap-4 sm:gap-6">
+              <div className="flex flex-col gap-4 sm:gap-5">
                 <FadeUp delay={0.08}>
                   <ShapePhoto imageUrl={content.slots.circleA} shape="dRight" />
                 </FadeUp>
