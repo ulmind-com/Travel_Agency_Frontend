@@ -112,11 +112,8 @@ export function Navbar() {
               onFocus={handleEnter}
               onBlur={handleLeave}
               className={cn(
-                "flex items-center gap-1 px-4 py-2 text-[13px] font-medium transition-colors",
-                isScrolled
-                  ? "text-ink-900/70 hover:text-ink-900"
-                  : "text-cream-50/80 hover:text-cream-50",
-                desktopOpen && (isScrolled ? "text-ink-900" : "text-cream-50"),
+                "flex items-center gap-1 px-4 py-2 text-[13px] font-medium transition-colors text-cream-50/80 hover:text-cream-50",
+                desktopOpen && "text-cream-50",
               )}
             >
               Destinations
