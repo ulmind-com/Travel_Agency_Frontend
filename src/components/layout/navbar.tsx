@@ -32,6 +32,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileDestOpen, setMobileDestOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const desktopRef = useRef<HTMLDivElement>(null);
   const hoverTimer = useRef<number | null>(null);
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -41,6 +42,13 @@ export function Navbar() {
     setMobileOpen(false);
     setDesktopOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Close desktop dropdown when clicking outside
   useEffect(() => {
@@ -65,9 +73,21 @@ export function Navbar() {
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-50 transition-all duration-500 bg-transparent"
+      className={cn(
+        "fixed z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        scrolled
+          ? "left-1/2 top-3 w-[min(1120px,calc(100%-24px))] -translate-x-1/2 rounded-full border border-cream-50/15 bg-ink-900/40 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150"
+          : "inset-x-0 top-0 bg-transparent",
+      )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-6 lg:h-20 lg:px-10">
+      <div
+        className={cn(
+          "mx-auto flex items-center justify-between gap-8 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          scrolled
+            ? "h-14 max-w-7xl px-5 lg:h-16 lg:px-8"
+            : "h-16 max-w-7xl px-6 lg:h-20 lg:px-10",
+        )}
+      >
         <Link
           to="/"
           className="min-w-0 truncate font-serif text-2xl tracking-tight transition-colors lg:text-3xl text-cream-50"
