@@ -97,7 +97,7 @@ export function PopularTours() {
       <Container>
         <FadeUp>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-serif text-2xl italic text-ink-900/70 sm:text-3xl">
+            <p className="font-script text-2xl text-ink-900/70 sm:text-3xl">
               {content.eyebrow}
             </p>
             <h2 className="mt-2 font-serif text-4xl font-medium text-ink-900 sm:text-5xl lg:text-6xl">
