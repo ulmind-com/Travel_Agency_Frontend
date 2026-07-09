@@ -7,6 +7,7 @@
       "dependencies": {
         "@fontsource-variable/cormorant-garamond": "^5.2.6",
         "@fontsource-variable/inter": "^5.2.8",
+        "@fontsource/dancing-script": "^5.2.8",
         "@hookform/resolvers": "^5.4.0",
         "@radix-ui/react-accordion": "^1.2.12",
         "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -218,6 +219,8 @@
     "@fontsource-variable/cormorant-garamond": ["@fontsource-variable/cormorant-garamond@5.2.6", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@fontsource-variable/cormorant-garamond/-/cormorant-garamond-5.2.6.tgz", {}, "sha512-5vHPJWMuTbVoB6OnorCflWJ51NJZ7eQWw58tVFUE/hHphTi/z2vrKESbuMSJ3diOC5KgPm/RLv2ULur+N1NLJQ=="],
 
     "@fontsource-variable/inter": ["@fontsource-variable/inter@5.2.8", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@fontsource-variable/inter/-/inter-5.2.8.tgz", {}, "sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ=="],
+
+    "@fontsource/dancing-script": ["@fontsource/dancing-script@5.2.8", "https://europe-west4-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@fontsource/dancing-script/-/dancing-script-5.2.8.tgz", {}, "sha512-zHVVgIQ5/rAIM0VVp1QMsqvJm9INHO5/C82E9rHT6NlabjaPTFYn8wl9lT4vPWizfB0TublGQM1999kfdA+XFA=="],
 
     "@hookform/resolvers": ["@hookform/resolvers@5.4.0", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@hookform/resolvers/-/resolvers-5.4.0.tgz", { "dependencies": { "@standard-schema/utils": "^0.3.0" }, "peerDependencies": { "react-hook-form": "^7.55.0" } }, "sha512-EIsqr/t/qbinPIhGjMdtvutIN1Kk4uwbROE9/UQ93CAVGR7GkA7Y92+fX80OzXi/OB67jVFYwKGO1WzkxmkFZw=="],
 
