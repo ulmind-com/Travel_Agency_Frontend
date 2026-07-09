@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import { Container } from "@/components/layout/container";
@@ -11,10 +11,9 @@ import {
   type TourCategory,
 } from "@/services/tour-categories.service";
 
-// Continuous left-drift speed in px/second.
-const SPEED = 55;
-const TILTS = [-6, 4, -3, 5, -4, 3, -5];
-const LIFTS = [10, -6, 8, -8, 6, -10, 4];
+const AUTO_MS = 3200;
+const TILTS = [-6, 4, -3, 5, -4];
+const LIFTS = [10, -6, 8, -8, 6];
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -27,6 +26,21 @@ function usePrefersReducedMotion() {
     return () => mq.removeEventListener("change", on);
   }, []);
   return reduced;
+}
+
+function useViewportSize() {
+  const [n, setN] = useState(5);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sync = () => {
+      const w = window.innerWidth;
+      setN(w < 640 ? 2 : w < 900 ? 3 : w < 1200 ? 4 : 5);
+    };
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
+  return n;
 }
 
 function useTourCategories(): TourCategory[] {
@@ -44,50 +58,25 @@ function useTourCategories(): TourCategory[] {
 export function TourCategories() {
   const items = useTourCategories();
   const reduced = usePrefersReducedMotion();
+  const visible = useViewportSize();
+  const [start, setStart] = useState(0);
   const [paused, setPaused] = useState(false);
+  const total = items.length;
+  const touchX = useRef<number | null>(null);
 
-  const x = useMotionValue(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const halfWidthRef = useRef(0);
-  const lastT = useRef<number | null>(null);
-
-  // Measure one copy of the track (we render the list twice for a seamless loop).
   useEffect(() => {
-    const measure = () => {
-      const el = trackRef.current;
-      if (!el) return;
-      halfWidthRef.current = el.scrollWidth / 2;
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [items.length]);
+    if (reduced || paused || total <= 1) return;
+    const t = window.setTimeout(() => setStart((s) => (s + 1) % total), AUTO_MS);
+    return () => window.clearTimeout(t);
+  }, [start, paused, reduced, total]);
 
-  useAnimationFrame((t) => {
-    if (reduced || paused) {
-      lastT.current = t;
-      return;
-    }
-    const prev = lastT.current ?? t;
-    const dt = (t - prev) / 1000;
-    lastT.current = t;
-    const half = halfWidthRef.current;
-    if (!half) return;
-    let next = x.get() - SPEED * dt;
-    // Wrap: after we've scrolled one full copy, snap back so the second copy takes over invisibly.
-    if (next <= -half) next += half;
-    x.set(next);
-  });
-
-  // Render items twice so the loop is seamless.
-  const loop = [...items, ...items];
+  const window_ = Array.from(
+    { length: visible },
+    (_, i) => items[(start + i) % total]!,
+  );
 
   return (
-    <section
-      className="overflow-hidden bg-cream-50 py-24"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
+    <section className="bg-cream-50 py-24">
       <Container className="text-center">
         <FadeUp>
           <p className="font-serif text-3xl italic text-ink-900/80 sm:text-4xl">
@@ -99,25 +88,57 @@ export function TourCategories() {
         </FadeUp>
       </Container>
 
-      <div className="relative mt-16 [perspective:1400px]">
-        {/* Edge fades */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-cream-50 to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-cream-50 to-transparent" />
-
-        <motion.div
-          ref={trackRef}
-          style={{ x }}
-          className="flex w-max items-center gap-8 px-6 will-change-transform lg:gap-12 lg:px-10"
-        >
-          {loop.map((item, i) => (
+      <div
+        className="relative mt-16 [perspective:1400px]"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={(e) => {
+          touchX.current = e.touches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(e) => {
+          const s = touchX.current;
+          if (s == null) return;
+          const dx = (e.changedTouches[0]?.clientX ?? s) - s;
+          if (Math.abs(dx) > 40) {
+            setStart((v) =>
+              dx < 0 ? (v + 1) % total : (v - 1 + total) % total,
+            );
+          }
+          touchX.current = null;
+        }}
+      >
+        <div className="mx-auto flex max-w-[1400px] items-center justify-center gap-6 px-6 lg:gap-10 lg:px-10">
+          {window_.map((item, i) => (
             <TiltCard
-              key={item.id + ":" + i}
+              key={item.id + ":" + start + ":" + i}
               item={item}
               tilt={TILTS[i % TILTS.length]!}
               lift={LIFTS[i % LIFTS.length]!}
+              index={i}
+              total={visible}
             />
           ))}
-        </motion.div>
+        </div>
+
+        <div className="mt-14 flex justify-center gap-3">
+          {Array.from({ length: total }).map((_, i) => {
+            const active = i === start;
+            return (
+              <button
+                key={i}
+                type="button"
+                aria-label={"Go to slide " + (i + 1)}
+                onClick={() => setStart(i)}
+                className={
+                  "size-3 rounded-full border transition-colors " +
+                  (active
+                    ? "border-ink-900 bg-ink-900"
+                    : "border-ink-900/30 bg-transparent hover:bg-ink-900/10")
+                }
+              />
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -127,18 +148,26 @@ function TiltCard({
   item,
   tilt,
   lift,
+  index,
+  total,
 }: {
   item: TourCategory;
   tilt: number;
   lift: number;
+  index: number;
+  total: number;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, rotateZ: tilt }}
-      whileInView={{ opacity: 1, y: lift, rotateZ: tilt }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ rotateZ: 0, y: lift - 18, scale: 1.05 }}
+      initial={{ opacity: 0, x: 80, rotateY: -18, rotateZ: 0 }}
+      animate={{ opacity: 1, x: 0, rotateY: 0, rotateZ: tilt, y: lift }}
+      exit={{ opacity: 0, x: -80, rotateY: 18 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+        delay: (index / Math.max(total, 1)) * 0.15,
+      }}
+      whileHover={{ rotateZ: 0, y: lift - 16, scale: 1.04 }}
       className="group flex w-40 shrink-0 flex-col items-center [transform-style:preserve-3d] sm:w-52 lg:w-60"
       style={{ transformOrigin: "center bottom" }}
     >
