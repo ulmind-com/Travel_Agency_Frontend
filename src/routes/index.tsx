@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Boutique luxury travel — from Amalfi villas to Arctic fjords.",
+          "Private itineraries and concierge-led escapes to Amalfi, the Maldives, Kyoto, the Swiss Alps and beyond — thoughtfully composed by Ulmind Travel.",
       },
       { property: "og:url", content: "/" },
     ],

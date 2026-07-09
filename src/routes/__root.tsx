@@ -87,22 +87,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ulmind Travel — Curated luxury journeys" },
+      { title: "Ulmind Travel — Quiet luxury, curated journeys" },
       {
         name: "description",
         content:
-          "Ulmind Travel is a boutique agency crafting quiet, high-fidelity luxury journeys — from Amalfi villas to Maldives atolls and the fjords of the Arctic Circle.",
+          "Private itineraries and concierge-led escapes to Amalfi, the Maldives, Kyoto, the Swiss Alps and beyond — thoughtfully composed by Ulmind Travel.",
       },
       { name: "author", content: "Ulmind Travel" },
-      { property: "og:title", content: "Ulmind Travel — Curated luxury journeys" },
+      { property: "og:title", content: "Ulmind Travel — Quiet luxury, curated journeys" },
       {
         property: "og:description",
         content:
-          "Boutique itineraries and private concierge for the discerning traveler.",
+          "Private itineraries and concierge-led escapes to Amalfi, the Maldives, Kyoto, the Swiss Alps and beyond — thoughtfully composed by Ulmind Travel.",
       },
       { property: "og:site_name", content: "Ulmind Travel" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Ulmind Travel — Quiet luxury, curated journeys" },
+      { name: "twitter:description", content: "Private itineraries and concierge-led escapes to Amalfi, the Maldives, Kyoto, the Swiss Alps and beyond — thoughtfully composed by Ulmind Travel." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7b20db1a-d3e5-4661-9acf-e6507b982f41/id-preview-69a3c55c--e5c4f5b1-8e5a-420c-b608-8d2db848d992.lovable.app-1783586120208.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7b20db1a-d3e5-4661-9acf-e6507b982f41/id-preview-69a3c55c--e5c4f5b1-8e5a-420c-b608-8d2db848d992.lovable.app-1783586120208.png" },
     ],
     links: [
       {
