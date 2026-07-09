@@ -1,73 +1,26 @@
-## "Plan Your Trip With Us" section — premium editorial + admin-managed
+## Fix collage shapes + smooth photo transitions
 
-Add a new home section modeled on the reference: a left-side artistic image collage (tall arch + two circles) paired with a right-side content block (eyebrow, headline, description, two feature bullets with icons, CTA button). Photos rotate through admin-uploaded sets with a subtle 3D animation. Everything ultra-premium, matching the site's cream/ink serif style (not the reference's blue/white palette).
+Two small tweaks to `src/components/home/plan-your-trip.tsx` only. No other files, no data changes.
 
-### Scope
-Homepage only. Placed right after the Popular Destinations section in `src/routes/index.tsx`.
+### 1. Shape fix — all three slots are the same "stadium/arch" shape
+Reference shows the left big shape AND both right shapes as identical rounded pill/arch forms (fully rounded top + bottom, straight-ish sides), just at different sizes and aspect ratios. Currently the two right slots are perfect circles — that's wrong.
 
-### Visual composition
-```text
-┌───────────────────────┬──────────────────────────────┐
-│  ╭─────╮   ╭──────╮   │  Let's Go Together  (script) │
-│  │ ARCH│   │CIRCLE│   │  Plan Your Trip              │
-│  │ tall│   │  top │   │  With Us            (serif)  │
-│  │     │   ╰──────╯   │                              │
-│  │     │              │  Body paragraph…             │
-│  │     │   ╭──────╮   │                              │
-│  │     │   │CIRCLE│   │  ◆ Exclusive Trip  (feature) │
-│  │     │   │ btm  │   │  ◆ Professional Guide        │
-│  ╰─────╯   ╰──────╯   │                              │
-│                       │  [ Learn More → ]            │
-└───────────────────────┴──────────────────────────────┘
-```
-- Left collage: 3 image slots — `tall arch` (rounded-top, left), `circle-top`, `circle-bottom` (right column, stacked). Soft cream disc drifting behind for depth.
-- Right column: script eyebrow (font-serif italic, ink), large serif headline, muted body copy, two feature rows (icon-in-rounded-square + title + description), dark pill CTA linking to `/packages`.
-- Colors reuse existing `cream-*` / `ink-*` tokens — no hard-coded hex. No purple/blue.
+- All three slots: use the arch shape (`rounded-[50%]` on all corners, i.e. a stadium/pill that scales with aspect ratio).
+- Aspect ratios matching the reference:
+  - Left arch: `aspect-[3/5]` (tall portrait) — already correct.
+  - Top-right arch: `aspect-[5/6]` (near-square, slightly taller).
+  - Bottom-right arch: `aspect-[5/6]` (same).
+- Remove the `shape: "arch" | "circle"` prop and the `rounded-full` branch — everything is one shape now.
+- Admin `SlotEditor` / `PhotoCell` previews also drop the circle branch so admin thumbnails match the homepage.
 
-### 3D auto-rotate animation
-Each of the 3 image slots holds an ordered list of photos. On an interval (~4.2s, staggered by slot so they don't flip in unison), the visible photo swaps with a Framer Motion 3D flip:
-- Outgoing image: `rotateY 0 → -90°`, `opacity 1 → 0`, slight `z` push.
-- Incoming image: `rotateY 90° → 0°`, `opacity 0 → 1`.
-- `perspective: 1200px` on each slot; `transformStyle: preserve-3d`.
-- Pauses on hover of the collage; respects `prefers-reduced-motion` (cross-fade only).
-- If a slot only has 1 image, it stays static (no flip).
+### 2. Smoother auto-rotate transition
+The current `rotateY: 90° → 0°` full-flip feels abrupt and briefly shows a blank edge. Replace with a gentler crossfade:
 
-### Data & admin
-New service `src/services/plan-your-trip.service.ts` (localStorage, same pattern as `popular-destinations.service.ts`) storing:
-```ts
-type PlanYourTripContent = {
-  eyebrow: string;           // "Let's Go Together"
-  title: string;             // "Plan Your Trip With Us"
-  description: string;
-  ctaLabel: string;          // "Learn More"
-  ctaHref: string;           // "/packages"
-  features: { id; title; description }[];  // 2 items default
-  slots: {
-    arch:    { id; imageUrl }[];   // rotating photos
-    circleA: { id; imageUrl }[];
-    circleB: { id; imageUrl }[];
-  };
-};
-```
-- Emits `ulmind:plan-your-trip-changed` for live sync.
-- Defaults ship with 2-3 curated images per slot (generated: hills/mountain, ghats/river, taj-style monument — reusing existing dest images where sensible, plus 2-3 new generated ones if needed).
-- Query added to `src/lib/queries.ts` as `planYourTripQuery()`. Service exported from `src/services/index.ts`.
+- `AnimatePresence mode="wait"` (not `popLayout`) so the outgoing image finishes before the next mounts — no overlap flash.
+- Motion: `opacity 0 → 1`, `scale 1.04 → 1`, `rotateY 8° → 0°` (very subtle depth cue, no full flip).
+- Duration `1.4s`, ease `[0.22, 1, 0.36, 1]`.
+- Interval stays `4600ms`; stagger stays `0 / 1200 / 2400ms`; hover-pause + reduced-motion behavior unchanged.
+- Keep `perspective: 1200px` on the slot so the subtle rotateY still reads as 3D.
 
-Admin route `src/routes/_authenticated.account.admin.plan-your-trip.tsx` mirroring existing admin pages:
-- Text inputs for eyebrow / title / description / CTA label / CTA href.
-- Feature editor: title + description per feature (add/remove/reorder, keep 2 minimum).
-- Per-slot photo manager: upload via `mediaService`, reorder, remove, add. Same UI patterns already used in popular-destinations admin.
-- Publish + reset-to-defaults buttons.
-- Sidebar link "Plan your trip" added to `src/components/account/sidebar.tsx`.
-
-### Component
-`src/components/home/plan-your-trip.tsx`:
-- Suspense-reads `planYourTripQuery()`, subscribes to change event.
-- Renders collage + copy in a `Container`, 2-col grid on `lg`, stacked on mobile (collage first).
-- Uses `FadeUp` for entry, Framer Motion for per-slot flipping.
-- Feature icons: `lucide-react` (`Compass` for Exclusive Trip, `UserRound` for Professional Guide) in a rounded ink-tinted square — swappable via admin only through text for now (icon set fixed to keep design consistent).
-
-### Files touched
-- **New**: `src/services/plan-your-trip.service.ts`, `src/components/home/plan-your-trip.tsx`, `src/routes/_authenticated.account.admin.plan-your-trip.tsx`, 3-6 new `src/assets/plan-*.jpg` defaults.
-- **Edited**: `src/routes/index.tsx` (mount section), `src/lib/queries.ts` (query), `src/services/index.ts` (export), `src/components/account/sidebar.tsx` (nav link).
-- **Untouched**: everything else (Popular Destinations, Tour Categories, backend, auth).
+### Not touched
+Copy, features, admin data model, service, query, sidebar, layout grid, background disc.

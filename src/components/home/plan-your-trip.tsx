@@ -50,7 +50,6 @@ function PhotoSlot({
   paused,
   reduced,
   className,
-  shape,
 }: {
   photos: PlanPhoto[];
   intervalMs: number;
@@ -58,7 +57,6 @@ function PhotoSlot({
   paused: boolean;
   reduced: boolean;
   className: string;
-  shape: "arch" | "circle";
 }) {
   const valid = photos.filter((p) => p.imageUrl);
   const [idx, setIdx] = useState(0);
@@ -81,31 +79,36 @@ function PhotoSlot({
   }, [intervalMs, paused, reduced, total]);
 
   const current = valid[idx] ?? valid[0];
-  const roundedClass =
-    shape === "arch"
-      ? "rounded-t-[999px] rounded-b-[999px]"
-      : "rounded-full";
-
   return (
     <div
       className={
-        "relative overflow-hidden bg-cream-100 shadow-[0_30px_60px_-30px_rgba(28,25,23,0.35)] ring-1 ring-ink-900/5 " +
-        roundedClass +
-        " " +
+        "relative overflow-hidden rounded-[50%] bg-cream-100 shadow-[0_30px_60px_-30px_rgba(28,25,23,0.35)] ring-1 ring-ink-900/5 " +
         className
       }
       style={{ perspective: "1200px" }}
     >
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="wait" initial={false}>
         <motion.img
           key={current?.id ?? "empty"}
           src={current?.imageUrl}
           alt=""
           loading="lazy"
-          initial={reduced ? { opacity: 0 } : { opacity: 0, rotateY: 90 }}
-          animate={reduced ? { opacity: 1 } : { opacity: 1, rotateY: 0 }}
-          exit={reduced ? { opacity: 0 } : { opacity: 0, rotateY: -90 }}
-          transition={{ duration: reduced ? 0.5 : 1.1, ease: [0.22, 1, 0.36, 1] }}
+          initial={
+            reduced
+              ? { opacity: 0 }
+              : { opacity: 0, scale: 1.04, rotateY: 8 }
+          }
+          animate={
+            reduced
+              ? { opacity: 1 }
+              : { opacity: 1, scale: 1, rotateY: 0 }
+          }
+          exit={
+            reduced
+              ? { opacity: 0 }
+              : { opacity: 0, scale: 0.98, rotateY: -8 }
+          }
+          transition={{ duration: reduced ? 0.6 : 1.4, ease: [0.22, 1, 0.36, 1] }}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
         />
@@ -145,7 +148,6 @@ export function PlanYourTrip() {
                   delayMs={0}
                   paused={paused}
                   reduced={reduced}
-                  shape="arch"
                   className="aspect-[3/5] w-full"
                 />
               </FadeUp>
@@ -158,8 +160,7 @@ export function PlanYourTrip() {
                     delayMs={1200}
                     paused={paused}
                     reduced={reduced}
-                    shape="circle"
-                    className="aspect-square w-full"
+                    className="aspect-[5/6] w-full"
                   />
                 </FadeUp>
                 <FadeUp delay={0.16}>
@@ -169,8 +170,7 @@ export function PlanYourTrip() {
                     delayMs={2400}
                     paused={paused}
                     reduced={reduced}
-                    shape="circle"
-                    className="aspect-square w-full"
+                    className="aspect-[5/6] w-full"
                   />
                 </FadeUp>
               </div>
