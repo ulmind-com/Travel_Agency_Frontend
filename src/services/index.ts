@@ -20,3 +20,10 @@ export {
   defaultPopularDestinations,
   type PopularDestination,
 } from "./popular-destinations.service";
+export {
+  planYourTripService,
+  defaultPlanYourTrip,
+  type PlanYourTripContent,
+  type PlanFeature,
+  type PlanPhoto,
+} from "./plan-your-trip.service";
