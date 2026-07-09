@@ -81,10 +81,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-6 lg:h-20 lg:px-10">
         <Link
           to="/"
-          className={cn(
-            "min-w-0 truncate font-serif text-2xl tracking-tight transition-colors lg:text-3xl",
-            isScrolled ? "text-ink-900" : "text-cream-50",
-          )}
+          className="min-w-0 truncate font-serif text-2xl tracking-tight transition-colors lg:text-3xl text-cream-50"
         >
           Ulmind
         </Link>
