@@ -70,7 +70,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative h-[92vh] min-h-[720px] w-full overflow-hidden bg-ink-900"
+      className="relative h-screen min-h-screen w-full overflow-hidden bg-ink-900"
       aria-roledescription="carousel"
       aria-label="Featured destinations"
       onFocus={() => setFocused(true)}
