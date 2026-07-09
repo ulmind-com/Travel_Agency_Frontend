@@ -257,7 +257,6 @@ function AdminPlanYourTripPage() {
             <SlotEditor
               key={key}
               title={SLOT_LABELS[key]}
-              shape={key === "arch" ? "arch" : "circle"}
               photos={c.slots[key]}
               onChange={(next) => updateSlot(key, next)}
             />
@@ -293,12 +292,10 @@ function TextField({
 
 function SlotEditor({
   title,
-  shape,
   photos,
   onChange,
 }: {
   title: string;
-  shape: "arch" | "circle";
   photos: PlanPhoto[];
   onChange: (next: PlanPhoto[]) => void;
 }) {
@@ -337,7 +334,6 @@ function SlotEditor({
             index={i}
             total={photos.length}
             photo={p}
-            shape={shape}
             onUrl={(url) => setUrl(p.id, url)}
             onRemove={() => remove(p.id)}
             onMove={(dir) => move(p.id, dir)}
@@ -352,7 +348,6 @@ function PhotoCell({
   index,
   total,
   photo,
-  shape,
   onUrl,
   onRemove,
   onMove,
@@ -360,7 +355,6 @@ function PhotoCell({
   index: number;
   total: number;
   photo: PlanPhoto;
-  shape: "arch" | "circle";
   onUrl: (url: string) => void;
   onRemove: () => void;
   onMove: (dir: -1 | 1) => void;
@@ -381,21 +375,12 @@ function PhotoCell({
     }
   };
 
-  const roundedClass =
-    shape === "arch" ? "rounded-t-[999px] rounded-b-[999px]" : "rounded-full";
-  const aspectClass = shape === "arch" ? "aspect-[3/5]" : "aspect-square";
-
   return (
     <div className="space-y-3">
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className={
-          "relative w-full overflow-hidden bg-cream-100 ring-1 ring-ink-900/5 " +
-          aspectClass +
-          " " +
-          roundedClass
-        }
+        className="relative aspect-[3/5] w-full overflow-hidden rounded-[50%] bg-cream-100 ring-1 ring-ink-900/5"
       >
         {photo.imageUrl ? (
           <img
