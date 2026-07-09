@@ -7,7 +7,10 @@ import { toast } from "sonner";
 import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
 import { LetterReveal } from "@/components/motion/letter-reveal";
-import { Field, inputClass } from "@/routes/auth.login";
+import { Field } from "@/routes/auth.login";
+
+const inputClass =
+  "w-full rounded-2xl border border-ink-900/15 bg-white px-4 py-3.5 text-sm text-ink-900 placeholder:text-ink-900/40 focus:border-ink-900/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-ink-900/10 transition-colors";
 
 import maldives from "@/assets/hero-slide-maldives.jpg";
 import kyoto from "@/assets/hero-slide-kyoto.jpg";
