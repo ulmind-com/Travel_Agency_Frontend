@@ -1,0 +1,10 @@
+export { authService } from "./auth.service";
+export { packagesService } from "./packages.service";
+export { wishlistService } from "./wishlist.service";
+export { bookingsService } from "./bookings.service";
+export { inventoryService } from "./inventory.service";
+export { paymentsService } from "./payments.service";
+export { reviewsService } from "./reviews.service";
+export { travelersService } from "./travelers.service";
+export { recommendationsService } from "./recommendations.service";
+export { waitlistService } from "./waitlist.service";
