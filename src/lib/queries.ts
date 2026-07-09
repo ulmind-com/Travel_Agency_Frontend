@@ -16,6 +16,7 @@ import { popularDestinationsService } from "@/services/popular-destinations.serv
 import { planYourTripService } from "@/services/plan-your-trip.service";
 import { popularToursService } from "@/services/popular-tours.service";
 import { recentGalleryService } from "@/services/recent-gallery.service";
+import { achievementsService } from "@/services/achievements.service";
 
 export const authKeys = {
   me: ["auth", "me"] as const,
@@ -126,5 +127,12 @@ export const recentGalleryQuery = () =>
   queryOptions({
     queryKey: ["recent-gallery"] as const,
     queryFn: () => recentGalleryService.get(),
+    staleTime: 60_000,
+  });
+
+export const achievementsQuery = () =>
+  queryOptions({
+    queryKey: ["achievements"] as const,
+    queryFn: () => achievementsService.get(),
     staleTime: 60_000,
   });
