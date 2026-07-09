@@ -138,14 +138,14 @@ export function Navbar() {
                             <Link
                               to="/packages"
                               search={{ destination: region.search }}
-                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-ink-900/80 transition-colors hover:bg-cream-100 hover:text-ink-900"
+                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-cream-50/80 transition-colors hover:bg-cream-50/5 hover:text-cream-50"
                               onClick={() => setDesktopOpen(false)}
                             >
                               <span className="flex items-center gap-2">
-                                <MapPin className="size-3.5 text-ink-900/30 transition-colors group-hover:text-gold" />
+                                <MapPin className="size-3.5 text-cream-50/30 transition-colors group-hover:text-gold" />
                                 {region.label}
                               </span>
-                              <ChevronDown className="size-3 -rotate-90 text-ink-900/20 transition-colors group-hover:text-ink-900/50" />
+                              <ChevronDown className="size-3 -rotate-90 text-cream-50/20 transition-colors group-hover:text-cream-50/50" />
                             </Link>
                           </li>
                         ))}
