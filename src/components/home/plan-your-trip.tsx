@@ -176,7 +176,7 @@ export function PlanYourTrip() {
 
             <FadeUp delay={0.25}>
               <Link
-                to={content.ctaHref}
+                to="/about"
                 className="mt-12 inline-flex items-center gap-3 rounded-full bg-ink-900 px-8 py-4 text-xs uppercase tracking-[0.25em] text-cream-50 transition-transform hover:-translate-y-0.5"
               >
                 {content.ctaLabel}
