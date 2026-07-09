@@ -1,132 +1,102 @@
 
-# Ulmind Travel — Phase 1 Plan (Customer Site)
+# Hero — Cinematic Rotating Backgrounds + Slide-Synced Copy
 
-Stack: **TanStack Start** (React 19 + Vite + Tailwind v4) with **TanStack Router + TanStack Query**, **Axios** for backend calls, **Zod + React Hook Form**, **Framer Motion + Lenis** for motion, **Sonner** toasts, **Lucide** icons. No Lovable Cloud / Supabase — backend is the existing Render API. Redux Toolkit and 3D globe / admin panel are explicitly **deferred to Phase 2**.
+Upgrade the home Hero into an ultra-premium, auto-rotating cinematic showcase. Nav bar stays fixed; only the hero background, headline, subtitle, and eyebrow change per slide with smooth crossfade + Ken Burns zoom + letter-reveal on the new text.
 
-Design direction: **Warm cream editorial (v2)** — Cormorant Garamond serif + Inter sans, cream `#fdfcf7 / #f9f7f0` on ink `#1c1917`, glass search card, editorial imagery, restrained motion.
+Admin can upload / manage these hero slides from a new admin screen (Phase 2 was deferred, but this one admin surface ships now because the feature depends on it).
 
 ---
 
-## What ships in Phase 1
+## User-facing behavior
 
-**Pages / routes** (all under `src/routes/`, file-based)
+- 5–6 slides cycle automatically every ~6s (pauseable on hover, respects `prefers-reduced-motion`).
+- Each slide: full-bleed background image + eyebrow + serif headline (with italic accent word) + one-line subtitle.
+- **Transition**: previous image crossfades out (opacity + subtle scale 1.05 → 1) while next fades in with a slow 8s Ken Burns zoom. Text swaps with a stagger: eyebrow slides up, headline runs letter-reveal, subtitle fades. Search card and CTA row stay put — they do NOT re-mount.
+- Progress rail on the right shows N segments; the active segment fills over the slide duration. Click a segment to jump. Prev/next chevrons at bottom-left. Swipe on touch.
+- Preloads next image so no flash.
+- First slide's image gets `fetchPriority="high"`; the rest lazy-load.
 
-```
-/                          Home (hero + search, stats, featured packages, collections, testimonial, CTA)
-/packages                  List — filter (category/price/destination), sort, pagination, wishlist toggle
-/packages/$id              Detail — gallery, itinerary tabs, pricing, sticky booking panel, reviews, related
-/auth/login                Login
-/auth/register             Register
-/_authenticated/account            Dashboard overview
-/_authenticated/account/bookings   My bookings + cancel request
-/_authenticated/account/wishlist   Saved packages
-/_authenticated/account/travelers  Saved travelers CRUD
-/_authenticated/account/profile    Profile (from /auth/me)
-/_authenticated/book/$id           Booking flow (date → travelers → seat lock → promo → Razorpay → verify)
-/_authenticated/book/success/$bookingId  Success + QR-style ticket
-/about, /contact           Static editorial pages
-```
+## Data source
 
-Root `__root.tsx`: Navbar + Footer + `<Toaster />` + Lenis smooth scroll + QueryClientProvider (already wired in template).
+Backend already exposes `/api/v1/media/upload`. We add a `hero_slides` concept.
 
-**Auth**
-- Email/password against `POST /api/v1/auth/register` and `POST /api/v1/auth/login`.
-- JWT stored in `localStorage` (`ulmind_token`). Axios request interceptor attaches `Authorization: Bearer`; response interceptor on 401 clears token and redirects to `/auth/login?redirect=…`.
-- `/auth/me` hydrates a lightweight `AuthContext` at app boot (via TanStack Query). `_authenticated` layout gates on that context and redirects unauthenticated users to `/auth/login`.
-- No refresh endpoint in backend → treat 401 as re-login.
+- If a `GET /api/v1/hero-slides` (or similar) endpoint exists in the OpenAPI, use it.
+- If not, the backend has no CRUD for hero slides yet. Two options — I'll ask below.
 
-**Backend integration (all 30 endpoints touched in Phase 1 unless marked admin)**
+For Phase 1 shipping now, the hero reads slides via `heroSlidesService.list()` with a **local fallback**: if the endpoint is missing / empty, it falls back to a bundled default set of 6 curated images + copy so the site never renders an empty hero.
 
-Service layer at `src/services/` (Axios instance from `src/lib/api.ts`):
-- `auth.service.ts` — register, login, me
-- `packages.service.ts` — list (public), detail, `/public/packages`
-- `bookings.service.ts` — create, my-bookings, request-cancel
-- `inventory.service.ts` — lock-seats
-- `payments.service.ts` — initiate, verify (Razorpay checkout)
-- `reviews.service.ts` — list by package, create
-- `wishlist.service.ts` — add/remove, list
-- `travelers.service.ts` — list, create, update, delete
-- `waitlist.service.ts` — join
-- `recommendations.service.ts` — personalized, trending
-- `media.service.ts` — upload (used in profile avatar / review photos)
-- `promos.service.ts` — apply promo (client-side; admin CRUD deferred)
+## Admin upload UI (minimal, ships with this change)
 
-Admin-only endpoints (`/admin/*`, `/checkin/scan`, `ml/train`, `packages POST/DELETE`) are wired in service layer but **UI is Phase 2**.
+New route: `/_authenticated/admin/hero` — gated by `has_role('admin')` check against `/auth/me` (or a role field on the user). Non-admin users get redirected to `/account`.
 
-**Data fetching pattern** (canonical for this template):
-```ts
-loader: ({ context }) => context.queryClient.ensureQueryData(packagesQuery(deps))
-component → useSuspenseQuery(packagesQuery(deps))
-```
-URL search params (`?category=&price=&page=`) via `validateSearch` — not `useState`.
+Screen contains:
+- Drag-and-drop uploader (uses existing `mediaService.upload`).
+- List of current slides with drag-to-reorder, eyebrow / headline / italic-accent / subtitle fields inline, active toggle, delete.
+- Save persists via slides endpoint.
 
-**Booking + Razorpay flow**
-1. `POST /bookings` → returns booking id.
-2. `POST /inventory/lock-seats` with booking id + seat count.
-3. Optional promo (client-side validate against admin promo list if available; else send in payment payload).
-4. `POST /payments/initiate` → Razorpay order id.
-5. Open Razorpay checkout (script loaded from `checkout.razorpay.com/v1/checkout.js` in `__root.tsx` head).
-6. On success handler → `POST /payments/verify` with `razorpay_payment_id/order_id/signature`.
-7. Redirect to `/account/book/success/$bookingId` with QR (generated client-side from booking id via `qrcode` npm).
+If the backend has no slides endpoint, the admin screen still uploads images (media endpoint works) and stores slide metadata in `localStorage` as a stopgap so you can preview the flow; a one-line service swap wires it to the real endpoint once you add it.
 
-**Motion**
-- Lenis smooth scroll (root provider).
-- Framer Motion: hero heading letter reveal, section fade-up on scroll, card image zoom on hover, magnetic primary CTA, sticky booking panel slide-in.
-- No GSAP / R3F in Phase 1 (defer with 3D globe).
-
-**Global**
-- Sonner toasts for all mutations (success/error).
-- Skeletons for list/detail loading (route `pendingComponent`).
-- `errorComponent` + `notFoundComponent` on every route with a loader.
-- SEO via per-route `head()` (title, description, og:*) — home + packages get real metadata; leaf `/packages/$id` derives og from loader data.
-- Responsive: mobile-first, tested at 375 / 768 / 1440.
-
-## Technical details
-
-**Files added / changed**
+## Files
 
 ```
-src/
-  lib/api.ts                    Axios instance + interceptors
-  lib/auth.ts                   token storage + AuthContext + useAuth
-  lib/razorpay.ts               loadRazorpayScript + openCheckout
-  lib/queries/*.ts              queryOptions factories per resource
-  services/*.service.ts         (list above)
-  types/api.ts                  zod schemas + inferred TS types for all responses
-  components/
-    layout/{Navbar,Footer,Container,PageTransition}.tsx
-    ui/{Button,Input,Card,Badge,Skeleton,Dialog,Sheet,Tabs,Accordion}.tsx  (shadcn-flavored, cream tokens)
-    home/{Hero,SearchCard,StatsRow,FeaturedPackages,CollectionsScroll,Testimonial,CtaFooter}.tsx
-    packages/{FilterBar,PackageCard,PackageGrid,Pagination,WishlistButton}.tsx
-    package-detail/{Gallery,ItineraryTabs,PriceBox,ReviewsSection,RelatedPackages,BookingPanel}.tsx
-    booking/{DateStep,TravelersStep,PromoStep,PaymentStep,SuccessCard}.tsx
-    account/{Sidebar,BookingRow,TravelerForm,ProfileForm}.tsx
-    motion/{FadeUp,LetterReveal,MagneticButton}.tsx
-  routes/                       (as listed above; __root.tsx updated with Lenis + Razorpay script)
-  styles.css                    cream/ink tokens + Cormorant/Inter fonts via @fontsource-variable
-  assets/                       generated hero + collection images (src/assets, imported)
+src/components/home/hero.tsx                    rewrite — slide engine + AnimatePresence
+src/components/home/hero-slide.tsx              new — single slide (bg + text + Ken Burns)
+src/components/home/hero-progress.tsx           new — segmented progress rail
+src/services/hero-slides.service.ts             new — list/create/update/delete/reorder
+src/services/media.service.ts                   new — upload wrapper (was referenced, not created)
+src/lib/queries.ts                              add heroSlidesQuery
+src/routes/_authenticated.admin.hero.tsx        new — admin CRUD screen
+src/components/admin/hero-slide-form.tsx        new — per-slide form row
+src/components/admin/image-dropzone.tsx         new — reusable uploader
+src/assets/hero-slide-{1..6}.jpg                new — generated fallback images
+src/lib/auth-context.tsx                        add isAdmin derived from /auth/me
+src/components/layout/navbar.tsx                show "Admin" link when isAdmin
 ```
 
-**Env** — `.env` with `VITE_API_BASE_URL`, `VITE_APP_NAME=Ulmind Travel`, `VITE_RAZORPAY_KEY_ID` (publishable, safe in client). Google Maps deferred.
+## Motion details
 
-**Backend response contracts**: I'll pull the full OpenAPI JSON at build time and define Zod schemas that match — you don't need to paste anything. If any endpoint returns a shape different from Swagger, we adjust the schema in one place.
+- Framer Motion `AnimatePresence mode="popLayout"` on the slide layer.
+- Background: `initial={{opacity:0, scale:1.08}} animate={{opacity:1, scale:1}} exit={{opacity:0}}` — 1.2s ease `[0.22,1,0.36,1]`; then a continuous 8s scale to 1.12 while active (Ken Burns).
+- Text layer: stagger 0.08 — eyebrow (y 12→0), headline via existing `LetterReveal` keyed on slide id so it re-runs, subtitle fade.
+- Progress bar: CSS transform scaleX driven by `motion.div` with duration = slide duration; resets on slide change.
 
-**What is NOT in Phase 1** (explicit to avoid scope creep — Phase 2 backlog):
-- Admin dashboard (packages/bookings/promos/analytics CRUD, ML train)
-- 3D globe hero (R3F/Drei), Three.js scenes
-- Redux Toolkit (TanStack Query covers server state; Context handles auth/UI — Redux adds no value in Phase 1)
-- GSAP, Lottie, Swiper, Embla, Instagram feed, Blog, PWA install, dark mode, i18n
-- Compare packages, recently-viewed persistence, notifications center
-- Waitlist notification UI beyond "join" (backend has no notification endpoint)
+## Accessibility & perf
+
+- `aria-roledescription="carousel"`, live region announces slide headline changes.
+- Reduced motion → no Ken Burns, instant crossfade, autoplay off.
+- Images served through existing asset pipeline (`import` for defaults, absolute URL for admin-uploaded).
+- Only mount 2 slides at once (current + next preloader).
+
+## Not included (deliberately)
+
+- Full admin dashboard (packages, bookings, promos) — still Phase 2.
+- Video backgrounds — image only for now.
+- Per-slide CTA override — CTA row stays global.
 
 ## Diagram
 
 ```text
-Browser ── TanStack Router ── loader ── QueryClient ── axios (Bearer) ── Render API
-                │                                            │
-                ├── Auth gate (_authenticated)              JWT (localStorage)
-                ├── Route pendingComponent (Skeletons)
-                └── Booking → Razorpay checkout → verify → success/QR
+Hero
+├── <SlideLayer> ─ AnimatePresence
+│    ├── HeroSlide (bg image + Ken Burns)
+│    └── HeroSlide.Text (eyebrow / headline / subtitle)
+├── <SearchCard>            (static, does not re-mount)
+├── <HeroProgress>          (segments, click-to-jump)
+└── <PrevNext>              (chevrons + swipe)
+
+heroSlidesQuery ── /hero-slides ──► backend
+        └── fallback: bundled 6 defaults if empty / 404
+
+Admin /admin/hero
+├── ImageDropzone → mediaService.upload → url
+└── HeroSlideForm[] → heroSlidesService.upsert/reorder/delete
 ```
 
-Ready to build Phase 1. On approval, next step is to install deps (`axios @tanstack/react-query zod react-hook-form @hookform/resolvers sonner lucide-react lenis framer-motion qrcode @fontsource-variable/cormorant-garamond @fontsource-variable/inter`), scaffold the service + auth layer against the OpenAPI schema, and build routes top-down starting with root layout + Home.
+---
+
+## Two questions before I build
+
+1. **Admin role source**: does `/auth/me` return a role/is_admin flag, or should I gate the admin screen by a hardcoded admin email list in env for now (`VITE_ADMIN_EMAILS`) until you add a role field?
+2. **Slides endpoint**: is there an existing hero/slides endpoint in the Swagger I missed, or should I ship with the localStorage stopgap + `mediaService.upload` for images, and wire to a real endpoint later?
+
+Approve and I'll build.
