@@ -1,25 +1,45 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Menu, X, Plane, MapPin, Globe } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { to: "/packages", label: "Destinations" },
-  { to: "/packages", label: "Collections", search: { category: "HONEYMOON" as const } },
-  { to: "/about", label: "The Journal" },
-  { to: "/contact", label: "Concierge" },
-];
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About Us" },
+  { to: "/gallery", label: "Gallery" },
+  { to: "/blogs", label: "Blogs" },
+  { to: "/contact", label: "Contact Us" },
+] as const;
+
+const INDIA_REGIONS = [
+  { label: "East India", search: "East India" },
+  { label: "North India", search: "North India" },
+  { label: "West India", search: "West India" },
+  { label: "South India", search: "South India" },
+] as const;
+
+const INTERNATIONAL = [
+  { label: "Europe", search: "Europe" },
+  { label: "Asia", search: "Asia" },
+  { label: "Middle East", search: "Middle East" },
+  { label: "Americas", search: "Americas" },
+] as const;
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(false);
+  const [mobileDestOpen, setMobileDestOpen] = useState(false);
+  const desktopRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
-    setOpen(false);
+    setMobileOpen(false);
+    setDesktopOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -29,54 +49,214 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close desktop dropdown when clicking outside
+  useEffect(() => {
+    if (!desktopOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (!desktopRef.current?.contains(e.target as Node)) {
+        setDesktopOpen(false);
+      }
+    };
+    window.addEventListener("click", onClick, { passive: true });
+    return () => window.removeEventListener("click", onClick);
+  }, [desktopOpen]);
+
+  const isHome = pathname === "/";
+
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
         scrolled
-          ? "backdrop-blur-xl bg-cream-50/85 border-b border-ink-900/5"
+          ? "bg-cream-50/90 backdrop-blur-xl border-b border-ink-900/5 shadow-[0_4px_30px_-10px_rgba(28,25,23,0.08)]"
           : "bg-transparent",
       )}
     >
       <div className="mx-auto grid h-16 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-6 lg:h-20 lg:px-10">
         <Link
           to="/"
-          className="min-w-0 truncate font-serif text-2xl tracking-tight text-ink-900 lg:text-3xl"
+          className={cn(
+            "min-w-0 truncate font-serif text-2xl tracking-tight lg:text-3xl",
+            scrolled ? "text-ink-900" : "text-ink-900",
+            isHome && !scrolled && "text-cream-50",
+          )}
         >
           Ulmind
         </Link>
-        <nav className="hidden items-center gap-8 md:flex">
+
+        <nav className="hidden items-center gap-1 md:flex">
           {NAV.map((item) => (
             <Link
               key={item.label}
               to={item.to}
-              search={item.search as never}
-              className="text-[13px] font-medium text-ink-900/70 transition-colors hover:text-ink-900"
+              className={cn(
+                "relative px-4 py-2 text-[13px] font-medium transition-colors",
+                scrolled
+                  ? "text-ink-900/70 hover:text-ink-900"
+                  : isHome
+                    ? "text-cream-50/80 hover:text-cream-50"
+                    : "text-ink-900/70 hover:text-ink-900",
+              )}
+              activeProps={{
+                className: cn(
+                  "text-ink-900",
+                  !scrolled && isHome && "text-cream-50",
+                ),
+              }}
+              activeOptions={{ exact: item.to === "/" }}
             >
               {item.label}
             </Link>
           ))}
-          <span className="h-4 w-px bg-ink-900/10" />
+
+          {/* Destinations mega trigger */}
+          <div
+            ref={desktopRef}
+            className="relative"
+            onMouseEnter={() => setDesktopOpen(true)}
+          >
+            <button
+              type="button"
+              onClick={() => setDesktopOpen((v) => !v)}
+              className={cn(
+                "flex items-center gap-1 px-4 py-2 text-[13px] font-medium transition-colors",
+                scrolled
+                  ? "text-ink-900/70 hover:text-ink-900"
+                  : isHome
+                    ? "text-cream-50/80 hover:text-cream-50"
+                    : "text-ink-900/70 hover:text-ink-900",
+                desktopOpen && (scrolled || !isHome ? "text-ink-900" : "text-cream-50"),
+              )}
+            >
+              Destinations
+              <ChevronDown
+                className={cn(
+                  "size-3.5 transition-transform duration-300",
+                  desktopOpen && "rotate-180",
+                )}
+              />
+            </button>
+
+            <AnimatePresence>
+              {desktopOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-ink-900/5 bg-cream-50/95 p-6 shadow-[0_30px_60px_-20px_rgba(28,25,23,0.25)] backdrop-blur-xl"
+                >
+                  <div className="grid grid-cols-2 gap-8">
+                    {/* India */}
+                    <div>
+                      <div className="mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">
+                        <Plane className="size-4" strokeWidth={1.5} />
+                        India
+                      </div>
+                      <ul className="space-y-1">
+                        {INDIA_REGIONS.map((region) => (
+                          <li key={region.label}>
+                            <Link
+                              to="/packages"
+                              search={{ destination: region.search }}
+                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-ink-900/80 transition-colors hover:bg-cream-100 hover:text-ink-900"
+                              onClick={() => setDesktopOpen(false)}
+                            >
+                              <span className="flex items-center gap-2">
+                                <MapPin className="size-3.5 text-ink-900/30 transition-colors group-hover:text-gold" />
+                                {region.label}
+                              </span>
+                              <ChevronDown className="size-3 -rotate-90 text-ink-900/20 transition-colors group-hover:text-ink-900/50" />
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* International */}
+                    <div>
+                      <div className="mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">
+                        <Globe className="size-4" strokeWidth={1.5} />
+                        International
+                      </div>
+                      <ul className="space-y-1">
+                        {INTERNATIONAL.map((region) => (
+                          <li key={region.label}>
+                            <Link
+                              to="/packages"
+                              search={{ destination: region.search }}
+                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-ink-900/80 transition-colors hover:bg-cream-100 hover:text-ink-900"
+                              onClick={() => setDesktopOpen(false)}
+                            >
+                              <span className="flex items-center gap-2">
+                                <Globe className="size-3.5 text-ink-900/30 transition-colors group-hover:text-gold" />
+                                {region.label}
+                              </span>
+                              <ChevronDown className="size-3 -rotate-90 text-ink-900/20 transition-colors group-hover:text-ink-900/50" />
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 border-t border-ink-900/5 pt-4">
+                    <Link
+                      to="/packages"
+                      className="group flex items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-ink-900 transition-colors hover:bg-cream-100"
+                      onClick={() => setDesktopOpen(false)}
+                    >
+                      <span>Browse all escapes</span>
+                      <ChevronDown className="size-3 -rotate-90 text-ink-900/40 transition-colors group-hover:text-ink-900" />
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <span
+            className={cn(
+              "mx-2 h-4 w-px",
+              scrolled || !isHome ? "bg-ink-900/10" : "bg-cream-50/20",
+            )}
+          />
+
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
               {isAdmin && (
                 <Link
                   to="/account/admin/hero"
-                  className="text-[11px] uppercase tracking-widest text-ink-900/50 hover:text-ink-900"
+                  className={cn(
+                    "text-[11px] uppercase tracking-widest transition-colors",
+                    scrolled || !isHome
+                      ? "text-ink-900/50 hover:text-ink-900"
+                      : "text-cream-50/60 hover:text-cream-50",
+                  )}
                 >
                   Admin
                 </Link>
               )}
               <Link
                 to="/account"
-                className="text-[13px] font-medium text-ink-900 hover:text-ink-900/70"
+                className={cn(
+                  "text-[13px] font-medium transition-colors",
+                  scrolled || !isHome
+                    ? "text-ink-900 hover:text-ink-900/70"
+                    : "text-cream-50 hover:text-cream-50/80",
+                )}
               >
                 {user?.name?.split(" ")[0] ?? "Account"}
               </Link>
               <button
                 type="button"
                 onClick={logout}
-                className="text-[12px] uppercase tracking-widest text-ink-900/50 hover:text-ink-900"
+                className={cn(
+                  "text-[12px] uppercase tracking-widest transition-colors",
+                  scrolled || !isHome
+                    ? "text-ink-900/50 hover:text-ink-900"
+                    : "text-cream-50/60 hover:text-cream-50",
+                )}
               >
                 Sign out
               </button>
@@ -84,63 +264,141 @@ export function Navbar() {
           ) : (
             <Link
               to="/auth/login"
-              className="rounded-full bg-ink-900 px-5 py-2 text-[12px] font-medium uppercase tracking-widest text-cream-50 ring-1 ring-ink-900 transition-transform active:scale-95"
+              className={cn(
+                "rounded-full px-5 py-2 text-[12px] font-medium uppercase tracking-widest ring-1 transition-transform active:scale-95",
+                scrolled || !isHome
+                  ? "bg-ink-900 text-cream-50 ring-ink-900"
+                  : "bg-cream-50 text-ink-900 ring-cream-50/30 hover:bg-cream-50/90",
+              )}
             >
               Inquire
             </Link>
           )}
         </nav>
+
+        {/* Mobile menu toggle */}
         <button
           type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((v) => !v)}
-          className="grid size-10 place-items-center rounded-full ring-1 ring-ink-900/15 text-ink-900 md:hidden"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMobileOpen((v) => !v)}
+          className={cn(
+            "grid size-10 place-items-center rounded-full ring-1 md:hidden",
+            scrolled || !isHome
+              ? "ring-ink-900/15 text-ink-900"
+              : "ring-cream-50/30 text-cream-50",
+          )}
         >
-          {open ? <X className="size-4" /> : <Menu className="size-4" />}
+          {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
         </button>
       </div>
-      {open && (
-        <div className="border-t border-ink-900/5 bg-cream-50 md:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4">
-            {NAV.map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                search={item.search as never}
-                className="rounded-lg px-3 py-3 text-sm font-medium text-ink-900/80 hover:bg-cream-100"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="mt-2 border-t border-ink-900/5 pt-3">
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/account"
-                    className="block rounded-lg px-3 py-3 text-sm font-medium text-ink-900 hover:bg-cream-100"
-                  >
-                    Account
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={logout}
-                    className="w-full rounded-lg px-3 py-3 text-left text-sm text-ink-900/60 hover:bg-cream-100"
-                  >
-                    Sign out
-                  </button>
-                </>
-              ) : (
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-t border-ink-900/5 bg-cream-50 md:hidden"
+          >
+            <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4">
+              {NAV.map((item) => (
                 <Link
-                  to="/auth/login"
-                  className="block rounded-lg bg-ink-900 px-3 py-3 text-center text-sm font-medium text-cream-50"
+                  key={item.label}
+                  to={item.to}
+                  className="rounded-lg px-3 py-3 text-sm font-medium text-ink-900/80 hover:bg-cream-100"
                 >
-                  Sign in
+                  {item.label}
                 </Link>
-              )}
-            </div>
-          </nav>
-        </div>
-      )}
+              ))}
+
+              {/* Mobile Destinations accordion */}
+              <div className="border-t border-ink-900/5 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setMobileDestOpen((v) => !v)}
+                  className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-ink-900/80 hover:bg-cream-100"
+                >
+                  Destinations
+                  <ChevronDown
+                    className={cn(
+                      "size-4 transition-transform",
+                      mobileDestOpen && "rotate-180",
+                    )}
+                  />
+                </button>
+                <AnimatePresence>
+                  {mobileDestOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-3 pb-2 pt-1">
+                        <p className="py-2 text-[10px] uppercase tracking-widest text-gold">
+                          India
+                        </p>
+                        {INDIA_REGIONS.map((region) => (
+                          <Link
+                            key={region.label}
+                            to="/packages"
+                            search={{ destination: region.search }}
+                            className="block rounded-lg px-3 py-2 text-sm text-ink-900/70 hover:bg-cream-100 hover:text-ink-900"
+                          >
+                            {region.label}
+                          </Link>
+                        ))}
+                        <p className="mt-2 py-2 text-[10px] uppercase tracking-widest text-gold">
+                          International
+                        </p>
+                        {INTERNATIONAL.map((region) => (
+                          <Link
+                            key={region.label}
+                            to="/packages"
+                            search={{ destination: region.search }}
+                            className="block rounded-lg px-3 py-2 text-sm text-ink-900/70 hover:bg-cream-100 hover:text-ink-900"
+                          >
+                            {region.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="mt-2 border-t border-ink-900/5 pt-3">
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/account"
+                      className="block rounded-lg px-3 py-3 text-sm font-medium text-ink-900 hover:bg-cream-100"
+                    >
+                      Account
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="w-full rounded-lg px-3 py-3 text-left text-sm text-ink-900/60 hover:bg-cream-100"
+                    >
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    to="/auth/login"
+                    className="block rounded-lg bg-ink-900 px-3 py-3 text-center text-sm font-medium text-cream-50"
+                  >
+                    Sign in
+                  </Link>
+                )}
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
