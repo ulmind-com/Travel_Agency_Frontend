@@ -173,7 +173,8 @@ export function PopularDestinations() {
                     transition={{ duration: 0.4 }}
                   >
                     <Link
-                      to="/packages"
+                      to="/destinations/$slug"
+                      params={{ slug: d.name.toLowerCase().replace(/\s+/g, "-") }}
                       className="inline-flex items-center gap-2 rounded-full border border-cream-50/60 bg-ink-900/40 px-5 py-2 text-xs uppercase tracking-widest text-cream-50 backdrop-blur-md transition-colors hover:bg-cream-50/20"
                     >
                       Details <ArrowRight className="size-3.5" />
