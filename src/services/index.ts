@@ -26,3 +26,9 @@ export {
   type PlanYourTripContent,
   type PlanFeature,
 } from "./plan-your-trip.service";
+export {
+  popularToursService,
+  defaultPopularTours,
+  type PopularToursContent,
+  type PopularTour,
+} from "./popular-tours.service";
