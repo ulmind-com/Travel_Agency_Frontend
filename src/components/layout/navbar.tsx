@@ -121,7 +121,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-ink-900/5 bg-cream-50 p-6 shadow-[0_30px_60px_-20px_rgba(28,25,23,0.25)] backdrop-blur-xl"
+                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-cream-50/10 bg-cream-50/[0.03] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
                   onMouseEnter={handleEnter}
                   onMouseLeave={handleLeave}
                 >
@@ -138,14 +138,14 @@ export function Navbar() {
                             <Link
                               to="/packages"
                               search={{ destination: region.search }}
-                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-ink-900/80 transition-colors hover:bg-cream-100 hover:text-ink-900"
+                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-cream-50/80 transition-colors hover:bg-cream-50/5 hover:text-cream-50"
                               onClick={() => setDesktopOpen(false)}
                             >
                               <span className="flex items-center gap-2">
-                                <MapPin className="size-3.5 text-ink-900/30 transition-colors group-hover:text-gold" />
+                                <MapPin className="size-3.5 text-cream-50/30 transition-colors group-hover:text-gold" />
                                 {region.label}
                               </span>
-                              <ChevronDown className="size-3 -rotate-90 text-ink-900/20 transition-colors group-hover:text-ink-900/50" />
+                              <ChevronDown className="size-3 -rotate-90 text-cream-50/20 transition-colors group-hover:text-cream-50/50" />
                             </Link>
                           </li>
                         ))}
@@ -164,14 +164,14 @@ export function Navbar() {
                             <Link
                               to="/packages"
                               search={{ destination: region.search }}
-                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-ink-900/80 transition-colors hover:bg-cream-100 hover:text-ink-900"
+                              className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-[14px] text-cream-50/80 transition-colors hover:bg-cream-50/5 hover:text-cream-50"
                               onClick={() => setDesktopOpen(false)}
                             >
                               <span className="flex items-center gap-2">
-                                <Globe className="size-3.5 text-ink-900/30 transition-colors group-hover:text-gold" />
+                                <Globe className="size-3.5 text-cream-50/30 transition-colors group-hover:text-gold" />
                                 {region.label}
                               </span>
-                              <ChevronDown className="size-3 -rotate-90 text-ink-900/20 transition-colors group-hover:text-ink-900/50" />
+                              <ChevronDown className="size-3 -rotate-90 text-cream-50/20 transition-colors group-hover:text-cream-50/50" />
                             </Link>
                           </li>
                         ))}
@@ -179,14 +179,14 @@ export function Navbar() {
                     </div>
                   </div>
 
-                  <div className="mt-6 border-t border-ink-900/5 pt-4">
+                  <div className="mt-6 border-t border-cream-50/10 pt-4">
                     <Link
                       to="/packages"
-                      className="group flex items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-ink-900 transition-colors hover:bg-cream-100"
+                      className="group flex items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-cream-50 transition-colors hover:bg-cream-50/5"
                       onClick={() => setDesktopOpen(false)}
                     >
                       <span>Browse all escapes</span>
-                      <ChevronDown className="size-3 -rotate-90 text-ink-900/40 transition-colors group-hover:text-ink-900" />
+                      <ChevronDown className="size-3 -rotate-90 text-cream-50/40 transition-colors group-hover:text-cream-50" />
                     </Link>
                   </div>
                 </motion.div>
