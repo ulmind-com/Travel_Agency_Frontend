@@ -110,7 +110,7 @@ export function PopularDestinations() {
         }}
       >
         <div
-          className="relative mx-auto flex h-[520px] max-w-6xl items-center justify-center sm:h-[560px]"
+          className="relative mx-auto flex h-[580px] max-w-6xl items-center justify-center sm:h-[640px]"
           style={{ perspective: "1400px" }}
         >
           {items.map((d, i) => {
@@ -119,8 +119,8 @@ export function PopularDestinations() {
             const sign = Math.sign(off);
             // depth styling
             const xPx = isMobile
-              ? sign * abs * 80
-              : sign * (abs === 1 ? 210 : abs === 2 ? 360 : 500);
+              ? sign * abs * 90
+              : sign * (abs === 1 ? 240 : abs === 2 ? 410 : 560);
             const scale = abs === 0 ? 1 : abs === 1 ? 0.82 : abs === 2 ? 0.66 : 0.5;
             const rotY = reduced ? 0 : -sign * (abs === 0 ? 0 : abs === 1 ? 22 : 32);
             const blur = abs === 0 ? 0 : abs === 1 ? 2 : 5;
@@ -148,7 +148,7 @@ export function PopularDestinations() {
                   transformStyle: "preserve-3d",
                   pointerEvents: abs >= 3 ? "none" : "auto",
                 }}
-                className="absolute h-[480px] w-[300px] overflow-hidden rounded-3xl shadow-[0_40px_80px_-30px_rgba(28,25,23,0.55)] ring-1 ring-black/10 sm:h-[520px] sm:w-[340px]"
+                className="absolute h-[540px] w-[340px] overflow-hidden rounded-3xl shadow-[0_40px_80px_-30px_rgba(28,25,23,0.55)] ring-1 ring-black/10 sm:h-[600px] sm:w-[390px]"
               >
                 <img
                   src={d.imageUrl}
@@ -190,33 +190,17 @@ export function PopularDestinations() {
             type="button"
             onClick={prev}
             aria-label="Previous destination"
-            className="grid size-11 place-items-center rounded-full border border-ink-900/20 text-ink-900 transition-colors hover:bg-ink-900/5"
+            className="grid size-14 place-items-center rounded-full border border-ink-900/20 text-ink-900 transition-colors hover:bg-ink-900/5"
           >
-            <ChevronLeft className="size-4" />
+            <ChevronLeft className="size-5" />
           </button>
-          <div className="flex items-center gap-3">
-            {items.map((d, i) => (
-              <button
-                key={d.id}
-                type="button"
-                aria-label={"Go to " + d.name}
-                onClick={() => setActive(i)}
-                className={
-                  "size-2.5 rounded-full border transition-colors " +
-                  (i === active
-                    ? "border-ink-900 bg-ink-900"
-                    : "border-ink-900/30 bg-transparent hover:bg-ink-900/10")
-                }
-              />
-            ))}
-          </div>
           <button
             type="button"
             onClick={next}
             aria-label="Next destination"
-            className="grid size-11 place-items-center rounded-full border border-ink-900/20 text-ink-900 transition-colors hover:bg-ink-900/5"
+            className="grid size-14 place-items-center rounded-full border border-ink-900/20 text-ink-900 transition-colors hover:bg-ink-900/5"
           >
-            <ChevronRight className="size-4" />
+            <ChevronRight className="size-5" />
           </button>
         </div>
       </div>
