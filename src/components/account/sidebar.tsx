@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bookmark, CalendarCheck, Heart, Image, LayoutGrid, User, Users } from "lucide-react";
+import { Bookmark, CalendarCheck, Heart, Image, LayoutGrid, MapPin, User, Users } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -15,6 +15,7 @@ const ITEMS = [
 const ADMIN_ITEMS = [
   { to: "/account/admin/hero", label: "Hero slides", icon: Image },
   { to: "/account/admin/tour-categories", label: "Tour categories", icon: LayoutGrid },
+  { to: "/account/admin/popular-destinations", label: "Popular destinations", icon: MapPin },
 ];
 
 export function AccountSidebar() {
