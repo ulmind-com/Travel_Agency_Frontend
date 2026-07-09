@@ -179,14 +179,14 @@ export function Navbar() {
                     </div>
                   </div>
 
-                  <div className="mt-6 border-t border-ink-900/5 pt-4">
+                  <div className="mt-6 border-t border-cream-50/10 pt-4">
                     <Link
                       to="/packages"
-                      className="group flex items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-ink-900 transition-colors hover:bg-cream-100"
+                      className="group flex items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-cream-50 transition-colors hover:bg-cream-50/5"
                       onClick={() => setDesktopOpen(false)}
                     >
                       <span>Browse all escapes</span>
-                      <ChevronDown className="size-3 -rotate-90 text-ink-900/40 transition-colors group-hover:text-ink-900" />
+                      <ChevronDown className="size-3 -rotate-90 text-cream-50/40 transition-colors group-hover:text-cream-50" />
                     </Link>
                   </div>
                 </motion.div>
