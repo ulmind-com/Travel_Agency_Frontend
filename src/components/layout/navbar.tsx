@@ -29,7 +29,6 @@ const INTERNATIONAL = [
 ] as const;
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileDestOpen, setMobileDestOpen] = useState(false);
@@ -38,20 +37,10 @@ export function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const isHome = pathname === "/";
-  const isScrolled = scrolled || !isHome;
-
   useEffect(() => {
     setMobileOpen(false);
     setDesktopOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Close desktop dropdown when clicking outside
   useEffect(() => {
