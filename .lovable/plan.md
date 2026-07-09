@@ -1,49 +1,50 @@
 ## Goal
-Stats row-er ("14 / 24/7 / 100% / 08") thik nicher e ekta notun **"Tour Categories"** section add korbo — screenshot-er "Wornderful Place For You / Tour Categories" section-er a-to-z same look. Cards ekta ekta kore **automatic left → right** slide korbe with a **3D tilt animation** (screenshot-er moto slightly rotated cards). Admin panel theke ei category cards-er photo + name upload/edit kora jabe.
-
-## Reference match (screenshot)
-- Cream/off-white background, centered heading.
-- Script eyebrow: *"Wornderful Place For You"* (italic serif script).
-- Big serif heading: **Tour Categories**.
-- 5 cards visible at once, rounded-3xl, subtle drop shadow, **prominent 3D tilt** — cards alternate rotation (~-6°, +4°, -3°, +5°, -4°) with slight Y offset so it feels like a fanned deck.
-- Below each card: **Category name** (serif, ink color) + small *"See More"* link.
-- Bottom: dot pagination (5 dots, active = filled ink).
-- Auto-advance left-to-right; pauses on hover; swipe on mobile.
+Ekta notun **"Popular Destination"** section add korbo — screenshot-er a-to-z same look. Coverflow-style 3D carousel: center e ekta boro sharp card ("Himachal / 1 Listing / Details →"), duipashe blurred/smaller cards receding into depth. Cards **automatic left→right** ekta ekta kore shift korbe, admin panel theke photo + name + listing count upload/edit kora jabe.
 
 ## Placement
-`src/routes/index.tsx` — insert `<TourCategories />` right after `<StatsRow />`, before `<FeaturedPackages />`. `CollectionsScroll` remains (different intent — horizontal scroll of destinations).
+`src/routes/index.tsx` — `<TourCategories />`-er thik nicher e, `<FeaturedPackages />`-er age insert korbo.
+
+## Reference match (screenshot)
+- Cream background, centered heading.
+- Script eyebrow: *"Top Destination"* (italic serif script, ink-teal).
+- Big serif heading: **Popular Destination**.
+- **Coverflow layout**: 5 cards visible; center card ~360×520 sharp/prominent, next ring (2 cards) slightly smaller + rotated inward + partially behind center, outer ring (2 cards) even smaller + blurred + further receded.
+- Each card: **portrait 3:4** aspect, rounded-2xl, cover photo, gradient overlay at bottom, **destination name** (serif bold, cream), **"N Listing"** (small cream), and a **"Details →"** pill button (rounded-full, ink border, cream text with arrow) — visible only on the center card (side cards blurred so pill hidden by design).
+- Auto-advance every ~3.5s, cards rotate through positions with 3D depth animation.
+- Optional: click a side card → jump to that position; center card's Details → `/packages?destination=...`.
 
 ## New files
-1. **`src/services/tour-categories.service.ts`**
-   - Same pattern as `hero-slides.service.ts` — localStorage-backed CRUD with bundled defaults, `ulmind:tour-categories-changed` event for live sync.
-   - Type: `{ id, name, imageUrl, category: PackageCategory }`.
-   - Defaults (matches screenshot spirit): Sea Beach, Pilgrimage, Wildlife, Hill Stations, Heritage, Adventure, Honeymoon (7 total so carousel has room to loop).
-2. **`src/assets/tour-cat-*.jpg`** (7 generated images: sea-beach, pilgrimage, wildlife, hill-stations, heritage, adventure, honeymoon) — used as fallback defaults.
-3. **`src/components/home/tour-categories.tsx`**
-   - Framer Motion carousel. Uses `motion.div` with continuous `x` translation via `animate` loop (marquee-style), OR index-based auto-advance every ~3.5s with `AnimatePresence` sliding cards left. Chosen: **index-based auto-advance** so dot pagination stays in sync and matches screenshot's dots.
-   - Renders a window of 5 cards (responsive: 2 on mobile, 3 on tablet, 5 on desktop).
-   - Each card has a **3D tilt**: `rotate` based on its position in the visible window (`[-6, 4, -3, 5, -4]`) + `translateY` offset, plus `perspective(1200px)` on the container so tilt feels dimensional.
-   - Hover: card lifts (`translateY(-8px)`) and straightens (`rotate: 0`) with 500ms ease.
-   - `useEffect` timer advances index every 3500ms; pauses on `onMouseEnter`, resumes on leave; respects `prefers-reduced-motion`.
-   - Dot pagination at bottom, click to jump.
-   - Clicking a card navigates to `/packages?category={category}` (typed `Link`).
-4. **`src/lib/queries.ts`** — add `tourCategoriesQuery()` mirroring `heroSlidesQuery()`.
-5. **`src/routes/_authenticated.account.admin.tour-categories.tsx`**
-   - Same shape as `_authenticated.account.admin.hero.tsx`. Admin-gated via `isAdmin`.
-   - List of categories with: image preview, name input, category dropdown (PackageCategory enum), upload button (uses existing `mediaService.upload`), remove, reorder (up/down), add new, reset to defaults, save.
+1. **`src/services/popular-destinations.service.ts`**
+   - Same pattern as `tour-categories.service.ts` — localStorage CRUD, defaults bundled, `ulmind:popular-destinations-changed` event.
+   - Type: `{ id, name, listingCount, imageUrl }`.
+   - Defaults (7 entries so wheel has depth): Himachal, Andaman, Sundarban, Kashmir, Ladakh, Kerala, Rajasthan.
+2. **`src/assets/dest-*.jpg`** (7 generated portrait 3:4 images).
+3. **`src/components/home/popular-destinations.tsx`**
+   - Framer Motion coverflow. State: `active` index. `useEffect` timer advances every 3500ms.
+   - For each destination i, compute `offset = i - active` normalized to `[-3..3]` (shortest path around ring). Style each card by offset:
+     - `offset 0`: scale 1, rotateY 0, translateX 0, z 100, blur 0, opacity 1
+     - `offset ±1`: scale 0.82, rotateY ∓25°, translateX ±180px, z 60, blur 2px, opacity 0.8
+     - `offset ±2`: scale 0.65, rotateY ∓35°, translateX ±320px, z 20, blur 5px, opacity 0.5
+     - `|offset| ≥ 3`: opacity 0, pointer-events none
+   - Container has `perspective: 1400px`, cards `position: absolute` centered, animated via `motion.div` with `animate` object driven by offset.
+   - Center card renders "Details →" pill; side cards hide it via opacity gate.
+   - Hover on container pauses autoplay; prev/next arrow buttons + dot pagination below.
+   - Mobile (< 640px): single card view, swipe gestures (touchstart/touchend).
+   - Respects `prefers-reduced-motion` (autoplay off, no rotateY).
+4. **`src/routes/_authenticated.account.admin.popular-destinations.tsx`**
+   - Mirror of tour-categories admin: image upload (`mediaService`), name input, listing count input, reorder up/down, remove, add new, reset, publish.
 
 ## Existing files edited
-- **`src/routes/index.tsx`** — import + render `<TourCategories />` after `<StatsRow />`.
-- **`src/components/account/sidebar.tsx`** — add "Tour Categories" link under the existing admin section (next to "Hero Slides").
-- **`src/services/index.ts`** — re-export `tourCategoriesService`.
+- **`src/routes/index.tsx`** — import + render `<PopularDestinations />` after `<TourCategories />`.
+- **`src/lib/queries.ts`** — add `popularDestinationsQuery()`.
+- **`src/services/index.ts`** — re-export new service.
+- **`src/components/account/sidebar.tsx`** — add "Popular destinations" link to ADMIN_ITEMS.
 
 ## Not touched
-- Backend / API — no `/tour-categories` endpoint exists; localStorage persistence mirrors hero-slides approach (admin edits persist per-browser; media uploads still go through real `/media/upload`).
-- Nav, footer, other home sections, auth, routing shell.
+- Backend / other sections / auth / routing shell.
 
 ## Verify
-- `/` — scroll past stats; new section renders with 5 tilted cards, auto-advances every ~3.5s left→right, dots update, hover pauses + straightens card.
-- Playwright screenshots at t=0 and t=4s to confirm visible slide change + tilt.
-- `/account/admin/tour-categories` (as admin) — upload replaces image, save persists, home reflects change on next visit (custom event triggers re-render).
-- `prefers-reduced-motion` — autoplay disabled, tilt reduced.
-- Mobile (716px) — 2 cards visible, swipe works, dots still shown.
+- `/` — new section renders between Tour Categories and Featured Packages. Center card is sharp with "Details →", side cards are receded + blurred, auto-cycles every 3.5s. Dot + arrows work. Hover pauses.
+- `/account/admin/popular-destinations` (admin) — upload photo, edit name + listing count, save → home reflects via custom event.
+- Mobile 716px — single card visible, swipe advances, dots visible.
+- `prefers-reduced-motion` — autoplay off, no 3D rotate.
