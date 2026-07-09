@@ -1,46 +1,53 @@
-## Match reference shapes exactly + one static photo per slot
+## Match reference shapes exactly using SVG clip-path (not CSS border-radius)
 
-Scope: `src/components/home/plan-your-trip.tsx`, `src/services/plan-your-trip.service.ts`, `src/routes/_authenticated.account.admin.plan-your-trip.tsx`. Nothing else.
+The current implementation uses `rounded-*` percentages which produce pill/ellipse shapes — the reference shows **asymmetric arch/leaf silhouettes** with a flat edge on one side and a full dome on the opposite side. `border-radius` cannot produce these; SVG `clipPath` with `pathData` can.
 
-### 1. Shapes — match reference precisely (asymmetric arches, not ellipses)
-The reference shows three distinct arch silhouettes, not identical stadiums:
+### Shape analysis from the reference
 
-- **Left (tall)**: symmetric tall stadium — rounded semicircle top + semicircle bottom, straight vertical sides.
-  → `aspect-[3/5]` + `rounded-full` (on a tall rect `rounded-full` renders as a pill/stadium; NOT `rounded-[50%]` which gives an ellipse — that's the current bug).
-- **Top-right (leaf leaning right)**: heavily rounded top-right + bottom-right + top corners, notably tighter on the bottom-left → petal shape.
-  → `aspect-[6/5]` with per-corner: `rounded-tl-[45%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[25%]`.
-- **Bottom-right (leaf mirrored)**: mirror of the above vertically — tighter on the top-left.
-  → `aspect-[6/5]` with per-corner: `rounded-tl-[25%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[45%]`.
+- **Left (tall)**: flat bottom, full semicircular dome top, straight vertical sides → tall arch / tombstone. Aspect ~ `3/5`.
+- **Top-right**: flat left edge, rounded top + right + bottom → half-stadium leaning right (D-shape, curved side right). Aspect ~ `6/5`.
+- **Bottom-right**: flat top edge, rounded left + bottom + right → inverted arch (dome on the bottom). Aspect ~ `6/5`.
 
-Each slot gets its own explicit rounding class (no shared prop). Same shape system applied to admin previews so they visually match.
+All three share one design language: one straight edge, the opposite three edges form a continuous smooth curve.
 
-### 2. One static photo per slot (no rotation animation)
-Remove auto-rotate, `AnimatePresence`, `PhotoSlot` component, hover-pause, `usePrefersReducedMotion`, staggered delays — all of it.
+### Implementation
 
-Each slot renders a single `<img>` with `object-cover`. Entry `FadeUp` on the whole slot stays for a subtle appear.
+**File: `src/components/home/plan-your-trip.tsx`**
 
-### 3. Data model change — single image per slot
-`PlanYourTripContent.slots` becomes:
-```ts
-slots: {
-  arch: string;      // single imageUrl
-  circleA: string;
-  circleB: string;
-}
+Replace the `archShape` / `leafRightShape` / `leafRightMirrorShape` classes with three inline SVG `clipPath` definitions applied via `style={{ clipPath: 'url(#id)' }}`. Define the clip paths once at the top of the section inside a hidden `<svg>`:
+
+```tsx
+<svg width="0" height="0" className="absolute">
+  <defs>
+    {/* Tall arch: flat bottom, semicircular top */}
+    <clipPath id="plan-arch-tall" clipPathUnits="objectBoundingBox">
+      <path d="M0,0.3 A0.5,0.3 0 0,1 1,0.3 L1,1 L0,1 Z" />
+    </clipPath>
+    {/* D-shape opening left: flat left edge */}
+    <clipPath id="plan-arch-right" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L0.5,0 A0.5,0.5 0 0,1 0.5,1 L0,1 Z" />
+    </clipPath>
+    {/* Inverted arch: flat top, semicircular bottom */}
+    <clipPath id="plan-arch-bottom" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L1,0 L1,0.7 A0.5,0.3 0 0,1 0,0.7 Z" />
+    </clipPath>
+  </defs>
+</svg>
 ```
-`PlanPhoto[]` arrays removed. `PlanPhoto` type removed from exports.
 
-Defaults ship the current first photo of each slot. Old localStorage payloads (array shape) are detected and ignored — fall back to defaults so the page never crashes on migration.
+Each `ShapePhoto` becomes a plain `<div>` with `aspect-*` + `style={{ clipPath: 'url(#plan-arch-tall)' }}`. Drop all `rounded-*` classes. Keep the ring/shadow via a wrapping element (shadow can't apply to a clipped element — use a `drop-shadow` filter on the parent instead of `box-shadow`).
 
-### 4. Admin panel simplification
-Replace the multi-photo `SlotEditor` / `PhotoCell` block with three single-image upload cards (one per slot). Each card:
-- Click-to-upload thumbnail rendered in the slot's actual shape (arch / leaf-A / leaf-B).
-- "Remove image" button.
-- Reuses `mediaService.upload`, `apiErrorMessage`.
+Aspect ratios:
+- Tall arch: `aspect-[3/5]`
+- Top-right D: `aspect-[6/5]`
+- Bottom inverted: `aspect-[6/5]`
 
-Copy fields (eyebrow/title/description/CTA) and features editor unchanged.
+The exact path `d` values will be tuned so the curves visually match the reference (semicircle radii adjusted so the dome portion is ~50–60% of the height for tall/inverted, and a true half-circle for the D shape).
 
-### 5. Cleanup
-- Remove `AnimatePresence`, `motion`, `Compass` icon imports only if unused (Compass still used for feature icon — keep).
-- `src/services/index.ts` re-export loses `PlanPhoto`.
-- `PlanPhoto` deletion cascades: check no other file imports it (only these three do).
+**File: `src/routes/_authenticated.account.admin.plan-your-trip.tsx`**
+
+Mirror the same three clip-path shapes on the admin upload thumbnails so previews match the site exactly. Add the same hidden `<svg>` block inside the admin route (or extract a tiny shared component `PlanArchClipDefs` under `src/components/home/` and import in both places — preferred, avoids duplication).
+
+### Cleanup
+- Remove the old `rounded-full` / `rounded-tl-[45%]` etc. classes.
+- No data model change. No animation change. Only shape rendering swaps from `border-radius` to `clipPath`.
