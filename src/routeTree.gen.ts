@@ -26,6 +26,7 @@ import { Route as AuthenticatedAccountProfileRouteImport } from './routes/_authe
 import { Route as AuthenticatedAccountBookingsRouteImport } from './routes/_authenticated.account.bookings'
 import { Route as AuthenticatedBookSuccessBookingIdRouteImport } from './routes/_authenticated.book.success.$bookingId'
 import { Route as AuthenticatedAccountAdminTourCategoriesRouteImport } from './routes/_authenticated.account.admin.tour-categories'
+import { Route as AuthenticatedAccountAdminPopularDestinationsRouteImport } from './routes/_authenticated.account.admin.popular-destinations'
 import { Route as AuthenticatedAccountAdminHeroRouteImport } from './routes/_authenticated.account.admin.hero'
 
 const PackagesRoute = PackagesRouteImport.update({
@@ -119,6 +120,12 @@ const AuthenticatedAccountAdminTourCategoriesRoute =
     path: '/admin/tour-categories',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
+const AuthenticatedAccountAdminPopularDestinationsRoute =
+  AuthenticatedAccountAdminPopularDestinationsRouteImport.update({
+    id: '/admin/popular-destinations',
+    path: '/admin/popular-destinations',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 const AuthenticatedAccountAdminHeroRoute =
   AuthenticatedAccountAdminHeroRouteImport.update({
     id: '/admin/hero',
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/book/$id': typeof AuthenticatedBookIdRoute
   '/account/': typeof AuthenticatedAccountIndexRoute
   '/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
+  '/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
@@ -160,6 +168,7 @@ export interface FileRoutesByTo {
   '/book/$id': typeof AuthenticatedBookIdRoute
   '/account': typeof AuthenticatedAccountIndexRoute
   '/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
+  '/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
@@ -181,6 +190,7 @@ export interface FileRoutesById {
   '/_authenticated/book/$id': typeof AuthenticatedBookIdRoute
   '/_authenticated/account/': typeof AuthenticatedAccountIndexRoute
   '/_authenticated/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
+  '/_authenticated/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/_authenticated/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
   '/_authenticated/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/book/$id'
     | '/account/'
     | '/account/admin/hero'
+    | '/account/admin/popular-destinations'
     | '/account/admin/tour-categories'
     | '/book/success/$bookingId'
   fileRoutesByTo: FileRoutesByTo
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/book/$id'
     | '/account'
     | '/account/admin/hero'
+    | '/account/admin/popular-destinations'
     | '/account/admin/tour-categories'
     | '/book/success/$bookingId'
   id:
@@ -240,6 +252,7 @@ export interface FileRouteTypes {
     | '/_authenticated/book/$id'
     | '/_authenticated/account/'
     | '/_authenticated/account/admin/hero'
+    | '/_authenticated/account/admin/popular-destinations'
     | '/_authenticated/account/admin/tour-categories'
     | '/_authenticated/book/success/$bookingId'
   fileRoutesById: FileRoutesById
@@ -375,6 +388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountAdminTourCategoriesRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
+    '/_authenticated/account/admin/popular-destinations': {
+      id: '/_authenticated/account/admin/popular-destinations'
+      path: '/admin/popular-destinations'
+      fullPath: '/account/admin/popular-destinations'
+      preLoaderRoute: typeof AuthenticatedAccountAdminPopularDestinationsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
     '/_authenticated/account/admin/hero': {
       id: '/_authenticated/account/admin/hero'
       path: '/admin/hero'
@@ -392,6 +412,7 @@ interface AuthenticatedAccountRouteChildren {
   AuthenticatedAccountWishlistRoute: typeof AuthenticatedAccountWishlistRoute
   AuthenticatedAccountIndexRoute: typeof AuthenticatedAccountIndexRoute
   AuthenticatedAccountAdminHeroRoute: typeof AuthenticatedAccountAdminHeroRoute
+  AuthenticatedAccountAdminPopularDestinationsRoute: typeof AuthenticatedAccountAdminPopularDestinationsRoute
   AuthenticatedAccountAdminTourCategoriesRoute: typeof AuthenticatedAccountAdminTourCategoriesRoute
 }
 
@@ -402,6 +423,8 @@ const AuthenticatedAccountRouteChildren: AuthenticatedAccountRouteChildren = {
   AuthenticatedAccountWishlistRoute: AuthenticatedAccountWishlistRoute,
   AuthenticatedAccountIndexRoute: AuthenticatedAccountIndexRoute,
   AuthenticatedAccountAdminHeroRoute: AuthenticatedAccountAdminHeroRoute,
+  AuthenticatedAccountAdminPopularDestinationsRoute:
+    AuthenticatedAccountAdminPopularDestinationsRoute,
   AuthenticatedAccountAdminTourCategoriesRoute:
     AuthenticatedAccountAdminTourCategoriesRoute,
 }
