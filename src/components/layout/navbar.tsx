@@ -34,8 +34,12 @@ export function Navbar() {
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileDestOpen, setMobileDestOpen] = useState(false);
   const desktopRef = useRef<HTMLDivElement>(null);
+  const hoverTimer = useRef<number | null>(null);
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  const isHome = pathname === "/";
+  const isScrolled = scrolled || !isHome;
 
   useEffect(() => {
     setMobileOpen(false);
@@ -61,29 +65,36 @@ export function Navbar() {
     return () => window.removeEventListener("click", onClick);
   }, [desktopOpen]);
 
-  const isHome = pathname === "/";
+  const handleEnter = () => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+    setDesktopOpen(true);
+  };
+
+  const handleLeave = () => {
+    hoverTimer.current = window.setTimeout(() => setDesktopOpen(false), 160);
+  };
 
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        scrolled
-          ? "bg-cream-50/90 backdrop-blur-xl border-b border-ink-900/5 shadow-[0_4px_30px_-10px_rgba(28,25,23,0.08)]"
+        isScrolled
+          ? "bg-cream-50/95 backdrop-blur-xl border-b border-ink-900/5 shadow-[0_4px_30px_-10px_rgba(28,25,23,0.08)]"
           : "bg-transparent",
       )}
     >
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-6 lg:h-20 lg:px-10">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-6 lg:h-20 lg:px-10">
         <Link
           to="/"
           className={cn(
-            "min-w-0 truncate font-serif text-2xl tracking-tight lg:text-3xl",
-            scrolled ? "text-ink-900" : "text-ink-900",
-            isHome && !scrolled && "text-cream-50",
+            "min-w-0 truncate font-serif text-2xl tracking-tight transition-colors lg:text-3xl",
+            isScrolled ? "text-ink-900" : "text-cream-50",
           )}
         >
           Ulmind
         </Link>
 
+        {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex">
           {NAV.map((item) => (
             <Link
@@ -91,16 +102,14 @@ export function Navbar() {
               to={item.to}
               className={cn(
                 "relative px-4 py-2 text-[13px] font-medium transition-colors",
-                scrolled
+                isScrolled
                   ? "text-ink-900/70 hover:text-ink-900"
-                  : isHome
-                    ? "text-cream-50/80 hover:text-cream-50"
-                    : "text-ink-900/70 hover:text-ink-900",
+                  : "text-cream-50/80 hover:text-cream-50",
               )}
               activeProps={{
                 className: cn(
                   "text-ink-900",
-                  !scrolled && isHome && "text-cream-50",
+                  !isScrolled && "text-cream-50",
                 ),
               }}
               activeOptions={{ exact: item.to === "/" }}
@@ -113,19 +122,18 @@ export function Navbar() {
           <div
             ref={desktopRef}
             className="relative"
-            onMouseEnter={() => setDesktopOpen(true)}
+            onMouseEnter={handleEnter}
+            onMouseLeave={handleLeave}
           >
             <button
               type="button"
               onClick={() => setDesktopOpen((v) => !v)}
               className={cn(
                 "flex items-center gap-1 px-4 py-2 text-[13px] font-medium transition-colors",
-                scrolled
+                isScrolled
                   ? "text-ink-900/70 hover:text-ink-900"
-                  : isHome
-                    ? "text-cream-50/80 hover:text-cream-50"
-                    : "text-ink-900/70 hover:text-ink-900",
-                desktopOpen && (scrolled || !isHome ? "text-ink-900" : "text-cream-50"),
+                  : "text-cream-50/80 hover:text-cream-50",
+                desktopOpen && (isScrolled ? "text-ink-900" : "text-cream-50"),
               )}
             >
               Destinations
@@ -144,7 +152,9 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-ink-900/5 bg-cream-50/95 p-6 shadow-[0_30px_60px_-20px_rgba(28,25,23,0.25)] backdrop-blur-xl"
+                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-ink-900/5 bg-cream-50 p-6 shadow-[0_30px_60px_-20px_rgba(28,25,23,0.25)] backdrop-blur-xl"
+                  onMouseEnter={handleEnter}
+                  onMouseLeave={handleLeave}
                 >
                   <div className="grid grid-cols-2 gap-8">
                     {/* India */}
@@ -214,14 +224,16 @@ export function Navbar() {
               )}
             </AnimatePresence>
           </div>
+        </nav>
 
+        {/* Right actions */}
+        <div className="hidden items-center gap-4 md:flex">
           <span
             className={cn(
-              "mx-2 h-4 w-px",
-              scrolled || !isHome ? "bg-ink-900/10" : "bg-cream-50/20",
+              "h-4 w-px",
+              isScrolled ? "bg-ink-900/10" : "bg-cream-50/20",
             )}
           />
-
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
               {isAdmin && (
@@ -229,7 +241,7 @@ export function Navbar() {
                   to="/account/admin/hero"
                   className={cn(
                     "text-[11px] uppercase tracking-widest transition-colors",
-                    scrolled || !isHome
+                    isScrolled
                       ? "text-ink-900/50 hover:text-ink-900"
                       : "text-cream-50/60 hover:text-cream-50",
                   )}
@@ -241,7 +253,7 @@ export function Navbar() {
                 to="/account"
                 className={cn(
                   "text-[13px] font-medium transition-colors",
-                  scrolled || !isHome
+                  isScrolled
                     ? "text-ink-900 hover:text-ink-900/70"
                     : "text-cream-50 hover:text-cream-50/80",
                 )}
@@ -253,7 +265,7 @@ export function Navbar() {
                 onClick={logout}
                 className={cn(
                   "text-[12px] uppercase tracking-widest transition-colors",
-                  scrolled || !isHome
+                  isScrolled
                     ? "text-ink-900/50 hover:text-ink-900"
                     : "text-cream-50/60 hover:text-cream-50",
                 )}
@@ -266,7 +278,7 @@ export function Navbar() {
               to="/auth/login"
               className={cn(
                 "rounded-full px-5 py-2 text-[12px] font-medium uppercase tracking-widest ring-1 transition-transform active:scale-95",
-                scrolled || !isHome
+                isScrolled
                   ? "bg-ink-900 text-cream-50 ring-ink-900"
                   : "bg-cream-50 text-ink-900 ring-cream-50/30 hover:bg-cream-50/90",
               )}
@@ -274,7 +286,7 @@ export function Navbar() {
               Inquire
             </Link>
           )}
-        </nav>
+        </div>
 
         {/* Mobile menu toggle */}
         <button
@@ -283,7 +295,7 @@ export function Navbar() {
           onClick={() => setMobileOpen((v) => !v)}
           className={cn(
             "grid size-10 place-items-center rounded-full ring-1 md:hidden",
-            scrolled || !isHome
+            isScrolled
               ? "ring-ink-900/15 text-ink-900"
               : "ring-cream-50/30 text-cream-50",
           )}
