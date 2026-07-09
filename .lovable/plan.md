@@ -1,53 +1,72 @@
-## Match reference shapes exactly using SVG clip-path (not CSS border-radius)
+## Recent Gallery section (homepage)
 
-The current implementation uses `rounded-*` percentages which produce pill/ellipse shapes — the reference shows **asymmetric arch/leaf silhouettes** with a flat edge on one side and a full dome on the opposite side. `border-radius` cannot produce these; SVG `clipPath` with `pathData` can.
+Build a new premium "Recent Gallery" homepage section that matches the reference screenshot A→Z, with entrance animations and full admin control.
 
-### Shape analysis from the reference
+### Visual layout (match reference exactly)
 
-- **Left (tall)**: flat bottom, full semicircular dome top, straight vertical sides → tall arch / tombstone. Aspect ~ `3/5`.
-- **Top-right**: flat left edge, rounded top + right + bottom → half-stadium leaning right (D-shape, curved side right). Aspect ~ `6/5`.
-- **Bottom-right**: flat top edge, rounded left + bottom + right → inverted arch (dome on the bottom). Aspect ~ `6/5`.
+- Centered header:
+  - Script italic eyebrow: *"Make Your Tour More Pleasure"* (font-serif italic, ink/70)
+  - Big bold sans title: **"Recent Gallery"** (dark teal, `font-serif` heavy, ~5xl–7xl)
+- Asymmetric collage grid with **5 image tiles** in the exact reference arrangement:
 
-All three share one design language: one straight edge, the opposite three edges form a continuous smooth curve.
-
-### Implementation
-
-**File: `src/components/home/plan-your-trip.tsx`**
-
-Replace the `archShape` / `leafRightShape` / `leafRightMirrorShape` classes with three inline SVG `clipPath` definitions applied via `style={{ clipPath: 'url(#id)' }}`. Define the clip paths once at the top of the section inside a hidden `<svg>`:
-
-```tsx
-<svg width="0" height="0" className="absolute">
-  <defs>
-    {/* Tall arch: flat bottom, semicircular top */}
-    <clipPath id="plan-arch-tall" clipPathUnits="objectBoundingBox">
-      <path d="M0,0.3 A0.5,0.3 0 0,1 1,0.3 L1,1 L0,1 Z" />
-    </clipPath>
-    {/* D-shape opening left: flat left edge */}
-    <clipPath id="plan-arch-right" clipPathUnits="objectBoundingBox">
-      <path d="M0,0 L0.5,0 A0.5,0.5 0 0,1 0.5,1 L0,1 Z" />
-    </clipPath>
-    {/* Inverted arch: flat top, semicircular bottom */}
-    <clipPath id="plan-arch-bottom" clipPathUnits="objectBoundingBox">
-      <path d="M0,0 L1,0 L1,0.7 A0.5,0.3 0 0,1 0,0.7 Z" />
-    </clipPath>
-  </defs>
-</svg>
+```text
+ ┌───────┐            ┌───────┐
+ │  1    │  ┌─────┐   │  3    │
+ │ tall  │  │  2  │   │ tall  │
+ │ left  │  │ mid │   │ right │
+ └───────┘  │offset│  └───────┘
+ ┌───────┐  │ down │   ┌───────┐
+ │  4    │  └─────┘   │  5    │
+ │ tall  │            │ tall  │
+ └───────┘            └───────┘
 ```
 
-Each `ShapePhoto` becomes a plain `<div>` with `aspect-*` + `style={{ clipPath: 'url(#plan-arch-tall)' }}`. Drop all `rounded-*` classes. Keep the ring/shadow via a wrapping element (shadow can't apply to a clipped element — use a `drop-shadow` filter on the parent instead of `box-shadow`).
+  - Columns 1 & 3: two stacked square-ish tiles
+  - Column 2 (center): single tile, vertically centered / offset downward so it sits between the two rows
+  - All tiles: `rounded-3xl`, soft shadow, subtle ring, `object-cover`
+  - Two small decorative side accents ("gallery image" plane/car doodles) matching the reference — inline SVG, low opacity, positioned left-middle and bottom-left; a small circular arrow-up accent bottom-right
 
-Aspect ratios:
-- Tall arch: `aspect-[3/5]`
-- Top-right D: `aspect-[6/5]`
-- Bottom inverted: `aspect-[6/5]`
+### Animations (ultra premium)
 
-The exact path `d` values will be tuned so the curves visually match the reference (semicircle radii adjusted so the dome portion is ~50–60% of the height for tall/inverted, and a true half-circle for the D shape).
+- Each tile fades + slides in one-by-one on scroll (IntersectionObserver / Framer Motion `whileInView`), staggered ~120ms in reference order (1 → 2 → 3 → 4 → 5)
+- Entrance: `opacity 0 → 1`, `y: 40 → 0`, subtle `scale 0.94 → 1`, easing `[0.22,1,0.36,1]`, duration 900ms
+- Hover: gentle `scale(1.03)` on image, shadow lift, 700ms cubic-bezier
+- Respect `prefers-reduced-motion`
 
-**File: `src/routes/_authenticated.account.admin.plan-your-trip.tsx`**
+### Admin panel
 
-Mirror the same three clip-path shapes on the admin upload thumbnails so previews match the site exactly. Add the same hidden `<svg>` block inside the admin route (or extract a tiny shared component `PlanArchClipDefs` under `src/components/home/` and import in both places — preferred, avoids duplication).
+New route `/account/admin/recent-gallery` (under `_authenticated`, admin-gated like the other admin pages):
+- Edit eyebrow, title
+- Manage exactly **5 fixed slots** (slot 1–5, each mapped to a position in the collage). Admin can upload/replace/remove the image per slot via `mediaService.upload`
+- Save button → persists via `recentGalleryService`
+- Sidebar link added in `src/components/account/sidebar.tsx`
 
-### Cleanup
-- Remove the old `rounded-full` / `rounded-tl-[45%]` etc. classes.
-- No data model change. No animation change. Only shape rendering swaps from `border-radius` to `clipPath`.
+### Data & wiring
+
+- New `src/services/recent-gallery.service.ts` — localStorage-backed (same pattern as `popular-tours.service.ts` / `plan-your-trip.service.ts`), with `defaultRecentGallery` (eyebrow, title, `slots: { id, imageUrl, alt }[]` length 5)
+- Register `recentGalleryQuery` in `src/lib/queries.ts`
+- Export from `src/services/index.ts`
+- New component `src/components/home/recent-gallery.tsx` using Framer Motion `FadeUp`-style stagger
+- Mount in `src/routes/index.tsx` right after the Popular Tours section
+- Register admin route in file-based routing (auto-picked up by TanStack plugin)
+
+### Files to create
+
+- `src/components/home/recent-gallery.tsx`
+- `src/services/recent-gallery.service.ts`
+- `src/routes/_authenticated.account.admin.recent-gallery.tsx`
+
+### Files to edit
+
+- `src/routes/index.tsx` — inject `<RecentGallery />`
+- `src/services/index.ts` — export service
+- `src/lib/queries.ts` — add `recentGalleryQuery`
+- `src/components/account/sidebar.tsx` — add admin link
+
+### Quality bar
+
+- Colors from existing tokens (`ink-900`, `cream-50`) — no hardcoded hex
+- Matches reference typography (script italic eyebrow + bold serif title)
+- Collage tile positions & aspect ratios match the reference visually
+- Smooth staggered entrance, buttery hover, reduced-motion safe
+- Admin flow mirrors existing admin pages for consistency

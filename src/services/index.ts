@@ -32,3 +32,9 @@ export {
   type PopularToursContent,
   type PopularTour,
 } from "./popular-tours.service";
+export {
+  recentGalleryService,
+  defaultRecentGallery,
+  type RecentGalleryContent,
+  type GallerySlot,
+} from "./recent-gallery.service";

@@ -10,6 +10,7 @@ import { TourCategories } from "@/components/home/tour-categories";
 import { PopularDestinations } from "@/components/home/popular-destinations";
 import { PlanYourTrip } from "@/components/home/plan-your-trip";
 import { PopularTours } from "@/components/home/popular-tours";
+import { RecentGallery } from "@/components/home/recent-gallery";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -42,6 +43,7 @@ function Home() {
       <PopularDestinations />
       <PlanYourTrip />
       <PopularTours />
+      <RecentGallery />
       <FeaturedPackages />
       <CollectionsScroll />
       <Testimonial />
