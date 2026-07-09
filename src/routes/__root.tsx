@@ -19,8 +19,7 @@ import { Navbar } from "../components/layout/navbar";
 import { Footer } from "../components/layout/footer";
 import "@fontsource-variable/cormorant-garamond";
 import "@fontsource-variable/inter";
-import "@fontsource/dancing-script/400.css";
-import "@fontsource/dancing-script/700.css";
+import "@fontsource/yellowtail/400.css";
 
 function NotFoundComponent() {
   return (
