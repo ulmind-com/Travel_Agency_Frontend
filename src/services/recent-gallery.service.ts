@@ -4,11 +4,11 @@ export type GallerySlot = {
   alt: string;
 };
 
-import gallery1 from "@/assets/gallery-1_sikkim.png.asset.json";
-import gallery2 from "@/assets/gallery-2_kashmir.png.asset.json";
-import gallery3 from "@/assets/gallery-3_lakshadweep.png.asset.json";
-import gallery4 from "@/assets/gallery-4_darjeeling.png.asset.json";
-import gallery5 from "@/assets/gallery-5_vietnam.png.asset.json";
+import gallery1 from "@/assets/gallery-1_sikkim-clean.jpg";
+import gallery2 from "@/assets/gallery-2_kashmir-clean.jpg";
+import gallery3 from "@/assets/gallery-3_lakshadweep-clean.jpg";
+import gallery4 from "@/assets/gallery-4_darjeeling-clean.jpg";
+import gallery5 from "@/assets/gallery-5_vietnam-clean.jpg";
 
 export type RecentGalleryContent = {
   eyebrow: string;
@@ -16,17 +16,17 @@ export type RecentGalleryContent = {
   slots: GallerySlot[]; // exactly 5
 };
 
-const STORAGE_KEY = "ulmind_recent_gallery_v2";
+const STORAGE_KEY = "ulmind_recent_gallery_v3";
 
 export const defaultRecentGallery: RecentGalleryContent = {
   eyebrow: "Make Your Tour More Pleasure",
   title: "Recent Gallery",
   slots: [
-    { id: "rg-1", imageUrl: gallery1.url, alt: "Sikkim adventure tour" },
-    { id: "rg-2", imageUrl: gallery2.url, alt: "Explore Kashmir" },
-    { id: "rg-3", imageUrl: gallery3.url, alt: "Escape to Lakshadweep island bliss" },
-    { id: "rg-4", imageUrl: gallery4.url, alt: "Darjeeling offbeat travel" },
-    { id: "rg-5", imageUrl: gallery5.url, alt: "Vietnam journey" },
+    { id: "rg-1", imageUrl: gallery1, alt: "Sikkim adventure tour" },
+    { id: "rg-2", imageUrl: gallery2, alt: "Explore Kashmir" },
+    { id: "rg-3", imageUrl: gallery3, alt: "Escape to Lakshadweep island bliss" },
+    { id: "rg-4", imageUrl: gallery4, alt: "Darjeeling offbeat travel" },
+    { id: "rg-5", imageUrl: gallery5, alt: "Vietnam journey" },
   ],
 };
 
