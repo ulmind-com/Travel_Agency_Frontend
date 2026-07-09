@@ -15,3 +15,8 @@ export {
   defaultTourCategories,
   type TourCategory,
 } from "./tour-categories.service";
+export {
+  popularDestinationsService,
+  defaultPopularDestinations,
+  type PopularDestination,
+} from "./popular-destinations.service";
