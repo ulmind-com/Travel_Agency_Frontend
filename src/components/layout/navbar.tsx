@@ -121,7 +121,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-ink-900/5 bg-cream-50 p-6 shadow-[0_30px_60px_-20px_rgba(28,25,23,0.25)] backdrop-blur-xl"
+                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-cream-50/10 bg-cream-50/[0.03] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
                   onMouseEnter={handleEnter}
                   onMouseLeave={handleLeave}
                 >
