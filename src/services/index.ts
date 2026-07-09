@@ -25,5 +25,4 @@ export {
   defaultPlanYourTrip,
   type PlanYourTripContent,
   type PlanFeature,
-  type PlanPhoto,
 } from "./plan-your-trip.service";
