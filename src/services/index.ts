@@ -38,3 +38,9 @@ export {
   type RecentGalleryContent,
   type GallerySlot,
 } from "./recent-gallery.service";
+export {
+  achievementsService,
+  defaultAchievements,
+  type AchievementsContent,
+  type AchievementStat,
+} from "./achievements.service";
