@@ -15,7 +15,12 @@ import {
   type PlanYourTripContent,
 } from "@/services/plan-your-trip.service";
 import { mediaService } from "@/services/media.service";
-import { PLAN_SHAPES } from "@/components/home/plan-your-trip";
+import {
+  getPlanShapeClipStyle,
+  PLAN_SHAPES,
+  PlanShapeClipDefs,
+  type PlanShapeKey,
+} from "@/components/home/plan-your-trip";
 
 export const Route = createFileRoute(
   "/_authenticated/account/admin/plan-your-trip",
@@ -33,7 +38,7 @@ type SlotKey = keyof PlanSlots;
 
 const SLOT_META: Record<
   SlotKey,
-  { label: string; shape: keyof typeof PLAN_SHAPES }
+  { label: string; shape: PlanShapeKey }
 > = {
   arch: { label: "Tall arch (left)", shape: "archTall" },
   circleA: { label: "D-shape (top right)", shape: "dRight" },
@@ -127,7 +132,8 @@ function AdminPlanYourTripPage() {
   const restoreDefaults = () => setC(defaultPlanYourTrip);
 
   return (
-    <div className="bg-cream-50">
+    <div className="relative bg-cream-50">
+      <PlanShapeClipDefs />
       <Container className="py-16">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -311,7 +317,7 @@ function SlotUploader({
   onChange,
 }: {
   label: string;
-  shape: keyof typeof PLAN_SHAPES;
+  shape: PlanShapeKey;
   imageUrl: string;
   onChange: (url: string) => void;
 }) {
@@ -341,10 +347,10 @@ function SlotUploader({
         type="button"
         onClick={() => inputRef.current?.click()}
         className={
-          "relative w-full overflow-hidden bg-cream-100 ring-1 ring-ink-900/5 " +
+          "relative w-full overflow-hidden bg-cream-100 drop-shadow-[0_18px_24px_rgba(28,25,23,0.14)] ring-1 ring-ink-900/5 " +
           s.aspect
         }
-        style={s.style}
+        style={getPlanShapeClipStyle(shape)}
       >
         {imageUrl ? (
           <img
