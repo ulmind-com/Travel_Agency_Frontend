@@ -237,9 +237,16 @@ function SearchCard() {
         <FieldGroup icon={<Users className="size-3.5" />} label="Guests" name="guests" placeholder="2 adults" />
         <button
           type="submit"
-          className="flex h-full items-center justify-center gap-2 rounded-xl bg-cream-50 px-8 py-4 text-[12px] font-semibold uppercase tracking-widest text-ink-900 ring-1 ring-cream-50/30 shadow-lg shadow-cream-50/5 transition-all hover:bg-cream-100 active:scale-95 md:rounded-full md:py-0"
+          className="group relative flex h-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-ink-900 px-8 py-4 text-[12px] font-medium uppercase tracking-widest text-cream-50 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out hover:scale-[1.02] active:scale-[0.98] md:rounded-full md:py-0"
         >
-          Find sanctuary
+          {/* Subtle inner polish */}
+          <div className="absolute inset-0 rounded-[inherit] bg-gradient-to-b from-cream-50/10 to-transparent opacity-50" />
+          {/* Hairline metallic gold border */}
+          <div className="absolute inset-0 rounded-[inherit] border border-gold/30 transition-colors duration-500 group-hover:border-gold/60" />
+          {/* Hover sheen */}
+          <div className="absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-cream-50/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+          <span className="relative">Find sanctuary</span>
+          <ArrowRight className="relative size-4 text-gold transition-transform duration-500 group-hover:translate-x-1" />
         </button>
       </form>
     </div>
