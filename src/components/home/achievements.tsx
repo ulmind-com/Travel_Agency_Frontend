@@ -86,7 +86,7 @@ function StatCircle({ stat, index }: { stat: AchievementStat; index: number }) {
     if (reduced) return;
     if (!hovered) return;
     const controls = animate(rotate, rotate.get() + 360 * 20, {
-      duration: 1.8 * 20,
+      duration: 3.5 * 20,
       ease: "linear",
     });
     return () => controls.stop();
