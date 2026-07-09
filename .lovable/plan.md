@@ -1,37 +1,53 @@
-## Contact page — ultra premium redesign
+Plan: Premium Ulmind mega-menu navbar + Gallery + Blogs
 
-Rebuild `src/routes/contact.tsx` to match the destination-page premium language (full-screen editorial hero, shape section, dark closing band).
+Interpretation of the request
+- The attached screenshot shows a clean horizontal nav: Home, About Us, Destination (with India/International sub-menus), Gallery, Blogs, Contact Us.
+- The user wants the same structure and dropdown behavior, but executed in the Ulmind premium style already established on the home hero and contact page.
+- We will create the missing Gallery and Blogs pages so the new nav links are real.
 
-### 1. Full-screen hero
-- `h-screen min-h-screen` like Home / destination pages.
-- Background: rotating slideshow (3 slides, Ken-Burns zoom, crossfade) reusing hero images (Maldives, Kyoto, Alps) with dark ink gradient overlay.
-- Content bottom-left: breadcrumb `Home · Contact`, eyebrow "The Concierge · Ulmind", huge serif headline using `LetterReveal`:
-  - "Tell us where" / *"you dream of."*
-- Sub-tagline under headline. Meta row: `MapPin` Kolkata · India · Private concierge 24/7.
-- Slide indicators (progress rails + numeric counter) bottom-right — same component style as destination hero.
+Scope
+- Only frontend/presentation changes. No backend or auth changes.
 
-### 2. Editorial "Reach the concierge" section (cream background)
-Two-column grid like destination detail:
-- **Left column**: script line ("A Private Line"), serif H2 "One conversation, an entire journey.", two paragraphs, then three icon-feature blocks:
-  - Phone → Direct concierge line (numbers stacked)
-  - Mail → Written concierge (emails stacked)
-  - MessageCircle → WhatsApp · 09:00–22:00 IST
-  - MapPin → Kolkata studio address
-- **Right column**: form as a floating card with cream ring + heavy drop-shadow, over a soft cream-100 blur blob (like destination shape well).
-  - Fields: Full name, Email, Phone, Dream destination, Message.
-  - Ink-900 pill submit button "Send to concierge" with arrow icon, hover lift.
-  - Keeps existing sonner toast + fake submit; no backend change.
+Changes
 
-### 3. Bank / trust strip (optional light band)
-A slim editorial strip with three trust cues: "Private advisors", "24/7 concierge", "Bespoke itineraries" — small serif, ink-900/60, divider dots.
+1. Redesign `src/components/layout/navbar.tsx`
+   - Keep the Ulmind logo on the left.
+   - Desktop nav items: Home, About Us, Destinations, Gallery, Blogs, Contact Us.
+   - Destinations becomes a mega-dropdown:
+     - Left column: "India" with regions East India, North India, West India, South India.
+     - Right column: "International" with popular regions or top destinations.
+     - Each item links to `/packages` with a destination search filter (or to dedicated destination slug pages where available).
+   - Styling matches the Ulmind premium language:
+     - Cream-50 background, ink-900 text, subtle gold accents, Cormorant Garamond serif headings.
+     - Backdrop blur and 1px ink-900/5 borders on the dropdown card.
+     - Smooth fade/slide open animation, refined hover states, elegant underline cues.
+   - Mobile: full-screen menu with an accordion for the Destinations sub-items.
+   - Preserve auth/account actions on the right (Sign in / Inquire / Account / Admin / Sign out).
 
-### 4. Closing CTA band (dark, ink-900)
-- Full-width dark section with cream text, script line "Ready when you are", serif line "Begin a private conversation.", and a cream pill button that scrolls to the form.
+2. Create `src/routes/gallery.tsx`
+   - Leaf route `/gallery`.
+   - Hero banner + masonry/image-grid gallery section.
+   - Use existing travel assets where possible and add route-specific `head()` metadata.
+   - Premium styling consistent with About and Contact.
 
-### Technical notes
-- Reuse `Container`, `FadeUp`, `LetterReveal`, `PlanShapeClipDefs` already in codebase.
-- Uses existing image imports from `@/assets/hero-slide-*`.
-- No new deps, no backend changes.
-- Head metadata: keep current, add matching `og:image` (first hero slide).
+3. Create `src/routes/blogs.tsx`
+   - Leaf route `/blogs`.
+   - Hero banner + editorial article/blog list grid.
+   - Use placeholder editorial content for now (no CMS backend).
+   - Premium styling and `head()` metadata.
 
-Files touched: `src/routes/contact.tsx` only.
+4. Update `src/routes/about.tsx` if needed
+   - The About page already exists; no content change unless small nav integration polish is required.
+
+5. Update `src/routeTree.gen.ts` automatically
+   - New routes will be picked up by the TanStack Router Vite plugin; no manual edits.
+
+No new dependencies
+- Reuse `framer-motion`, `lucide-react`, `sonner`, existing design tokens, and shared components (`Container`, `FadeUp`, `LetterReveal`).
+
+Verification
+- Run build/typecheck to confirm route generation and imports.
+- Visually verify the dropdown opens/closes on desktop and the mobile accordion works.
+
+Open question
+- The user selected "Current Ulmind labels" in the last question, but the reference screenshot and the request to create Gallery/Blogs pages imply the nav should follow the screenshot structure. This plan uses the screenshot structure (Home, About Us, Destinations, Gallery, Blogs, Contact Us). If you prefer to keep the original Ulmind labels (Destinations, Collections, The Journal, Concierge), we can adjust the plan before building.
