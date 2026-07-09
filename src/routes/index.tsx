@@ -11,6 +11,7 @@ import { PopularDestinations } from "@/components/home/popular-destinations";
 import { PlanYourTrip } from "@/components/home/plan-your-trip";
 import { PopularTours } from "@/components/home/popular-tours";
 import { RecentGallery } from "@/components/home/recent-gallery";
+import { Achievements } from "@/components/home/achievements";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,6 +45,7 @@ function Home() {
       <PlanYourTrip />
       <PopularTours />
       <RecentGallery />
+      <Achievements />
       <FeaturedPackages />
       <CollectionsScroll />
       <Testimonial />
