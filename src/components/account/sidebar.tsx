@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bookmark, CalendarCheck, Compass, Heart, Image, Images, LayoutGrid, MapPin, Sparkles, User, Users } from "lucide-react";
+import { Bookmark, CalendarCheck, Compass, Heart, Image, Images, LayoutGrid, MapPin, Sparkles, Trophy, User, Users } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -19,6 +19,7 @@ const ADMIN_ITEMS = [
   { to: "/account/admin/plan-your-trip", label: "Plan your trip", icon: Compass },
   { to: "/account/admin/popular-tours", label: "Popular tours", icon: Sparkles },
   { to: "/account/admin/recent-gallery", label: "Recent gallery", icon: Images },
+  { to: "/account/admin/achievements", label: "Achievements", icon: Trophy },
 ];
 
 export function AccountSidebar() {
