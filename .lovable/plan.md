@@ -1,53 +1,26 @@
-Plan: Premium Ulmind mega-menu navbar + Gallery + Blogs
+## Goal
+Make the navbar invisible over the hero (as today), and once the user scrolls past the hero, morph it into a floating, rounded **liquid‑glass pill** that stays visible on the cream sections below.
 
-Interpretation of the request
-- The attached screenshot shows a clean horizontal nav: Home, About Us, Destination (with India/International sub-menus), Gallery, Blogs, Contact Us.
-- The user wants the same structure and dropdown behavior, but executed in the Ulmind premium style already established on the home hero and contact page.
-- We will create the missing Gallery and Blogs pages so the new nav links are real.
+## Behavior
+- At the very top (over hero): navbar stays exactly as it is now — transparent, cream text, full width.
+- After scrolling ~80px down: navbar animates into a **centered, rounded pill** that floats near the top of the viewport.
+  - Shrinks in width (max-w ~5xl), gets `rounded-full`, subtle margin from the top.
+  - Liquid glass surface: `bg-ink-900/40` + `backdrop-blur-2xl` + `saturate-150`, hairline `border border-cream-50/15`, soft shadow, inner top-edge highlight.
+  - Text stays cream/light so it reads on both dark blur and cream page.
+  - Smooth transition (opacity, transform, border-radius, width) with `cubic-bezier(0.22,1,0.36,1)` over ~500ms.
+- Scrolling back up to the hero: reverses smoothly to the transparent full-width state.
 
-Scope
-- Only frontend/presentation changes. No backend or auth changes.
+## Implementation (single file)
+`src/components/layout/navbar.tsx`
+- Add a `scrolled` state driven by a `scroll` listener (threshold 80px, passive).
+- Header wrapper: switch between two class sets based on `scrolled`:
+  - Not scrolled: current `fixed inset-x-0 top-0 bg-transparent`.
+  - Scrolled: `fixed top-3 left-1/2 -translate-x-1/2 w-[min(1120px,calc(100%-24px))] rounded-full border border-cream-50/15 bg-ink-900/40 backdrop-blur-2xl shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]` plus a subtle inner top highlight via a pseudo overlay.
+- Inner row: reduce height slightly when scrolled (`h-14 lg:h-16`) and tighten horizontal padding (`px-6 lg:px-8`).
+- Keep all existing links, dropdown, auth actions, and mobile menu untouched — only the shell changes.
+- Ensure the Destinations mega‑dropdown still anchors correctly under the trigger inside the pill (it already uses absolute positioning; unaffected).
+- Mobile: keep current behavior; the pill styling only applies at md+ (mobile keeps a simple full-width translucent bar when scrolled).
 
-Changes
-
-1. Redesign `src/components/layout/navbar.tsx`
-   - Keep the Ulmind logo on the left.
-   - Desktop nav items: Home, About Us, Destinations, Gallery, Blogs, Contact Us.
-   - Destinations becomes a mega-dropdown:
-     - Left column: "India" with regions East India, North India, West India, South India.
-     - Right column: "International" with popular regions or top destinations.
-     - Each item links to `/packages` with a destination search filter (or to dedicated destination slug pages where available).
-   - Styling matches the Ulmind premium language:
-     - Cream-50 background, ink-900 text, subtle gold accents, Cormorant Garamond serif headings.
-     - Backdrop blur and 1px ink-900/5 borders on the dropdown card.
-     - Smooth fade/slide open animation, refined hover states, elegant underline cues.
-   - Mobile: full-screen menu with an accordion for the Destinations sub-items.
-   - Preserve auth/account actions on the right (Sign in / Inquire / Account / Admin / Sign out).
-
-2. Create `src/routes/gallery.tsx`
-   - Leaf route `/gallery`.
-   - Hero banner + masonry/image-grid gallery section.
-   - Use existing travel assets where possible and add route-specific `head()` metadata.
-   - Premium styling consistent with About and Contact.
-
-3. Create `src/routes/blogs.tsx`
-   - Leaf route `/blogs`.
-   - Hero banner + editorial article/blog list grid.
-   - Use placeholder editorial content for now (no CMS backend).
-   - Premium styling and `head()` metadata.
-
-4. Update `src/routes/about.tsx` if needed
-   - The About page already exists; no content change unless small nav integration polish is required.
-
-5. Update `src/routeTree.gen.ts` automatically
-   - New routes will be picked up by the TanStack Router Vite plugin; no manual edits.
-
-No new dependencies
-- Reuse `framer-motion`, `lucide-react`, `sonner`, existing design tokens, and shared components (`Container`, `FadeUp`, `LetterReveal`).
-
-Verification
-- Run build/typecheck to confirm route generation and imports.
-- Visually verify the dropdown opens/closes on desktop and the mobile accordion works.
-
-Open question
-- The user selected "Current Ulmind labels" in the last question, but the reference screenshot and the request to create Gallery/Blogs pages imply the nav should follow the screenshot structure. This plan uses the screenshot structure (Home, About Us, Destinations, Gallery, Blogs, Contact Us). If you prefer to keep the original Ulmind labels (Destinations, Collections, The Journal, Concierge), we can adjust the plan before building.
+## Non-goals
+- No changes to hero, routes, or any other component.
+- No new dependencies.
