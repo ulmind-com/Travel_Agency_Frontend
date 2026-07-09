@@ -5,10 +5,10 @@ import { FadeUp } from "@/components/motion/fade-up";
 import { LetterReveal } from "@/components/motion/letter-reveal";
 
 import heroBg from "@/assets/hero-slide-kyoto.jpg";
-import post1 from "@/assets/gallery-2_kashmir-clean.jpg";
+import post1 from "@/assets/dest-kashmir.jpg";
 import post2 from "@/assets/hero-slide-maldives.jpg";
 import post3 from "@/assets/hero-slide-rajasthan.jpg";
-import post4 from "@/assets/gallery-5_vietnam-clean.jpg";
+import post4 from "@/assets/dest-kerala.jpg";
 
 export const Route = createFileRoute("/blogs")({
   head: () => ({
@@ -63,15 +63,15 @@ const POSTS = [
     date: "April 2026",
   },
   {
-    slug: "north-vietnam-road-notes",
-    title: "North Vietnam Road Notes",
+    slug: "kerala-backwater-notes",
+    title: "Kerala Backwater Notes",
     excerpt:
-      "Rice-terrace curves, mountain mist, and the kindness of strangers in the highlands above Sapa.",
+      "Houseboat rhythms, spice-scented air, and the quiet generosity of the Malabar coast.",
     image: post4,
     category: "Journeys",
     date: "March 2026",
   },
-];
+] as const;
 
 function BlogsPage() {
   return (

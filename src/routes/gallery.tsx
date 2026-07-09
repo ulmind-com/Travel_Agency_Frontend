@@ -3,12 +3,12 @@ import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
 import { LetterReveal } from "@/components/motion/letter-reveal";
 
-import gallery1 from "@/assets/gallery-1_sikkim-clean.jpg";
-import gallery2 from "@/assets/gallery-2_kashmir-clean.jpg";
-import gallery3 from "@/assets/gallery-3_lakshadweep-clean.jpg";
-import gallery4 from "@/assets/gallery-4_darjeeling-clean.jpg";
-import gallery5 from "@/assets/gallery-5_vietnam-clean.jpg";
-import heroBg from "@/assets/hero-slide-rajasthan.jpg";
+import kashmir from "@/assets/dest-kashmir.jpg";
+import kerala from "@/assets/dest-kerala.jpg";
+import ladakh from "@/assets/dest-ladakh.jpg";
+import himachal from "@/assets/dest-himachal.jpg";
+import rajasthan from "@/assets/dest-rajasthan.jpg";
+import andaman from "@/assets/dest-andaman.jpg";
 import alps from "@/assets/hero-slide-alps.jpg";
 import maldives from "@/assets/hero-slide-maldives.jpg";
 import kyoto from "@/assets/hero-slide-kyoto.jpg";
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/gallery")({
         content:
           "A curated visual journal of escapes, landscapes, and quiet moments composed by Ulmind Travel.",
       },
-      { property: "og:image", content: gallery2 },
+      { property: "og:image", content: kashmir },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/gallery" },
     ],
@@ -40,16 +40,17 @@ export const Route = createFileRoute("/gallery")({
 });
 
 const IMAGES = [
-  { src: gallery2, alt: "Kashmir — Snow-dusted pines and silent valleys", location: "Kashmir", span: "md:col-span-2 md:row-span-2" },
-  { src: gallery1, alt: "Sikkim — Prayer flags over high-altitude trails", location: "Sikkim", span: "" },
-  { src: gallery3, alt: "Lakshadweep — Turquoise shallows and coral light", location: "Lakshadweep", span: "md:row-span-2" },
-  { src: gallery4, alt: "Darjeeling — Mist rolling over tea gardens", location: "Darjeeling", span: "" },
-  { src: gallery5, alt: "Vietnam — Limestone karsts at golden hour", location: "Vietnam", span: "md:col-span-2" },
+  { src: kashmir, alt: "Kashmir — Snow-dusted pines and silent valleys", location: "Kashmir", span: "md:col-span-2 md:row-span-2" },
+  { src: himachal, alt: "Himachal — Himalayan ridgelines and cedar forests", location: "Himachal", span: "" },
+  { src: ladakh, alt: "Ladakh — High-altitude light over ancient passes", location: "Ladakh", span: "md:row-span-2" },
+  { src: kerala, alt: "Kerala — Backwaters at dawn and tea-covered hills", location: "Kerala", span: "" },
+  { src: rajasthan, alt: "Rajasthan — Sandstone geometry and desert dusk", location: "Rajasthan", span: "md:col-span-2" },
   { src: alps, alt: "St. Moritz — Alpine stillness above the treeline", location: "St. Moritz", span: "" },
   { src: maldives, alt: "Maldives — Reef mornings over the Indian Ocean", location: "Maldives", span: "md:row-span-2" },
   { src: kyoto, alt: "Kyoto — Bamboo paths and temple gardens", location: "Kyoto", span: "" },
   { src: santorini, alt: "Santorini — Whitewashed curves over the caldera", location: "Santorini", span: "" },
   { src: iceland, alt: "Iceland — Volcanic coast under Arctic light", location: "Iceland", span: "md:col-span-2" },
+  { src: andaman, alt: "Andaman — Mangrove shadows and coral shallows", location: "Andaman", span: "" },
 ];
 
 function GalleryPage() {
@@ -58,7 +59,7 @@ function GalleryPage() {
       {/* Hero */}
       <section className="relative h-[420px] w-full overflow-hidden lg:h-[520px]">
         <img
-          src={heroBg}
+          src={kashmir}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
