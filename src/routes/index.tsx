@@ -1,17 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { CollectionsScroll } from "@/components/home/collections-scroll";
-import { CtaFooter } from "@/components/home/cta-footer";
-import { FeaturedPackages } from "@/components/home/featured-packages";
 import { Hero } from "@/components/home/hero";
 import { StatsRow } from "@/components/home/stats-row";
-import { Testimonial } from "@/components/home/testimonial";
 import { TourCategories } from "@/components/home/tour-categories";
 import { PopularDestinations } from "@/components/home/popular-destinations";
 import { PlanYourTrip } from "@/components/home/plan-your-trip";
 import { PopularTours } from "@/components/home/popular-tours";
 import { RecentGallery } from "@/components/home/recent-gallery";
 import { Achievements } from "@/components/home/achievements";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,10 +43,6 @@ function Home() {
       <PopularTours />
       <RecentGallery />
       <Achievements />
-      <FeaturedPackages />
-      <CollectionsScroll />
-      <Testimonial />
-      <CtaFooter />
     </div>
   );
 }
