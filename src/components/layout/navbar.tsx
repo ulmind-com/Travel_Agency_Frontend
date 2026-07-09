@@ -404,7 +404,7 @@ export function Navbar() {
                     to="/auth/login"
                     className="block rounded-lg bg-ink-900 px-3 py-3 text-center text-sm font-medium text-cream-50"
                   >
-                    Sign in
+                    Inquire
                   </Link>
                 )}
               </div>
