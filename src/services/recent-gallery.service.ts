@@ -16,17 +16,17 @@ export type RecentGalleryContent = {
   slots: GallerySlot[]; // exactly 5
 };
 
-const STORAGE_KEY = "ulmind_recent_gallery_v2";
+const STORAGE_KEY = "ulmind_recent_gallery_v3";
 
 export const defaultRecentGallery: RecentGalleryContent = {
   eyebrow: "Make Your Tour More Pleasure",
   title: "Recent Gallery",
   slots: [
-    { id: "rg-1", imageUrl: gallery1.url, alt: "Sikkim adventure tour" },
-    { id: "rg-2", imageUrl: gallery2.url, alt: "Explore Kashmir" },
-    { id: "rg-3", imageUrl: gallery3.url, alt: "Escape to Lakshadweep island bliss" },
-    { id: "rg-4", imageUrl: gallery4.url, alt: "Darjeeling offbeat travel" },
-    { id: "rg-5", imageUrl: gallery5.url, alt: "Vietnam journey" },
+    { id: "rg-1", imageUrl: gallery1, alt: "Sikkim adventure tour" },
+    { id: "rg-2", imageUrl: gallery2, alt: "Explore Kashmir" },
+    { id: "rg-3", imageUrl: gallery3, alt: "Escape to Lakshadweep island bliss" },
+    { id: "rg-4", imageUrl: gallery4, alt: "Darjeeling offbeat travel" },
+    { id: "rg-5", imageUrl: gallery5, alt: "Vietnam journey" },
   ],
 };
 
