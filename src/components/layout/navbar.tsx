@@ -15,7 +15,7 @@ const NAV = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
@@ -59,6 +59,14 @@ export function Navbar() {
           <span className="h-4 w-px bg-ink-900/10" />
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
+              {isAdmin && (
+                <Link
+                  to="/account/admin/hero"
+                  className="text-[11px] uppercase tracking-widest text-ink-900/50 hover:text-ink-900"
+                >
+                  Admin
+                </Link>
+              )}
               <Link
                 to="/account"
                 className="text-[13px] font-medium text-ink-900 hover:text-ink-900/70"

@@ -25,6 +25,7 @@ import { Route as AuthenticatedAccountTravelersRouteImport } from './routes/_aut
 import { Route as AuthenticatedAccountProfileRouteImport } from './routes/_authenticated.account.profile'
 import { Route as AuthenticatedAccountBookingsRouteImport } from './routes/_authenticated.account.bookings'
 import { Route as AuthenticatedBookSuccessBookingIdRouteImport } from './routes/_authenticated.book.success.$bookingId'
+import { Route as AuthenticatedAccountAdminHeroRouteImport } from './routes/_authenticated.account.admin.hero'
 
 const PackagesRoute = PackagesRouteImport.update({
   id: '/packages',
@@ -111,6 +112,12 @@ const AuthenticatedBookSuccessBookingIdRoute =
     path: '/book/success/$bookingId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAccountAdminHeroRoute =
+  AuthenticatedAccountAdminHeroRouteImport.update({
+    id: '/admin/hero',
+    path: '/admin/hero',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/account/wishlist': typeof AuthenticatedAccountWishlistRoute
   '/book/$id': typeof AuthenticatedBookIdRoute
   '/account/': typeof AuthenticatedAccountIndexRoute
+  '/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
 export interface FileRoutesByTo {
@@ -143,6 +151,7 @@ export interface FileRoutesByTo {
   '/account/wishlist': typeof AuthenticatedAccountWishlistRoute
   '/book/$id': typeof AuthenticatedBookIdRoute
   '/account': typeof AuthenticatedAccountIndexRoute
+  '/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
 export interface FileRoutesById {
@@ -162,6 +171,7 @@ export interface FileRoutesById {
   '/_authenticated/account/wishlist': typeof AuthenticatedAccountWishlistRoute
   '/_authenticated/book/$id': typeof AuthenticatedBookIdRoute
   '/_authenticated/account/': typeof AuthenticatedAccountIndexRoute
+  '/_authenticated/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
   '/_authenticated/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
 export interface FileRouteTypes {
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/account/wishlist'
     | '/book/$id'
     | '/account/'
+    | '/account/admin/hero'
     | '/book/success/$bookingId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/account/wishlist'
     | '/book/$id'
     | '/account'
+    | '/account/admin/hero'
     | '/book/success/$bookingId'
   id:
     | '__root__'
@@ -215,6 +227,7 @@ export interface FileRouteTypes {
     | '/_authenticated/account/wishlist'
     | '/_authenticated/book/$id'
     | '/_authenticated/account/'
+    | '/_authenticated/account/admin/hero'
     | '/_authenticated/book/success/$bookingId'
   fileRoutesById: FileRoutesById
 }
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBookSuccessBookingIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/account/admin/hero': {
+      id: '/_authenticated/account/admin/hero'
+      path: '/admin/hero'
+      fullPath: '/account/admin/hero'
+      preLoaderRoute: typeof AuthenticatedAccountAdminHeroRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
   }
 }
 
@@ -351,6 +371,7 @@ interface AuthenticatedAccountRouteChildren {
   AuthenticatedAccountTravelersRoute: typeof AuthenticatedAccountTravelersRoute
   AuthenticatedAccountWishlistRoute: typeof AuthenticatedAccountWishlistRoute
   AuthenticatedAccountIndexRoute: typeof AuthenticatedAccountIndexRoute
+  AuthenticatedAccountAdminHeroRoute: typeof AuthenticatedAccountAdminHeroRoute
 }
 
 const AuthenticatedAccountRouteChildren: AuthenticatedAccountRouteChildren = {
@@ -359,6 +380,7 @@ const AuthenticatedAccountRouteChildren: AuthenticatedAccountRouteChildren = {
   AuthenticatedAccountTravelersRoute: AuthenticatedAccountTravelersRoute,
   AuthenticatedAccountWishlistRoute: AuthenticatedAccountWishlistRoute,
   AuthenticatedAccountIndexRoute: AuthenticatedAccountIndexRoute,
+  AuthenticatedAccountAdminHeroRoute: AuthenticatedAccountAdminHeroRoute,
 }
 
 const AuthenticatedAccountRouteWithChildren =

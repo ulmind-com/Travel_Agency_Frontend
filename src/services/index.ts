@@ -8,3 +8,5 @@ export { reviewsService } from "./reviews.service";
 export { travelersService } from "./travelers.service";
 export { recommendationsService } from "./recommendations.service";
 export { waitlistService } from "./waitlist.service";
+export { mediaService } from "./media.service";
+export { heroSlidesService, defaultHeroSlides, type HeroSlide } from "./hero-slides.service";
