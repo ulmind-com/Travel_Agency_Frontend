@@ -1,14 +1,39 @@
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-import heroImg from "@/assets/hero-slide-iceland.jpg";
+import hero1 from "@/assets/hero-slide-iceland.jpg";
+import hero2 from "@/assets/hero-slide-alps.jpg";
+import hero3 from "@/assets/hero-slide-rajasthan.jpg";
+import hero4 from "@/assets/hero-slide-santorini.jpg";
+import hero5 from "@/assets/hero-slide-maldives.jpg";
+import hero6 from "@/assets/hero-slide-kyoto.jpg";
+
+const bgImages = [hero1, hero2, hero3, hero4, hero5, hero6];
+const SLIDE_DURATION_MS = 6500;
 
 export function AuthShell({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const t = window.setInterval(() => {
+      setIndex((i) => (i + 1) % bgImages.length);
+    }, SLIDE_DURATION_MS);
+    return () => window.clearInterval(t);
+  }, []);
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-ink-900 px-6 py-16">
-      {/* Background image */}
+      {/* Background slideshow */}
       <div className="absolute inset-0">
-        <img src={heroImg} alt="" className="h-full w-full object-cover" />
+        {bgImages.map((img, i) => (
+          <img
+            key={img}
+            src={img}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ opacity: i === index ? 1 : 0 }}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-b from-ink-900/50 via-ink-900/25 to-ink-900/80" />
         <div className="absolute inset-0 bg-ink-900/20 backdrop-blur-[2px]" />
       </div>
