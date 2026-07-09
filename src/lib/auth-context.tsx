@@ -18,6 +18,7 @@ import type { UserResponse } from "@/types/api";
 type AuthContextValue = {
   user: UserResponse | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
   refresh: () => Promise<void>;
   logout: () => void;
@@ -58,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user: hasToken ? data ?? null : null,
       isAuthenticated: hasToken && Boolean(data),
+      isAdmin: hasToken && data?.role === "ADMIN",
       isLoading: hasToken && isLoading,
       refresh: async () => {
         await refetch();
