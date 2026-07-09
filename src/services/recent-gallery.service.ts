@@ -16,7 +16,7 @@ export type RecentGalleryContent = {
   slots: GallerySlot[]; // exactly 5
 };
 
-const STORAGE_KEY = "ulmind_recent_gallery_v3";
+const STORAGE_KEY = "ulmind_recent_gallery_v4";
 
 export const defaultRecentGallery: RecentGalleryContent = {
   eyebrow: "Make Your Tour More Pleasure",
