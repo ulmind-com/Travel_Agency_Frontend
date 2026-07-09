@@ -70,13 +70,13 @@ function RegisterPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-full bg-ink-900 py-4 text-[12px] font-medium uppercase tracking-widest text-cream-50 disabled:opacity-50"
+          className="w-full rounded-full bg-cream-50 py-4 text-[12px] font-medium uppercase tracking-widest text-ink-900 transition-all duration-300 hover:bg-cream-100 hover:shadow-lg disabled:opacity-50"
         >
           {isSubmitting ? "Creating…" : "Create account"}
         </button>
-        <p className="text-center text-sm text-ink-900/60">
+        <p className="text-center text-sm text-cream-50/60">
           Already a member?{" "}
-          <Link to="/auth/login" className="text-ink-900 underline underline-offset-4">
+          <Link to="/auth/login" className="text-cream-50 underline underline-offset-4 transition-colors hover:text-gold">
             Sign in
           </Link>
         </p>
