@@ -19,7 +19,7 @@ import { Navbar } from "../components/layout/navbar";
 import { Footer } from "../components/layout/footer";
 import "@fontsource-variable/cormorant-garamond";
 import "@fontsource-variable/inter";
-import "@fontsource/yellowtail/400.css";
+import "@fontsource/pinyon-script/400.css";
 
 function NotFoundComponent() {
   return (
