@@ -4,12 +4,6 @@ import { ArrowRight, Compass, UserRound } from "lucide-react";
 
 import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
-import {
-  PLAN_SHAPES,
-  PlanShapeClipDefs,
-  getPlanShapeClipStyle,
-  type PlanShapeKey,
-} from "@/components/home/plan-your-trip";
 import heroBg from "@/assets/hero-slide-maldives.jpg";
 import shapeAlps from "@/assets/hero-slide-alps.jpg";
 import shapeKyoto from "@/assets/hero-slide-kyoto.jpg";
@@ -37,20 +31,30 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
-function ShapePhoto({ imageUrl, shape }: { imageUrl: string; shape: PlanShapeKey }) {
-  const s = PLAN_SHAPES[shape];
+function RoundedPhoto({
+  imageUrl,
+  className = "",
+  aspect = "aspect-[4/5]",
+}: {
+  imageUrl: string;
+  className?: string;
+  aspect?: string;
+}) {
   return (
     <div
       className={
-        "relative w-full drop-shadow-[0_30px_35px_rgba(28,25,23,0.18)] " + s.aspect
+        "relative w-full overflow-hidden rounded-3xl bg-cream-100 ring-1 ring-ink-900/5 shadow-[0_30px_60px_-25px_rgba(28,25,23,0.35)] " +
+        aspect +
+        " " +
+        className
       }
     >
-      <div
-        className="h-full w-full overflow-hidden bg-cream-100 ring-1 ring-ink-900/5"
-        style={getPlanShapeClipStyle(shape)}
-      >
-        <img src={imageUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
-      </div>
+      <img
+        src={imageUrl}
+        alt=""
+        loading="lazy"
+        className="h-full w-full object-cover"
+      />
     </div>
   );
 }
@@ -80,7 +84,6 @@ function AboutPage() {
 
       {/* Shape collage section */}
       <section className="relative bg-cream-50 py-24 lg:py-32">
-        <PlanShapeClipDefs />
         <Container>
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center lg:gap-24">
             <div className="relative order-2 lg:order-1">
@@ -88,18 +91,28 @@ function AboutPage() {
                 aria-hidden
                 className="pointer-events-none absolute -left-16 top-10 hidden size-64 rounded-full bg-cream-100/80 blur-3xl lg:block"
               />
-              <div className="relative mx-auto grid max-w-[620px] grid-cols-2 gap-4 sm:gap-5">
-                <FadeUp>
-                  <ShapePhoto imageUrl={shapeAlps} shape="archTall" />
+              <div className="relative mx-auto h-[560px] w-full max-w-[560px] sm:h-[640px]">
+                {/* Top-left tall */}
+                <FadeUp className="absolute left-0 top-0 w-[55%]">
+                  <RoundedPhoto imageUrl={shapeAlps} aspect="aspect-[4/5]" />
                 </FadeUp>
-                <div className="flex flex-col gap-4 sm:gap-5">
-                  <FadeUp delay={0.08}>
-                    <ShapePhoto imageUrl={shapeKyoto} shape="dRight" />
-                  </FadeUp>
-                  <FadeUp delay={0.16}>
-                    <ShapePhoto imageUrl={shapeRajasthan} shape="archBottom" />
-                  </FadeUp>
-                </div>
+                {/* Middle-right, offset down */}
+                <FadeUp
+                  delay={0.08}
+                  className="absolute right-0 top-[26%] w-[55%]"
+                >
+                  <RoundedPhoto imageUrl={shapeKyoto} aspect="aspect-[4/5]" />
+                </FadeUp>
+                {/* Bottom-left */}
+                <FadeUp
+                  delay={0.16}
+                  className="absolute bottom-0 left-[8%] w-[50%]"
+                >
+                  <RoundedPhoto
+                    imageUrl={shapeRajasthan}
+                    aspect="aspect-[5/4]"
+                  />
+                </FadeUp>
               </div>
             </div>
 
