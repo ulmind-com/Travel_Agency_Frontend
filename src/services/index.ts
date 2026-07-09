@@ -10,3 +10,8 @@ export { recommendationsService } from "./recommendations.service";
 export { waitlistService } from "./waitlist.service";
 export { mediaService } from "./media.service";
 export { heroSlidesService, defaultHeroSlides, type HeroSlide } from "./hero-slides.service";
+export {
+  tourCategoriesService,
+  defaultTourCategories,
+  type TourCategory,
+} from "./tour-categories.service";
