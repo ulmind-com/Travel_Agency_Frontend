@@ -55,11 +55,11 @@ function LoginPage() {
 
   return (
     <AuthShell subtitle="Private members" title="Welcome back">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" autoComplete="off">
         <Field label="Email" error={errors.email?.message}>
           <input
             type="email"
-            autoComplete="email"
+            autoComplete="off"
             placeholder="you@domain.com"
             {...register("email")}
             className={inputClass}
@@ -68,7 +68,7 @@ function LoginPage() {
         <Field label="Password" error={errors.password?.message}>
           <input
             type="password"
-            autoComplete="current-password"
+            autoComplete="new-password"
             placeholder="Your password"
             {...register("password")}
             className={inputClass}
