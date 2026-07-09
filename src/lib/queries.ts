@@ -14,6 +14,7 @@ import { heroSlidesService } from "@/services/hero-slides.service";
 import { tourCategoriesService } from "@/services/tour-categories.service";
 import { popularDestinationsService } from "@/services/popular-destinations.service";
 import { planYourTripService } from "@/services/plan-your-trip.service";
+import { popularToursService } from "@/services/popular-tours.service";
 
 export const authKeys = {
   me: ["auth", "me"] as const,
@@ -110,5 +111,12 @@ export const planYourTripQuery = () =>
   queryOptions({
     queryKey: ["plan-your-trip"] as const,
     queryFn: () => planYourTripService.get(),
+    staleTime: 60_000,
+  });
+
+export const popularToursQuery = () =>
+  queryOptions({
+    queryKey: ["popular-tours"] as const,
+    queryFn: () => popularToursService.get(),
     staleTime: 60_000,
   });
