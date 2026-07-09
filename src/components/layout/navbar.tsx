@@ -29,7 +29,6 @@ const INTERNATIONAL = [
 ] as const;
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileDestOpen, setMobileDestOpen] = useState(false);
@@ -38,20 +37,10 @@ export function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const isHome = pathname === "/";
-  const isScrolled = scrolled || !isHome;
-
   useEffect(() => {
     setMobileOpen(false);
     setDesktopOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Close desktop dropdown when clicking outside
   useEffect(() => {
@@ -76,20 +65,12 @@ export function Navbar() {
 
   return (
     <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        isScrolled
-          ? "bg-cream-50/95 backdrop-blur-xl border-b border-ink-900/5 shadow-[0_4px_30px_-10px_rgba(28,25,23,0.08)]"
-          : "bg-transparent",
-      )}
+      className="fixed inset-x-0 top-0 z-50 transition-all duration-500 bg-transparent"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-6 lg:h-20 lg:px-10">
         <Link
           to="/"
-          className={cn(
-            "min-w-0 truncate font-serif text-2xl tracking-tight transition-colors lg:text-3xl",
-            isScrolled ? "text-ink-900" : "text-cream-50",
-          )}
+          className="min-w-0 truncate font-serif text-2xl tracking-tight transition-colors lg:text-3xl text-cream-50"
         >
           Ulmind
         </Link>
@@ -100,18 +81,8 @@ export function Navbar() {
             <Link
               key={item.label}
               to={item.to}
-              className={cn(
-                "relative px-4 py-2 text-[13px] font-medium transition-colors",
-                isScrolled
-                  ? "text-ink-900/70 hover:text-ink-900"
-                  : "text-cream-50/80 hover:text-cream-50",
-              )}
-              activeProps={{
-                className: cn(
-                  "text-ink-900",
-                  !isScrolled && "text-cream-50",
-                ),
-              }}
+              className="relative px-4 py-2 text-[13px] font-medium transition-colors text-cream-50/80 hover:text-cream-50"
+              activeProps={{ className: "text-cream-50" }}
               activeOptions={{ exact: item.to === "/" }}
             >
               {item.label}
@@ -130,11 +101,8 @@ export function Navbar() {
               onFocus={handleEnter}
               onBlur={handleLeave}
               className={cn(
-                "flex items-center gap-1 px-4 py-2 text-[13px] font-medium transition-colors",
-                isScrolled
-                  ? "text-ink-900/70 hover:text-ink-900"
-                  : "text-cream-50/80 hover:text-cream-50",
-                desktopOpen && (isScrolled ? "text-ink-900" : "text-cream-50"),
+                "flex items-center gap-1 px-4 py-2 text-[13px] font-medium transition-colors text-cream-50/80 hover:text-cream-50",
+                desktopOpen && "text-cream-50",
               )}
             >
               Destinations
@@ -229,47 +197,27 @@ export function Navbar() {
 
         {/* Right actions */}
         <div className="hidden items-center gap-4 md:flex">
-          <span
-            className={cn(
-              "h-4 w-px",
-              isScrolled ? "bg-ink-900/10" : "bg-cream-50/20",
-            )}
-          />
+          <span className="h-4 w-px bg-cream-50/20" />
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
               {isAdmin && (
                 <Link
                   to="/account/admin/hero"
-                  className={cn(
-                    "text-[11px] uppercase tracking-widest transition-colors",
-                    isScrolled
-                      ? "text-ink-900/50 hover:text-ink-900"
-                      : "text-cream-50/60 hover:text-cream-50",
-                  )}
+                  className="text-[11px] uppercase tracking-widest transition-colors text-cream-50/60 hover:text-cream-50"
                 >
                   Admin
                 </Link>
               )}
               <Link
                 to="/account"
-                className={cn(
-                  "text-[13px] font-medium transition-colors",
-                  isScrolled
-                    ? "text-ink-900 hover:text-ink-900/70"
-                    : "text-cream-50 hover:text-cream-50/80",
-                )}
+                className="text-[13px] font-medium transition-colors text-cream-50 hover:text-cream-50/80"
               >
                 {user?.name?.split(" ")[0] ?? "Account"}
               </Link>
               <button
                 type="button"
                 onClick={logout}
-                className={cn(
-                  "text-[12px] uppercase tracking-widest transition-colors",
-                  isScrolled
-                    ? "text-ink-900/50 hover:text-ink-900"
-                    : "text-cream-50/60 hover:text-cream-50",
-                )}
+                className="text-[12px] uppercase tracking-widest transition-colors text-cream-50/60 hover:text-cream-50"
               >
                 Sign out
               </button>
@@ -277,12 +225,7 @@ export function Navbar() {
           ) : (
             <Link
               to="/auth/login"
-              className={cn(
-                "rounded-full px-5 py-2 text-[12px] font-medium uppercase tracking-widest ring-1 transition-transform active:scale-95",
-                isScrolled
-                  ? "bg-ink-900 text-cream-50 ring-ink-900"
-                  : "bg-cream-50 text-ink-900 ring-cream-50/30 hover:bg-cream-50/90",
-              )}
+              className="rounded-full px-5 py-2 text-[12px] font-medium uppercase tracking-widest ring-1 transition-transform active:scale-95 bg-transparent text-cream-50 ring-cream-50/30 hover:bg-cream-50/10"
             >
               Inquire
             </Link>
@@ -294,12 +237,7 @@ export function Navbar() {
           type="button"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           onClick={() => setMobileOpen((v) => !v)}
-          className={cn(
-            "grid size-10 place-items-center rounded-full ring-1 md:hidden",
-            isScrolled
-              ? "ring-ink-900/15 text-ink-900"
-              : "ring-cream-50/30 text-cream-50",
-          )}
+          className="grid size-10 place-items-center rounded-full ring-1 md:hidden ring-cream-50/30 text-cream-50"
         >
           {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
         </button>
