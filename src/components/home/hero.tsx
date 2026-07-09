@@ -220,21 +220,29 @@ export function Hero() {
 
 function SearchCard() {
   return (
-    <form
-      action="/packages"
-      method="get"
-      className="mt-10 grid gap-2 rounded-3xl bg-cream-50/95 p-2 shadow-[0_10px_40px_-15px_rgba(28,25,23,0.35)] ring-1 ring-black/5 backdrop-blur-xl md:grid-cols-[1fr_1fr_1fr_auto]"
-    >
-      <FieldGroup icon={<MapPin className="size-3.5" />} label="Where" name="destination" placeholder="Any destination" />
-      <FieldGroup icon={<Calendar className="size-3.5" />} label="When" name="when" placeholder="Add dates" type="text" />
-      <FieldGroup icon={<Users className="size-3.5" />} label="Guests" name="guests" placeholder="2 adults" />
-      <button
-        type="submit"
-        className="flex items-center justify-center gap-2 rounded-2xl bg-ink-900 px-8 py-4 text-[12px] font-medium uppercase tracking-widest text-cream-50 ring-1 ring-ink-900 transition-transform active:scale-95"
+    <div className="relative mt-10">
+      {/* Soft ambient glow behind the glass */}
+      <div className="absolute -inset-4 rounded-[3rem] bg-gold/10 blur-3xl" />
+
+      {/* Decorative liquid highlight along the top edge */}
+      <div className="pointer-events-none absolute top-0 left-1/2 z-10 h-[1px] w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-cream-50/20 to-transparent" />
+
+      <form
+        action="/packages"
+        method="get"
+        className="relative flex flex-col items-stretch gap-0 rounded-2xl border border-cream-50/10 bg-cream-50/5 p-2 shadow-2xl ring-1 ring-inset ring-cream-50/5 backdrop-blur-2xl md:flex-row md:rounded-full"
       >
-        Find sanctuary
-      </button>
-    </form>
+        <FieldGroup icon={<MapPin className="size-3.5" />} label="Where" name="destination" placeholder="Any destination" />
+        <FieldGroup icon={<Calendar className="size-3.5" />} label="When" name="when" placeholder="Add dates" type="text" />
+        <FieldGroup icon={<Users className="size-3.5" />} label="Guests" name="guests" placeholder="2 adults" />
+        <button
+          type="submit"
+          className="flex h-full items-center justify-center gap-2 rounded-xl bg-cream-50 px-8 py-4 text-[12px] font-semibold uppercase tracking-widest text-ink-900 ring-1 ring-cream-50/30 shadow-lg shadow-cream-50/5 transition-all hover:bg-cream-100 active:scale-95 md:rounded-full md:py-0"
+        >
+          Find sanctuary
+        </button>
+      </form>
+    </div>
   );
 }
 
@@ -252,15 +260,15 @@ function FieldGroup({
   type?: string;
 }) {
   return (
-    <label className="group flex flex-col rounded-2xl px-5 py-3 transition-colors hover:bg-cream-100">
-      <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-ink-900/40">
+    <label className="group flex flex-1 flex-col justify-center border-b border-cream-50/10 px-6 py-4 transition-colors hover:bg-cream-50/[0.03] last:border-b-0 md:border-b-0 md:border-r md:px-8 md:last:border-r-0">
+      <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-cream-50/40">
         {icon} {label}
       </span>
       <input
         name={name}
         type={type}
         placeholder={placeholder}
-        className="mt-1 w-full border-none bg-transparent p-0 text-sm font-medium text-ink-900 placeholder:text-ink-900/30 focus:outline-none focus:ring-0"
+        className="mt-1 w-full border-none bg-transparent p-0 text-base font-light text-cream-50 placeholder:text-cream-50/30 focus:outline-none focus:ring-0"
       />
     </label>
   );
