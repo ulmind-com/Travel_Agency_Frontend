@@ -20,9 +20,12 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
 
       {/* Liquid glass card */}
       <div className="relative z-10 w-full max-w-[440px]">
-        <div className="relative overflow-hidden rounded-[2rem] border border-cream-50/10 bg-cream-50/[0.03] p-8 shadow-2xl ring-1 ring-inset ring-cream-50/5 backdrop-blur-3xl md:p-10">
+        <div className="relative overflow-hidden rounded-[2rem] border border-cream-50/15 bg-gradient-to-b from-cream-50/[0.07] to-cream-50/[0.02] p-8 shadow-2xl shadow-ink-900/30 ring-1 ring-inset ring-cream-50/5 backdrop-blur-3xl md:p-10">
           {/* Decorative liquid highlight along the top edge */}
-          <div className="pointer-events-none absolute top-0 left-1/2 z-10 h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-cream-50/25 to-transparent" />
+          <div className="pointer-events-none absolute top-0 left-1/2 z-10 h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-cream-50/30 to-transparent" />
+
+          {/* Subtle inner sheen */}
+          <div className="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-cream-50/5 blur-3xl" />
 
           {/* Logo */}
           <Link to="/" className="mb-6 flex items-center justify-center">
