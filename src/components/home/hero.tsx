@@ -237,16 +237,16 @@ function SearchCard() {
         <FieldGroup icon={<Users className="size-3.5" />} label="Guests" name="guests" placeholder="2 adults" />
         <button
           type="submit"
-          className="group relative flex h-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-ink-900 px-8 py-4 text-[12px] font-medium uppercase tracking-widest text-cream-50 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out hover:scale-[1.02] active:scale-[0.98] md:rounded-full md:py-0"
+          className="group relative flex h-full items-center justify-between gap-4 overflow-hidden rounded-xl bg-ink-900/80 px-6 py-4 text-[11px] font-medium uppercase tracking-[0.3em] text-cream-50/90 shadow-[0_0_20px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-500 hover:scale-[1.02] hover:bg-ink-800/90 active:scale-[0.98] md:rounded-full"
         >
-          {/* Subtle inner polish */}
-          <div className="absolute inset-0 rounded-[inherit] bg-gradient-to-b from-cream-50/10 to-transparent opacity-50" />
-          {/* Hairline metallic gold border */}
-          <div className="absolute inset-0 rounded-[inherit] border border-gold/30 transition-colors duration-500 group-hover:border-gold/60" />
-          {/* Hover sheen */}
-          <div className="absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-cream-50/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
-          <span className="relative">Find sanctuary</span>
-          <ArrowRight className="relative size-4 text-gold transition-transform duration-500 group-hover:translate-x-1" />
+          {/* Luminous hairline border */}
+          <div className="absolute inset-0 rounded-[inherit] border border-cream-50/10 transition-colors duration-500 group-hover:border-gold/40" />
+          <span className="relative z-10">Find sanctuary</span>
+          <div className="relative z-10 flex size-6 items-center justify-center">
+            <ArrowRight className="size-4 text-gold transition-transform duration-500 group-hover:translate-x-1" strokeWidth={1.5} />
+          </div>
+          {/* Champagne shimmer */}
+          <div className="absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-cream-50/[0.03] to-transparent transition-transform duration-1000 ease-in-out group-hover:translate-x-full" />
         </button>
       </form>
     </div>
