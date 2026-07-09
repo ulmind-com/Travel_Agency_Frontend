@@ -105,7 +105,7 @@ export function RecentGallery() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="font-serif text-2xl italic text-ink-900/70 sm:text-3xl"
+            className="font-script text-2xl text-ink-900/70 sm:text-3xl"
           >
             {content.eyebrow}
           </motion.p>
