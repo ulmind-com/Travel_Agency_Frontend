@@ -1,41 +1,37 @@
-## Goal
+## Contact page — ultra premium redesign
 
-"Let's Go Together" section er `Learn More` button click korle `/about` page e nibe. Sei About page e:
-1. Boro hero banner (2nd screenshot er moto — dark blue overlay er upor "About" title + `Home → About` breadcrumb, full-width, screen-jure)
-2. Tar niche shape/collage section (1st screenshot er moto — home er `PlanYourTrip` component ei duplicate visual: 3 rounded shape collage + script eyebrow + boro heading + 2 feature (Exclusive Trip / Professional Guide) + Contact With Us button)
+Rebuild `src/routes/contact.tsx` to match the destination-page premium language (full-screen editorial hero, shape section, dark closing band).
 
-## Changes
+### 1. Full-screen hero
+- `h-screen min-h-screen` like Home / destination pages.
+- Background: rotating slideshow (3 slides, Ken-Burns zoom, crossfade) reusing hero images (Maldives, Kyoto, Alps) with dark ink gradient overlay.
+- Content bottom-left: breadcrumb `Home · Contact`, eyebrow "The Concierge · Ulmind", huge serif headline using `LetterReveal`:
+  - "Tell us where" / *"you dream of."*
+- Sub-tagline under headline. Meta row: `MapPin` Kolkata · India · Private concierge 24/7.
+- Slide indicators (progress rails + numeric counter) bottom-right — same component style as destination hero.
 
-### 1. `src/components/home/plan-your-trip.tsx`
-- `Link` `to={content.ctaHref}` → hardcode `to="/about"` (or ensure ctaHref points to `/about`) so "Learn More" always goes to About page.
+### 2. Editorial "Reach the concierge" section (cream background)
+Two-column grid like destination detail:
+- **Left column**: script line ("A Private Line"), serif H2 "One conversation, an entire journey.", two paragraphs, then three icon-feature blocks:
+  - Phone → Direct concierge line (numbers stacked)
+  - Mail → Written concierge (emails stacked)
+  - MessageCircle → WhatsApp · 09:00–22:00 IST
+  - MapPin → Kolkata studio address
+- **Right column**: form as a floating card with cream ring + heavy drop-shadow, over a soft cream-100 blur blob (like destination shape well).
+  - Fields: Full name, Email, Phone, Dream destination, Message.
+  - Ink-900 pill submit button "Send to concierge" with arrow icon, hover lift.
+  - Keeps existing sonner toast + fake submit; no backend change.
 
-### 2. `src/routes/about.tsx` (rewrite entirely)
-Replace current minimal About page with:
+### 3. Bank / trust strip (optional light band)
+A slim editorial strip with three trust cues: "Private advisors", "24/7 concierge", "Bespoke itineraries" — small serif, ink-900/60, divider dots.
 
-**Hero section (like screenshot 2):**
-- Full-width banner, ~h-[420px] / lg:h-[520px]
-- Background: existing hero image (`hero-slide-maldives.jpg` — ocean/atoll matches reference) with dark blue gradient overlay (`from-ink-900/70`)
-- Centered: `<h1>About</h1>` big bold sans (font-sans font-bold text-6xl/7xl text-cream-50)
-- Below: breadcrumb `Home → About` (Link Home, arrow icon, About) in cream-50
+### 4. Closing CTA band (dark, ink-900)
+- Full-width dark section with cream text, script line "Ready when you are", serif line "Begin a private conversation.", and a cream pill button that scrolls to the form.
 
-**Shape/collage section (like screenshot 1):**
-- Reuse the exact visual pattern from `PlanYourTrip` component: 2-column grid, left = 3 clipped shape photos collage (archTall + dRight + archBottom via `PlanShapeClipDefs` + `getPlanShapeClipStyle`), right = copy.
-- Right column content (About-specific, not from plan-your-trip service):
-  - Eyebrow (font-script): "Welcome To Ulmind Travel"
-  - Heading (font-serif): "Explore the World with a Trusted Travel Partner"
-  - 2 description paragraphs
-  - 2 features with icons (Compass = "Exclusive Trip", UserRound = "Professional Guide"), same dark rounded-2xl icon box as PlanYourTrip
-  - "Contact With Us" pill button → `/contact`
-- Import shape clip helpers + `PlanShapeClipDefs` from `@/components/home/plan-your-trip`, or extract to a shared module. Simplest: import the named exports already exported (`PLAN_SHAPES`, `getPlanShapeClipStyle`, `PlanShapeClipDefs`) from plan-your-trip.tsx.
-- Use 3 tour images from `@/assets` (mountain/lake/temple style to match reference feel — e.g. hero-slide-alps, hero-slide-kyoto, hero-slide-rajasthan).
+### Technical notes
+- Reuse `Container`, `FadeUp`, `LetterReveal`, `PlanShapeClipDefs` already in codebase.
+- Uses existing image imports from `@/assets/hero-slide-*`.
+- No new deps, no backend changes.
+- Head metadata: keep current, add matching `og:image` (first hero slide).
 
-**Head metadata:** keep About-specific title/description/og tags (update to Ulmind about copy).
-
-### 3. Route
-`/about` route already exists — no route creation needed. Navbar already links to it.
-
-## Scope
-
-- Existing home sections untouched except the one Link `to` change.
-- No backend / no service changes.
-- Uses existing design tokens (font-script, font-serif, ink-900, cream-50) — no new colors.
+Files touched: `src/routes/contact.tsx` only.
