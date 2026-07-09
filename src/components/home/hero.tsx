@@ -239,8 +239,6 @@ function SearchCard() {
           type="submit"
           className="group relative flex h-full translate-y-1 items-center justify-between gap-4 overflow-hidden rounded-xl border border-cream-50/10 bg-cream-50/[0.03] px-6 py-4 text-[11px] font-medium uppercase tracking-[0.3em] text-cream-50/90 shadow-[0_0_20px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-500 hover:scale-[1.02] hover:border-cream-50/20 hover:bg-cream-50/5 active:scale-[0.98] md:rounded-full"
         >
-          {/* Luminous hairline border */}
-          <div className="absolute inset-0 rounded-[inherit] border border-cream-50/10 transition-colors duration-500 group-hover:border-gold/40" />
           <span className="relative z-10">Find sanctuary</span>
           <div className="relative z-10 flex size-6 items-center justify-center">
             <ArrowRight className="size-4 text-gold transition-transform duration-500 group-hover:translate-x-1" strokeWidth={1.5} />
