@@ -6,6 +6,7 @@ import { FeaturedPackages } from "@/components/home/featured-packages";
 import { Hero } from "@/components/home/hero";
 import { StatsRow } from "@/components/home/stats-row";
 import { Testimonial } from "@/components/home/testimonial";
+import { TourCategories } from "@/components/home/tour-categories";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,6 +35,7 @@ function Home() {
     <div className="flex flex-col">
       <Hero />
       <StatsRow />
+      <TourCategories />
       <FeaturedPackages />
       <CollectionsScroll />
       <Testimonial />
