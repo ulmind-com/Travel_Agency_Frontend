@@ -40,7 +40,7 @@ export function Hero() {
   const slides = useHeroSlides();
   const reduced = usePrefersReducedMotion();
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [focused, setFocused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const total = slides.length;
@@ -63,18 +63,22 @@ export function Hero() {
 
   // Autoplay
   useEffect(() => {
-    if (reduced || paused || total <= 1) return;
+    if (reduced || focused || total <= 1) return;
     const t = window.setTimeout(next, SLIDE_DURATION_MS);
     return () => window.clearTimeout(t);
-  }, [next, paused, reduced, index, total]);
+  }, [next, focused, reduced, index, total]);
 
   return (
     <section
       className="relative h-[92vh] min-h-[720px] w-full overflow-hidden bg-ink-900"
       aria-roledescription="carousel"
       aria-label="Featured destinations"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setFocused(false);
+        }
+      }}
       onTouchStart={(e) => {
         touchStartX.current = e.touches[0]?.clientX ?? null;
       }}
@@ -176,7 +180,7 @@ export function Hero() {
                 scaleY: i < index ? 1 : i === index ? 1 : 0,
               }}
               transition={
-                i === index && !paused && !reduced
+                i === index && !focused && !reduced
                   ? { duration: SLIDE_DURATION_MS / 1000, ease: "linear" }
                   : { duration: 0.3 }
               }
