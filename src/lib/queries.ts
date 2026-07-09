@@ -15,6 +15,7 @@ import { tourCategoriesService } from "@/services/tour-categories.service";
 import { popularDestinationsService } from "@/services/popular-destinations.service";
 import { planYourTripService } from "@/services/plan-your-trip.service";
 import { popularToursService } from "@/services/popular-tours.service";
+import { recentGalleryService } from "@/services/recent-gallery.service";
 
 export const authKeys = {
   me: ["auth", "me"] as const,
@@ -118,5 +119,12 @@ export const popularToursQuery = () =>
   queryOptions({
     queryKey: ["popular-tours"] as const,
     queryFn: () => popularToursService.get(),
+    staleTime: 60_000,
+  });
+
+export const recentGalleryQuery = () =>
+  queryOptions({
+    queryKey: ["recent-gallery"] as const,
+    queryFn: () => recentGalleryService.get(),
     staleTime: 60_000,
   });
