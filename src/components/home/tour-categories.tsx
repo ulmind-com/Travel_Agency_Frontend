@@ -79,7 +79,7 @@ export function TourCategories() {
     <section className="bg-cream-50 py-24">
       <Container className="text-center">
         <FadeUp>
-          <p className="font-serif text-3xl italic text-ink-900/80 sm:text-4xl">
+          <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
             Wonderful Place For You
           </p>
           <h2 className="mt-3 font-serif text-5xl font-medium text-ink-900 sm:text-6xl">

@@ -140,7 +140,7 @@ export function PlanYourTrip() {
           {/* Copy */}
           <div className="order-1 lg:order-2">
             <FadeUp>
-              <p className="font-serif text-3xl italic text-ink-900/80 sm:text-4xl">
+              <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
                 {content.eyebrow}
               </p>
               <h2 className="mt-3 font-serif text-4xl font-medium leading-[1.05] text-ink-900 sm:text-5xl lg:text-6xl">

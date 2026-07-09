@@ -54,7 +54,7 @@
   --color-gold: var(--gold);
   --font-serif: "Cormorant Garamond Variable", ui-serif, Georgia, serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-script: "Pinyon Script", cursive;
+  --font-script: "Montez", cursive;
 }
 
 :root {
