@@ -285,7 +285,7 @@ function DestinationHero({ d }: { d: DestinationDetail }) {
   }, [index, d.slides, total]);
 
   return (
-    <section className="relative h-[92vh] min-h-[720px] w-full overflow-hidden bg-ink-900">
+    <section className="relative h-screen min-h-screen w-full overflow-hidden bg-ink-900">
       <AnimatePresence mode="sync">
         <motion.div
           key={active.imageUrl}
