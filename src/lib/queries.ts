@@ -11,6 +11,7 @@ import {
 import { authService } from "@/services/auth.service";
 import type { PublicPackageFilters } from "@/services/packages.service";
 import { heroSlidesService } from "@/services/hero-slides.service";
+import { tourCategoriesService } from "@/services/tour-categories.service";
 
 export const authKeys = {
   me: ["auth", "me"] as const,
@@ -86,5 +87,12 @@ export const heroSlidesQuery = () =>
   queryOptions({
     queryKey: ["hero-slides"] as const,
     queryFn: () => heroSlidesService.list(),
+    staleTime: 60_000,
+  });
+
+export const tourCategoriesQuery = () =>
+  queryOptions({
+    queryKey: ["tour-categories"] as const,
+    queryFn: () => tourCategoriesService.list(),
     staleTime: 60_000,
   });

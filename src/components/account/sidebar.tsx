@@ -1,7 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bookmark, CalendarCheck, Heart, User, Users } from "lucide-react";
+import { Bookmark, CalendarCheck, Heart, Image, LayoutGrid, User, Users } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth-context";
 
 const ITEMS = [
   { to: "/account", label: "Overview", icon: User },
@@ -11,11 +12,18 @@ const ITEMS = [
   { to: "/account/profile", label: "Profile", icon: Bookmark },
 ];
 
+const ADMIN_ITEMS = [
+  { to: "/account/admin/hero", label: "Hero slides", icon: Image },
+  { to: "/account/admin/tour-categories", label: "Tour categories", icon: LayoutGrid },
+];
+
 export function AccountSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { isAdmin } = useAuth();
+  const items = isAdmin ? [...ITEMS, ...ADMIN_ITEMS] : ITEMS;
   return (
     <nav className="flex flex-row gap-2 overflow-x-auto pb-4 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
-      {ITEMS.map((it) => {
+      {items.map((it) => {
         const active = pathname === it.to;
         const Icon = it.icon;
         return (
