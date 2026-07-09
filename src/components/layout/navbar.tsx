@@ -127,7 +127,8 @@ export function Navbar() {
           >
             <button
               type="button"
-              onClick={() => setDesktopOpen((v) => !v)}
+              onFocus={handleEnter}
+              onBlur={handleLeave}
               className={cn(
                 "flex items-center gap-1 px-4 py-2 text-[13px] font-medium transition-colors",
                 isScrolled
