@@ -80,6 +80,18 @@ function StatCircle({ stat, index }: { stat: AchievementStat; index: number }) {
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  const rotate = useMotionValue(index * 45);
+
+  useEffect(() => {
+    if (reduced) return;
+    if (!hovered) return;
+    const controls = animate(rotate, rotate.get() + 360 * 20, {
+      duration: 1.8 * 20,
+      ease: "linear",
+    });
+    return () => controls.stop();
+  }, [hovered, reduced, rotate]);
+
   // parse numeric portion for count-up
   const match = stat.value.match(/^(\d+(?:\.\d+)?)(.*)$/);
   const target = match ? parseFloat(match[1]!) : 0;
@@ -114,16 +126,7 @@ function StatCircle({ stat, index }: { stat: AchievementStat; index: number }) {
       {!reduced && (
         <motion.div
           className="absolute inset-0"
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: hovered ? 1.8 : 9,
-            ease: "linear",
-            repeat: Infinity,
-          }}
-          style={{
-            // start angle offset per circle
-            rotate: index * 45,
-          }}
+          style={{ rotate }}
         >
           <motion.span
             animate={
