@@ -11,7 +11,7 @@ import {
   defaultPlanYourTrip,
   planYourTripService,
   type PlanFeature,
-  type PlanPhoto,
+  type PlanSlots,
   type PlanYourTripContent,
 } from "@/services/plan-your-trip.service";
 import { mediaService } from "@/services/media.service";
@@ -28,12 +28,26 @@ export const Route = createFileRoute(
   component: AdminPlanYourTripPage,
 });
 
-type SlotKey = "arch" | "circleA" | "circleB";
+type SlotKey = keyof PlanSlots;
 
-const SLOT_LABELS: Record<SlotKey, string> = {
-  arch: "Tall arch photo (left)",
-  circleA: "Top circle photo",
-  circleB: "Bottom circle photo",
+const SLOT_META: Record<
+  SlotKey,
+  { label: string; shapeClass: string }
+> = {
+  arch: {
+    label: "Tall arch (left)",
+    shapeClass: "aspect-[3/5] rounded-full",
+  },
+  circleA: {
+    label: "Top petal (right)",
+    shapeClass:
+      "aspect-[6/5] rounded-tl-[45%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[25%]",
+  },
+  circleB: {
+    label: "Bottom petal (right)",
+    shapeClass:
+      "aspect-[6/5] rounded-tl-[25%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[45%]",
+  },
 };
 
 function rid(prefix: string) {
@@ -73,17 +87,22 @@ function AdminPlanYourTripPage() {
   }
 
   const patch = (p: Partial<PlanYourTripContent>) =>
-    setC((s) => ({ ...s, ...p }));
+    setC((s: PlanYourTripContent) => ({ ...s, ...p }));
 
   const updateFeature = (id: string, p: Partial<PlanFeature>) =>
-    setC((s) => ({
+    setC((s: PlanYourTripContent) => ({
       ...s,
-      features: s.features.map((f) => (f.id === id ? { ...f, ...p } : f)),
+      features: s.features.map((f: PlanFeature) =>
+        f.id === id ? { ...f, ...p } : f,
+      ),
     }));
   const removeFeature = (id: string) =>
-    setC((s) => ({ ...s, features: s.features.filter((f) => f.id !== id) }));
+    setC((s: PlanYourTripContent) => ({
+      ...s,
+      features: s.features.filter((f: PlanFeature) => f.id !== id),
+    }));
   const addFeature = () =>
-    setC((s) => ({
+    setC((s: PlanYourTripContent) => ({
       ...s,
       features: [
         ...s.features,
@@ -91,8 +110,11 @@ function AdminPlanYourTripPage() {
       ],
     }));
 
-  const updateSlot = (slot: SlotKey, next: PlanPhoto[]) =>
-    setC((s) => ({ ...s, slots: { ...s.slots, [slot]: next } }));
+  const setSlot = (slot: SlotKey, url: string) =>
+    setC((s: PlanYourTripContent) => ({
+      ...s,
+      slots: { ...s.slots, [slot]: url },
+    }));
 
   const save = async () => {
     setSaving(true);
@@ -126,7 +148,7 @@ function AdminPlanYourTripPage() {
               Plan your trip
             </h1>
             <p className="mt-3 max-w-lg text-sm text-ink-900/60">
-              Edit the copy, features and rotating collage photos shown in the
+              Edit the copy, features and the three collage photos shown in the
               Plan Your Trip section on the homepage.
             </p>
           </div>
@@ -200,7 +222,7 @@ function AdminPlanYourTripPage() {
         <section className="mb-10">
           <h2 className="mb-4 font-serif text-2xl text-ink-900">Features</h2>
           <div className="space-y-4">
-            {c.features.map((f) => (
+            {c.features.map((f: PlanFeature) => (
               <div
                 key={f.id}
                 className="grid gap-4 rounded-3xl border border-ink-900/10 bg-white p-4 sm:grid-cols-[1fr_2fr_auto]"
@@ -245,22 +267,24 @@ function AdminPlanYourTripPage() {
         </section>
 
         {/* Slots */}
-        <section className="space-y-8">
-          <h2 className="font-serif text-2xl text-ink-900">Collage photos</h2>
-          <p className="-mt-4 max-w-lg text-sm text-ink-900/60">
-            Each slot rotates through its photo list on the homepage with a
-            subtle 3D flip. Add multiple photos per slot to enable the
-            animation.
+        <section>
+          <h2 className="mb-2 font-serif text-2xl text-ink-900">
+            Collage photos
+          </h2>
+          <p className="mb-6 max-w-lg text-sm text-ink-900/60">
+            One photo per shape. Uploads replace the current image immediately.
           </p>
-
-          {(Object.keys(SLOT_LABELS) as SlotKey[]).map((key) => (
-            <SlotEditor
-              key={key}
-              title={SLOT_LABELS[key]}
-              photos={c.slots[key]}
-              onChange={(next) => updateSlot(key, next)}
-            />
-          ))}
+          <div className="grid gap-6 md:grid-cols-3">
+            {(Object.keys(SLOT_META) as SlotKey[]).map((key) => (
+              <SlotUploader
+                key={key}
+                label={SLOT_META[key].label}
+                shapeClass={SLOT_META[key].shapeClass}
+                imageUrl={c.slots[key]}
+                onChange={(url) => setSlot(key, url)}
+              />
+            ))}
+          </div>
         </section>
       </Container>
     </div>
@@ -290,74 +314,16 @@ function TextField({
   );
 }
 
-function SlotEditor({
-  title,
-  photos,
+function SlotUploader({
+  label,
+  shapeClass,
+  imageUrl,
   onChange,
 }: {
-  title: string;
-  photos: PlanPhoto[];
-  onChange: (next: PlanPhoto[]) => void;
-}) {
-  const add = () =>
-    onChange([...photos, { id: rid("ph"), imageUrl: "" }]);
-  const remove = (id: string) =>
-    onChange(photos.filter((p) => p.id !== id));
-  const move = (id: string, dir: -1 | 1) => {
-    const i = photos.findIndex((p) => p.id === id);
-    if (i < 0) return;
-    const j = i + dir;
-    if (j < 0 || j >= photos.length) return;
-    const copy = [...photos];
-    [copy[i], copy[j]] = [copy[j]!, copy[i]!];
-    onChange(copy);
-  };
-  const setUrl = (id: string, url: string) =>
-    onChange(photos.map((p) => (p.id === id ? { ...p, imageUrl: url } : p)));
-
-  return (
-    <div className="rounded-3xl border border-ink-900/10 bg-white p-6">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <h3 className="font-serif text-lg text-ink-900">{title}</h3>
-        <button
-          type="button"
-          onClick={add}
-          className="inline-flex items-center gap-2 rounded-full border border-dashed border-ink-900/30 px-4 py-2 text-[11px] uppercase tracking-widest text-ink-900/70 hover:bg-ink-900/5"
-        >
-          <Plus className="size-3.5" /> Add photo
-        </button>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {photos.map((p, i) => (
-          <PhotoCell
-            key={p.id}
-            index={i}
-            total={photos.length}
-            photo={p}
-            onUrl={(url) => setUrl(p.id, url)}
-            onRemove={() => remove(p.id)}
-            onMove={(dir) => move(p.id, dir)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PhotoCell({
-  index,
-  total,
-  photo,
-  onUrl,
-  onRemove,
-  onMove,
-}: {
-  index: number;
-  total: number;
-  photo: PlanPhoto;
-  onUrl: (url: string) => void;
-  onRemove: () => void;
-  onMove: (dir: -1 | 1) => void;
+  label: string;
+  shapeClass: string;
+  imageUrl: string;
+  onChange: (url: string) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -366,7 +332,7 @@ function PhotoCell({
     setUploading(true);
     try {
       const media = await mediaService.upload(file);
-      onUrl(media.url);
+      onChange(media.url);
       toast.success("Image uploaded");
     } catch (err) {
       toast.error(apiErrorMessage(err, "Upload failed"));
@@ -376,15 +342,21 @@ function PhotoCell({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="rounded-3xl border border-ink-900/10 bg-white p-5">
+      <p className="mb-3 text-[11px] uppercase tracking-widest text-ink-900/50">
+        {label}
+      </p>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="relative aspect-[3/5] w-full overflow-hidden rounded-[50%] bg-cream-100 ring-1 ring-ink-900/5"
+        className={
+          "relative w-full overflow-hidden bg-cream-100 ring-1 ring-ink-900/5 " +
+          shapeClass
+        }
       >
-        {photo.imageUrl ? (
+        {imageUrl ? (
           <img
-            src={photo.imageUrl}
+            src={imageUrl}
             alt=""
             className="h-full w-full object-cover"
           />
@@ -410,35 +382,23 @@ function PhotoCell({
           }}
         />
       </button>
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="rounded-full bg-ink-900/5 px-3 py-1 text-[10px] uppercase tracking-widest text-ink-900/50">
-          {index + 1} / {total}
-        </span>
-        <div className="flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="inline-flex items-center gap-2 rounded-full border border-ink-900/15 px-4 py-2 text-[11px] uppercase tracking-widest text-ink-900/70 hover:bg-ink-900/5"
+        >
+          <ImagePlus className="size-3.5" /> Replace
+        </button>
+        {imageUrl ? (
           <button
             type="button"
-            onClick={() => onMove(-1)}
-            disabled={index === 0}
-            className="rounded-full border border-ink-900/10 px-3 py-1 text-[10px] uppercase tracking-widest text-ink-900/70 disabled:opacity-30"
+            onClick={() => onChange("")}
+            className="inline-flex items-center gap-1 rounded-full border border-destructive/30 px-4 py-2 text-[11px] uppercase tracking-widest text-destructive"
           >
-            Up
+            <Trash2 className="size-3" /> Remove
           </button>
-          <button
-            type="button"
-            onClick={() => onMove(1)}
-            disabled={index === total - 1}
-            className="rounded-full border border-ink-900/10 px-3 py-1 text-[10px] uppercase tracking-widest text-ink-900/70 disabled:opacity-30"
-          >
-            Down
-          </button>
-          <button
-            type="button"
-            onClick={onRemove}
-            className="inline-flex items-center gap-1 rounded-full border border-destructive/30 px-3 py-1 text-[10px] uppercase tracking-widest text-destructive"
-          >
-            <Trash2 className="size-3" />
-          </button>
-        </div>
+        ) : null}
       </div>
     </div>
   );

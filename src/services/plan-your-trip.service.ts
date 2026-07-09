@@ -1,16 +1,17 @@
 import arch1 from "@/assets/plan-arch-1.jpg";
-import arch2 from "@/assets/plan-arch-2.jpg";
 import circleA1 from "@/assets/plan-circle-a-1.jpg";
-import circleA2 from "@/assets/plan-circle-a-2.jpg";
 import circleB1 from "@/assets/plan-circle-b-1.jpg";
-import circleB2 from "@/assets/plan-circle-b-2.jpg";
-
-export type PlanPhoto = { id: string; imageUrl: string };
 
 export type PlanFeature = {
   id: string;
   title: string;
   description: string;
+};
+
+export type PlanSlots = {
+  arch: string;
+  circleA: string;
+  circleB: string;
 };
 
 export type PlanYourTripContent = {
@@ -20,14 +21,10 @@ export type PlanYourTripContent = {
   ctaLabel: string;
   ctaHref: string;
   features: PlanFeature[];
-  slots: {
-    arch: PlanPhoto[];
-    circleA: PlanPhoto[];
-    circleB: PlanPhoto[];
-  };
+  slots: PlanSlots;
 };
 
-const STORAGE_KEY = "ulmind_plan_your_trip_v1";
+const STORAGE_KEY = "ulmind_plan_your_trip_v2";
 
 export const defaultPlanYourTrip: PlanYourTripContent = {
   eyebrow: "Let's Go Together",
@@ -51,28 +48,30 @@ export const defaultPlanYourTrip: PlanYourTripContent = {
     },
   ],
   slots: {
-    arch: [
-      { id: "arch-1", imageUrl: arch1 },
-      { id: "arch-2", imageUrl: arch2 },
-    ],
-    circleA: [
-      { id: "ca-1", imageUrl: circleA1 },
-      { id: "ca-2", imageUrl: circleA2 },
-    ],
-    circleB: [
-      { id: "cb-1", imageUrl: circleB1 },
-      { id: "cb-2", imageUrl: circleB2 },
-    ],
+    arch: arch1,
+    circleA: circleA1,
+    circleB: circleB1,
   },
 };
+
+function isValid(c: unknown): c is PlanYourTripContent {
+  if (!c || typeof c !== "object") return false;
+  const s = (c as PlanYourTripContent).slots;
+  return (
+    !!s &&
+    typeof s.arch === "string" &&
+    typeof s.circleA === "string" &&
+    typeof s.circleB === "string"
+  );
+}
 
 function readLocal(): PlanYourTripContent | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as PlanYourTripContent;
-    if (!parsed || !parsed.slots) return null;
+    const parsed = JSON.parse(raw);
+    if (!isValid(parsed)) return null;
     return parsed;
   } catch {
     return null;
