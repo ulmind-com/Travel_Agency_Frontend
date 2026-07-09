@@ -54,7 +54,7 @@ function LoginPage() {
   };
 
   return (
-    <AuthShell subtitle="Members entry" title="Sign in to Ulmind">
+    <AuthShell subtitle="Private members" title="Welcome back">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <Field label="Email" error={errors.email?.message}>
           <input
@@ -77,13 +77,13 @@ function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-full bg-ink-900 py-4 text-[12px] font-medium uppercase tracking-widest text-cream-50 disabled:opacity-50"
+          className="w-full rounded-full bg-cream-50 py-4 text-[12px] font-medium uppercase tracking-widest text-ink-900 transition-all duration-300 hover:bg-cream-100 hover:shadow-lg disabled:opacity-50"
         >
           {isSubmitting ? "Signing in…" : "Sign in"}
         </button>
-        <p className="text-center text-sm text-ink-900/60">
+        <p className="text-center text-sm text-cream-50/60">
           New here?{" "}
-          <Link to="/auth/register" className="text-ink-900 underline underline-offset-4">
+          <Link to="/auth/register" className="text-cream-50 underline underline-offset-4 transition-colors hover:text-gold">
             Create an account
           </Link>
         </p>
@@ -93,7 +93,7 @@ function LoginPage() {
 }
 
 export const inputClass =
-  "w-full rounded-2xl border border-ink-900/10 bg-cream-50 px-4 py-3 text-sm text-ink-900 placeholder:text-ink-900/40 focus:border-ink-900/40 focus:outline-none";
+  "w-full rounded-2xl border border-cream-50/15 bg-cream-50/[0.05] px-4 py-3.5 text-sm text-cream-50 placeholder:text-cream-50/35 focus:border-cream-50/30 focus:bg-cream-50/[0.08] focus:outline-none backdrop-blur-sm transition-colors";
 
 export function Field({
   label,
@@ -106,11 +106,11 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[11px] uppercase tracking-widest text-ink-900/50">
+      <span className="mb-1.5 block text-[11px] uppercase tracking-widest text-cream-50/50">
         {label}
       </span>
       {children}
-      {error && <span className="mt-1 block text-xs text-destructive">{error}</span>}
+      {error && <span className="mt-1 block text-xs text-red-300">{error}</span>}
     </label>
   );
 }
