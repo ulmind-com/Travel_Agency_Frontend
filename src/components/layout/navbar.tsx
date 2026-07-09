@@ -92,18 +92,8 @@ export function Navbar() {
             <Link
               key={item.label}
               to={item.to}
-              className={cn(
-                "relative px-4 py-2 text-[13px] font-medium transition-colors",
-                isScrolled
-                  ? "text-ink-900/70 hover:text-ink-900"
-                  : "text-cream-50/80 hover:text-cream-50",
-              )}
-              activeProps={{
-                className: cn(
-                  "text-ink-900",
-                  !isScrolled && "text-cream-50",
-                ),
-              }}
+              className="relative px-4 py-2 text-[13px] font-medium transition-colors text-cream-50/80 hover:text-cream-50"
+              activeProps={{ className: "text-cream-50" }}
               activeOptions={{ exact: item.to === "/" }}
             >
               {item.label}
