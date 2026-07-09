@@ -248,12 +248,7 @@ export function Navbar() {
           type="button"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           onClick={() => setMobileOpen((v) => !v)}
-          className={cn(
-            "grid size-10 place-items-center rounded-full ring-1 md:hidden",
-            isScrolled
-              ? "ring-ink-900/15 text-ink-900"
-              : "ring-cream-50/30 text-cream-50",
-          )}
+          className="grid size-10 place-items-center rounded-full ring-1 md:hidden ring-cream-50/30 text-cream-50"
         >
           {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
         </button>
