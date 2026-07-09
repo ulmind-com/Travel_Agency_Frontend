@@ -56,13 +56,13 @@ export function PlanShapeClipDefs() {
     >
       <defs>
         <clipPath id="plan-trip-arch-tall" clipPathUnits="objectBoundingBox">
-          <path d="M0.5,0 C0.22,0 0,0.13 0,0.3 L0,0.78 C0,0.91 0.11,1 0.25,1 L1,1 L1,0.3 C1,0.13 0.78,0 0.5,0 Z" />
+          <path d="M0.5,0 C0.22,0 0,0.13 0,0.31 L0,0.78 C0,0.92 0.11,1 0.26,1 L1,1 L1,0.31 C1,0.13 0.78,0 0.5,0 Z" />
         </clipPath>
         <clipPath id="plan-trip-d-right" clipPathUnits="objectBoundingBox">
-          <path d="M0,1 L0,0.49 C0.03,0.22 0.24,0 0.52,0 C0.79,0 1,0.22 1,0.5 C1,0.78 0.78,1 0.5,1 Z" />
+          <path d="M0,1 L0,0.49 C0,0.22 0.22,0 0.5,0 C0.78,0 1,0.22 1,0.5 C1,0.78 0.78,1 0.5,1 Z" />
         </clipPath>
         <clipPath id="plan-trip-arch-bottom" clipPathUnits="objectBoundingBox">
-          <path d="M0.5,0 L1,0 L1,0.51 C0.97,0.78 0.76,1 0.48,1 C0.21,1 0,0.78 0,0.5 C0,0.22 0.22,0 0.5,0 Z" />
+          <path d="M0.5,0 L1,0 L1,0.5 C1,0.78 0.78,1 0.5,1 C0.22,1 0,0.78 0,0.5 C0,0.22 0.22,0 0.5,0 Z" />
         </clipPath>
       </defs>
     </svg>
