@@ -25,30 +25,46 @@ function useContent(): PlanYourTripContent {
 }
 
 /**
- * Shape classes mirror the reference collage:
- * - archShape: tall stadium (rounded-full on tall aspect → pill)
- * - leafRightShape: petal leaning right (tight bottom-left)
- * - leafRightMirrorShape: petal mirrored vertically (tight top-left)
+ * Shape silhouettes matching the reference collage:
+ * - archTall: tall tombstone — flat bottom, full semicircular dome top.
+ * - dRight:  wide D — flat left edge, semicircle bulging right (top+right+bottom curved).
+ * - archBottom: wide inverted arch — flat top, semicircular dome bottom.
+ *
+ * Radii tuned so the round side is a true semicircle at each aspect ratio.
  */
-const archShape = "aspect-[3/5] rounded-full";
-const leafRightShape =
-  "aspect-[6/5] rounded-tl-[45%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[25%]";
-const leafRightMirrorShape =
-  "aspect-[6/5] rounded-tl-[25%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[45%]";
+export const PLAN_SHAPES = {
+  archTall: {
+    aspect: "aspect-[3/5]",
+    // width 3, height 5 → top corners x=w/2=50%, y=w/2/h=30%
+    style: { borderRadius: "50% 50% 0 0 / 30% 30% 0 0" },
+  },
+  dRight: {
+    aspect: "aspect-[6/5]",
+    // width 6, height 5 → right corners x=h/2/w≈42%, y=50%
+    style: { borderRadius: "0 42% 42% 0 / 0 50% 50% 0" },
+  },
+  archBottom: {
+    aspect: "aspect-[6/5]",
+    // width 6, height 5 → bottom corners x=50%, y=w/2/h=60%
+    style: { borderRadius: "0 0 50% 50% / 0 0 60% 60%" },
+  },
+} as const;
 
 function ShapePhoto({
   imageUrl,
-  shapeClass,
+  shape,
 }: {
   imageUrl: string;
-  shapeClass: string;
+  shape: keyof typeof PLAN_SHAPES;
 }) {
+  const s = PLAN_SHAPES[shape];
   return (
     <div
       className={
         "relative w-full overflow-hidden bg-cream-100 shadow-[0_30px_60px_-30px_rgba(28,25,23,0.35)] ring-1 ring-ink-900/5 " +
-        shapeClass
+        s.aspect
       }
+      style={s.style}
     >
       {imageUrl ? (
         <img
@@ -80,23 +96,17 @@ export function PlanYourTrip() {
 
             <div className="relative mx-auto grid max-w-[560px] grid-cols-[1.05fr_0.95fr] gap-4 sm:gap-6">
               <FadeUp>
-                <ShapePhoto
-                  imageUrl={content.slots.arch}
-                  shapeClass={archShape}
-                />
+                <ShapePhoto imageUrl={content.slots.arch} shape="archTall" />
               </FadeUp>
 
               <div className="flex flex-col gap-4 sm:gap-6">
                 <FadeUp delay={0.08}>
-                  <ShapePhoto
-                    imageUrl={content.slots.circleA}
-                    shapeClass={leafRightShape}
-                  />
+                  <ShapePhoto imageUrl={content.slots.circleA} shape="dRight" />
                 </FadeUp>
                 <FadeUp delay={0.16}>
                   <ShapePhoto
                     imageUrl={content.slots.circleB}
-                    shapeClass={leafRightMirrorShape}
+                    shape="archBottom"
                   />
                 </FadeUp>
               </div>

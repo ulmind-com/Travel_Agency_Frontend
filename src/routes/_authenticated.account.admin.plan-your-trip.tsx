@@ -15,6 +15,7 @@ import {
   type PlanYourTripContent,
 } from "@/services/plan-your-trip.service";
 import { mediaService } from "@/services/media.service";
+import { PLAN_SHAPES } from "@/components/home/plan-your-trip";
 
 export const Route = createFileRoute(
   "/_authenticated/account/admin/plan-your-trip",
@@ -32,22 +33,11 @@ type SlotKey = keyof PlanSlots;
 
 const SLOT_META: Record<
   SlotKey,
-  { label: string; shapeClass: string }
+  { label: string; shape: keyof typeof PLAN_SHAPES }
 > = {
-  arch: {
-    label: "Tall arch (left)",
-    shapeClass: "aspect-[3/5] rounded-full",
-  },
-  circleA: {
-    label: "Top petal (right)",
-    shapeClass:
-      "aspect-[6/5] rounded-tl-[45%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[25%]",
-  },
-  circleB: {
-    label: "Bottom petal (right)",
-    shapeClass:
-      "aspect-[6/5] rounded-tl-[25%] rounded-tr-[55%] rounded-br-[55%] rounded-bl-[45%]",
-  },
+  arch: { label: "Tall arch (left)", shape: "archTall" },
+  circleA: { label: "D-shape (top right)", shape: "dRight" },
+  circleB: { label: "Inverted arch (bottom right)", shape: "archBottom" },
 };
 
 function rid(prefix: string) {
@@ -279,7 +269,7 @@ function AdminPlanYourTripPage() {
               <SlotUploader
                 key={key}
                 label={SLOT_META[key].label}
-                shapeClass={SLOT_META[key].shapeClass}
+                shape={SLOT_META[key].shape}
                 imageUrl={c.slots[key]}
                 onChange={(url) => setSlot(key, url)}
               />
@@ -316,17 +306,18 @@ function TextField({
 
 function SlotUploader({
   label,
-  shapeClass,
+  shape,
   imageUrl,
   onChange,
 }: {
   label: string;
-  shapeClass: string;
+  shape: keyof typeof PLAN_SHAPES;
   imageUrl: string;
   onChange: (url: string) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const s = PLAN_SHAPES[shape];
 
   const onFile = async (file: File) => {
     setUploading(true);
@@ -351,8 +342,9 @@ function SlotUploader({
         onClick={() => inputRef.current?.click()}
         className={
           "relative w-full overflow-hidden bg-cream-100 ring-1 ring-ink-900/5 " +
-          shapeClass
+          s.aspect
         }
+        style={s.style}
       >
         {imageUrl ? (
           <img
