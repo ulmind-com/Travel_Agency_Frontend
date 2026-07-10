@@ -1,26 +1,62 @@
 ## Goal
-Make the navbar invisible over the hero (as today), and once the user scrolls past the hero, morph it into a floating, rounded **liquid‑glass pill** that stays visible on the cream sections below.
+Redesign the **About page hero/top section** in `src/routes/about.tsx` to visually match the uploaded reference — a teal-green background with angled diagonal photo panels on the right — while keeping all existing About page copy intact.
 
-## Behavior
-- At the very top (over hero): navbar stays exactly as it is now — transparent, cream text, full width.
-- After scrolling ~80px down: navbar animates into a **centered, rounded pill** that floats near the top of the viewport.
-  - Shrinks in width (max-w ~5xl), gets `rounded-full`, subtle margin from the top.
-  - Liquid glass surface: `bg-ink-900/40` + `backdrop-blur-2xl` + `saturate-150`, hairline `border border-cream-50/15`, soft shadow, inner top-edge highlight.
-  - Text stays cream/light so it reads on both dark blur and cream page.
-  - Smooth transition (opacity, transform, border-radius, width) with `cubic-bezier(0.22,1,0.36,1)` over ~500ms.
-- Scrolling back up to the hero: reverses smoothly to the transparent full-width state.
+## Reference reading
+From the uploaded image:
+- Solid muted teal/green background (approx `#5FA79A` / sage-teal).
+- Large bold white sans-serif headline on the left ("TRAVEL / THE WORLD" style).
+- Italic pull-quote in white below the headline.
+- Smaller lorem paragraph under it in lighter white.
+- Dark rounded "BOOK NOW" pill button.
+- Right side: **three diagonal parallel strips** at ~65° angle, each strip filled with a landscape photo, bottom edges rounded like elongated capsules. Strips overlap the top-right and bottom-right of the frame.
+- Small dotted-grid decorative squares scattered (top-right, mid-left, bottom).
 
-## Implementation (single file)
-`src/components/layout/navbar.tsx`
-- Add a `scrolled` state driven by a `scroll` listener (threshold 80px, passive).
-- Header wrapper: switch between two class sets based on `scrolled`:
-  - Not scrolled: current `fixed inset-x-0 top-0 bg-transparent`.
-  - Scrolled: `fixed top-3 left-1/2 -translate-x-1/2 w-[min(1120px,calc(100%-24px))] rounded-full border border-cream-50/15 bg-ink-900/40 backdrop-blur-2xl shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]` plus a subtle inner top highlight via a pseudo overlay.
-- Inner row: reduce height slightly when scrolled (`h-14 lg:h-16`) and tighten horizontal padding (`px-6 lg:px-8`).
-- Keep all existing links, dropdown, auth actions, and mobile menu untouched — only the shell changes.
-- Ensure the Destinations mega‑dropdown still anchors correctly under the trigger inside the pill (it already uses absolute positioning; unaffected).
-- Mobile: keep current behavior; the pill styling only applies at md+ (mobile keeps a simple full-width translucent bar when scrolled).
+## Scope
+- Only edit `src/routes/about.tsx`.
+- Replace the current dark hero banner (`heroBg` with `About` + breadcrumb) with a new **teal hero block** matching the reference.
+- Keep the existing "Welcome To Ulmind Travel" collage section below completely untouched.
+- Keep all existing About text: reuse the current heading/subtitle/paragraph copy inside the new hero layout (no new lorem — user said "jemon lekha ache ota to thakbei").
+
+## New hero layout (left → right)
+Left column (~55% width):
+- Kicker: small white uppercase "About Ulmind Travel" (existing eyebrow feel).
+- H1: `About` (kept, but restyled — bold sans, huge, white, tight tracking, two-line stacked like "TRAVEL / THE WORLD").
+- Italic quote line pulled from existing subtitle ("Explore the world with a trusted travel partner").
+- Short paragraph: first existing About paragraph, trimmed to ~3 lines, white/80.
+- Rounded dark pill CTA → `/contact` labeled "Book Now" (matches reference button).
+- Row of small social icon circles (Instagram, Facebook, Twitter) — decorative, matches reference.
+
+Right column (~45% width, absolutely positioned inside hero):
+- Three diagonal photo strips using existing imported images (`heroBg` maldives, `shapeAlps`, `shapeKyoto`).
+- Each strip: fixed width (~180–220px), tall enough to bleed off top and bottom, `rounded-full` bottom, rotated `-25deg`, staggered horizontally with slight overlap.
+- Implemented via absolutely-positioned divs with `transform: rotate(-25deg)`, `overflow-hidden`, `rounded-[9999px]`, and an `<img>` inside with `object-cover` + counter-scale so the photo fills the tilted strip cleanly.
+- Soft shadow under each strip for depth.
+
+Decorative accents:
+- Two small 4×4 dotted-grid squares (CSS radial-gradient dots) positioned top-right area and bottom-left area.
+- Small arrow chevrons (`»`) beside the headline like the reference.
+
+## Colors (inline via arbitrary Tailwind — no token file changes)
+- Hero background: `bg-[#5FA79A]`.
+- Text: white / white/80.
+- CTA: `bg-ink-900 text-cream-50 rounded-full`.
+- Dots: `text-white/40`.
+
+## Technical notes
+```text
+<section class="relative overflow-hidden bg-[#5FA79A] min-h-[620px] lg:min-h-[720px]">
+  <Container> grid lg:grid-cols-[1.1fr_1fr]
+    left: kicker, h1, quote, paragraph, CTA, socials
+    right: relative h-full
+      3x <div class="absolute rotate-[-25deg] rounded-full overflow-hidden shadow-2xl">
+            <img class="h-full w-full object-cover scale-125" />
+          </div>
+  decorative dot grids as absolute divs with background-image radial-gradient
+</section>
+```
+Breadcrumb from current hero is removed (reference has no breadcrumb). If you want to keep it, say so and I'll tuck it above the kicker in muted white.
 
 ## Non-goals
-- No changes to hero, routes, or any other component.
+- No changes to the collage section, navbar, footer, or any other route.
+- No new image assets — reuse `heroBg`, `shapeAlps`, `shapeKyoto` already imported.
 - No new dependencies.
