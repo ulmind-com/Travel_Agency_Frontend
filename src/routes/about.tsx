@@ -155,11 +155,11 @@ function AboutPage() {
                 // viewport) and rotate them so they lean like "\".
                 const VBW = 780;
                 const VBH = 780;
-                const W = 120;               // strip thickness
+                const W = 116;               // strip thickness
                 const R = W / 2;             // bottom cap radius
-                const TOP = -260;            // starts above viewport (flat-cut)
-                const BOT = 620;             // rounded end inside viewport
-                const ANGLE = 22;            // positive → leans like "\"
+                const TOP = -320;            // starts well above viewport (flat-cut)
+                const BOT = 680;             // rounded end inside viewport
+                const ANGLE = 24;            // positive → leans like "\"
                 // Flat top, rounded bottom capsule (vertical), centered on x=0.
                 const pill = [
                   `M ${-R},${TOP}`,
@@ -171,11 +171,13 @@ function AboutPage() {
                 // Anchors at the TOP edge of the panel; strips fan from the
                 // top-right corner down-left because of the +22° rotation
                 // around each anchor point (y=0).
+                // Anchor all strips near the top-right corner and fan
+                // outward down-left because of the +24° rotation.
                 const strips = [
-                  { cx: 320, cy: 0 },
-                  { cx: 470, cy: 0 },
-                  { cx: 620, cy: 0 },
-                  { cx: 770, cy: 0 },
+                  { cx: 560, cy: 0 },
+                  { cx: 660, cy: 0 },
+                  { cx: 760, cy: 0 },
+                  { cx: 860, cy: 0 },
                 ];
                 return (
                   <svg
@@ -212,10 +214,10 @@ function AboutPage() {
                     </defs>
 
                     {/* Faint lighter-teal parallel band behind strips */}
-                    <g opacity="0.3">
+                    <g opacity="0.28">
                       <path
                         d={pill}
-                        transform={`translate(545 0) rotate(${ANGLE}) scale(3 1)`}
+                        transform={`translate(710 0) rotate(${ANGLE}) scale(3.4 1)`}
                         fill="#8FC4B9"
                       />
                     </g>
