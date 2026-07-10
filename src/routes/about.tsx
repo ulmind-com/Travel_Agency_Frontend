@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Compass, UserRound } from "lucide-react";
+import { ArrowRight, ChevronsRight, Compass, Facebook, Instagram, Twitter, UserRound } from "lucide-react";
 
 import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
@@ -62,23 +62,126 @@ function RoundedPhoto({
 function AboutPage() {
   return (
     <div>
-      {/* Hero banner */}
-      <section className="relative h-[420px] w-full overflow-hidden lg:h-[520px]">
-        <img
-          src={heroBg}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+      {/* Hero banner — teal with diagonal photo strips */}
+      <section className="relative w-full overflow-hidden bg-[#5FA79A] pt-28 lg:pt-32">
+        {/* Decorative dot grids */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-[38%] top-24 h-16 w-16 opacity-60"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.55) 1.5px, transparent 1.5px)",
+            backgroundSize: "12px 12px",
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink-900/70 via-ink-900/55 to-ink-900/70" />
-        <div className="relative flex h-full flex-col items-center justify-center text-center text-cream-50">
-          <h1 className="font-sans text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-            About
-          </h1>
-          <nav className="mt-4 flex items-center gap-3 text-sm text-cream-50/90">
-            <Link to="/" className="hover:text-cream-50">Home</Link>
-            <ArrowRight className="size-4" />
-            <span>About</span>
-          </nav>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-16 left-[30%] h-14 w-14 opacity-50"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.55) 1.5px, transparent 1.5px)",
+            backgroundSize: "12px 12px",
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute right-10 top-6 h-12 w-24 opacity-50"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.6) 1.5px, transparent 1.5px)",
+            backgroundSize: "12px 12px",
+          }}
+        />
+
+        <Container>
+          <div className="relative grid min-h-[560px] gap-10 pb-20 lg:min-h-[680px] lg:grid-cols-[1.05fr_1fr] lg:gap-6 lg:pb-28">
+            {/* Left: text */}
+            <div className="relative z-10 flex flex-col justify-center text-cream-50">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cream-50/80">
+                About Ulmind Travel
+              </p>
+              <h1 className="mt-6 flex flex-wrap items-center gap-x-4 font-sans text-6xl font-extrabold uppercase leading-[0.95] tracking-tight text-cream-50 sm:text-7xl lg:text-[88px]">
+                <span>
+                  Travel
+                  <br />
+                  The World
+                </span>
+                <ChevronsRight
+                  className="mt-3 hidden size-10 text-cream-50/70 lg:inline"
+                  strokeWidth={2.5}
+                />
+              </h1>
+              <p className="mt-8 max-w-lg font-serif text-2xl italic leading-snug text-cream-50">
+                “Explore the world with a trusted travel partner — discover new
+                destinations, unforgettable experiences & endless adventures.”
+              </p>
+              <p className="mt-6 max-w-md text-sm leading-relaxed text-cream-50/85">
+                At Ulmind Travel, we are committed to turning your travel dreams
+                into reality. With years of experience in the travel and tourism
+                industry, we offer personalized services, curated itineraries,
+                and unforgettable experiences.
+              </p>
+
+              <div className="mt-10 flex items-center gap-6">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-3 rounded-full bg-ink-900 px-8 py-4 text-xs font-medium uppercase tracking-[0.25em] text-cream-50 shadow-lg transition-transform hover:-translate-y-0.5"
+                >
+                  Book Now
+                  <ArrowRight className="size-4" />
+                </Link>
+
+                <div className="flex items-center gap-3">
+                  {[Instagram, Facebook, Twitter].map((Icon, i) => (
+                    <span
+                      key={i}
+                      className="grid size-9 place-items-center rounded-full bg-cream-50/15 text-cream-50 ring-1 ring-cream-50/25 backdrop-blur-sm"
+                    >
+                      <Icon className="size-4" strokeWidth={1.8} />
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: diagonal photo strips */}
+            <div className="relative hidden min-h-[600px] lg:block">
+              {[
+                { img: shapeAlps, left: "8%", delay: 0 },
+                { img: heroBg, left: "38%", delay: 0.05 },
+                { img: shapeKyoto, left: "68%", delay: 0.1 },
+              ].map((s, i) => (
+                <div
+                  key={i}
+                  className="absolute -top-40 h-[1100px] w-[190px] overflow-hidden rounded-full shadow-[0_30px_60px_-20px_rgba(0,0,0,0.4)]"
+                  style={{
+                    left: s.left,
+                    transform: "rotate(25deg)",
+                    transformOrigin: "center",
+                  }}
+                >
+                  <img
+                    src={s.img}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    style={{ transform: "rotate(-25deg) scale(1.6)" }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+
+        {/* Mobile strips */}
+        <div className="relative -mt-6 grid grid-cols-3 gap-3 px-6 pb-12 lg:hidden">
+          {[shapeAlps, heroBg, shapeKyoto].map((img, i) => (
+            <div
+              key={i}
+              className="h-52 overflow-hidden rounded-full shadow-lg"
+            >
+              <img src={img} alt="" className="h-full w-full object-cover" />
+            </div>
+          ))}
         </div>
       </section>
 
