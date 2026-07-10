@@ -147,32 +147,51 @@ function AboutPage() {
             {/* Right: diagonal photo strips (SVG capsule clip) */}
             <div className="relative hidden min-h-[600px] lg:block">
               {(() => {
-                // Three parallel capsule strips (flat top clipped by viewport,
-                // rounded bottom) filled with the SAME image — matches the
-                // reference where one scenic photo peeks through 3 tilted windows.
-                const W = 105;
-                const R = 52;
-                const TOP = -260;
-                const BOT = 470; // straight section ends here; arc reaches BOT + R
-                const ANGLE = 24;
-                const PIVOT_X = W / 2;
-                const PIVOT_Y = 100;
-                const singleStrip = `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`;
-                const centers = [190, 355, 520];
+                // Parallel capsule strips tilted like "/" (top-right to
+                // bottom-left). Each strip is a rounded-both-ends pill
+                // filled with the SAME photo — matches the reference where
+                // one scenic image peeks through several tilted windows.
+                const VBW = 780;
+                const VBH = 720;
+                const W = 130;               // strip thickness
+                const R = W / 2;             // cap radius
+                const LEN = 900;             // straight length (huge — cropped by viewport)
+                const ANGLE = -22;           // negative → leans like "/"
+                // Rounded-both-ends capsule centered on origin, tall (vertical),
+                // then rotated. Straight section from -LEN/2..LEN/2, caps beyond.
+                const capsule = `M ${-R},${-LEN / 2} L ${R},${-LEN / 2} A ${R},${R} 0 0 1 ${R},${-LEN / 2 + 0} L ${R},${LEN / 2} A ${R},${R} 0 0 1 ${-R},${LEN / 2} Z`;
+                // Better capsule path: two semicircle caps.
+                const pill = [
+                  `M ${-R},${-LEN / 2}`,
+                  `A ${R},${R} 0 0 1 ${R},${-LEN / 2}`,
+                  `L ${R},${LEN / 2}`,
+                  `A ${R},${R} 0 0 1 ${-R},${LEN / 2}`,
+                  "Z",
+                ].join(" ");
+                // Strip centers along the diagonal — spaced across the panel.
+                const strips = [
+                  { cx: 180, cy: 320 },
+                  { cx: 360, cy: 340 },
+                  { cx: 540, cy: 360 },
+                  { cx: 720, cy: 380 },
+                ];
                 return (
                   <svg
-                    viewBox="0 0 700 720"
+                    viewBox={`0 0 ${VBW} ${VBH}`}
                     preserveAspectRatio="xMidYMid slice"
                     className="absolute inset-0 h-full w-full"
                     aria-hidden
                   >
                     <defs>
+                      <clipPath id="about-band">
+                        {/* Lighter diagonal band behind strips */}
+                      </clipPath>
                       <clipPath id="about-strips">
-                        {centers.map((cx, i) => (
+                        {strips.map((s, i) => (
                           <path
                             key={i}
-                            d={singleStrip}
-                            transform={`translate(${cx - PIVOT_X} 0) rotate(${ANGLE} ${PIVOT_X} ${PIVOT_Y})`}
+                            d={pill}
+                            transform={`translate(${s.cx} ${s.cy}) rotate(${ANGLE})`}
                           />
                         ))}
                       </clipPath>
@@ -185,20 +204,30 @@ function AboutPage() {
                       >
                         <feDropShadow
                           dx="0"
-                          dy="18"
-                          stdDeviation="18"
+                          dy="14"
+                          stdDeviation="16"
                           floodColor="#000"
-                          floodOpacity="0.35"
+                          floodOpacity="0.3"
                         />
                       </filter>
                     </defs>
+
+                    {/* Faint lighter-teal parallel band behind strips */}
+                    <g opacity="0.35">
+                      <path
+                        d={pill}
+                        transform={`translate(640 380) rotate(${ANGLE}) scale(2.2 1)`}
+                        fill="#8FC4B9"
+                      />
+                    </g>
+
                     <g filter="url(#about-strip-shadow)" clipPath="url(#about-strips)">
                       <image
                         href={heroBg}
                         x="0"
                         y="0"
-                        width="700"
-                        height="720"
+                        width={VBW}
+                        height={VBH}
                         preserveAspectRatio="xMidYMid slice"
                       />
                     </g>
