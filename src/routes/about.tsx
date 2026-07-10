@@ -181,10 +181,10 @@ function AboutPage() {
                 // Fan from the top-right corner: rightmost strip hugs
                 // the right edge, the others step left with clean gaps.
                 const strips = [
-                  { cx: 320, cy: 0 },
-                  { cx: 480, cy: 0 },
-                  { cx: 640, cy: 0 },
-                  { cx: 800, cy: 0 },
+                  { cx: 210, cy: 0 },
+                  { cx: 400, cy: 0 },
+                  { cx: 590, cy: 0 },
+                  { cx: 780, cy: 0 },
                 ];
                 return (
                   <svg
