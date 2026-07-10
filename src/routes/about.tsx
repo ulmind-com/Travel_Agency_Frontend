@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronsRight, Compass, Facebook, Instagram, Twitter, UserRound } from "lucide-react";
+import { ArrowRight, ChevronsRight, Compass, UserRound } from "lucide-react";
+import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 
 import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
@@ -132,12 +133,12 @@ function AboutPage() {
                 </Link>
 
                 <div className="flex items-center gap-3">
-                  {[Instagram, Facebook, Twitter].map((Icon, i) => (
+                  {[FaInstagram, FaFacebookF, FaTwitter].map((Icon, i) => (
                     <span
                       key={i}
                       className="grid size-9 place-items-center rounded-full bg-cream-50/15 text-cream-50 ring-1 ring-cream-50/25 backdrop-blur-sm"
                     >
-                      <Icon className="size-4" strokeWidth={1.8} />
+                      <Icon className="size-4" />
                     </span>
                   ))}
                 </div>
