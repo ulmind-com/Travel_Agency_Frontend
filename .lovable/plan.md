@@ -1,26 +1,40 @@
 ## Goal
-Make the About page hero photo panels **pixel-match the reference** — three parallel diagonal "capsule" strips (flat top edge that follows the hero's top border, rounded bottom, tilted ~65°) filled with photos. Current CSS `rotate + overflow-hidden` approach produces rectangles, not the elongated pill shape shown in the reference.
+Redesign the site footer in `src/components/layout/footer.tsx` to match the reference: a wide teal-toned landscape silhouette (layered mountains, pine trees, a small family figure on a hill) filling the top of the footer, with link columns and copyright sitting on the dark foreground band below.
 
-## Approach: SVG with clipPath
-Replace the right-side `<div>` strips in `src/routes/about.tsx` with a single inline **SVG** that draws the exact shape and clips photos into it.
+## Approach
 
-- One `<svg>` filling the right half of the hero (viewBox e.g. `0 0 600 700`, `preserveAspectRatio="xMidYMid slice"`).
-- Inside `<defs>`, three `<clipPath>`s — one per strip. Each clipPath is a rotated capsule:
-  - Path shape: rectangle with a semicircle on the bottom end (like `M x,0 L x+w,0 L x+w,h-r A r,r 0 0 1 x+w-r,h L x+r,h A r,r 0 0 1 x,h-r Z` where `r = w/2`).
-  - Applied `transform="rotate(-25 cx cy)"` so the strip tilts while its top edge stays flush with the SVG's top edge (mimicking the reference where strips are cut off cleanly at the top by the hero container).
-  - Three copies offset horizontally so they sit parallel with slight overlap, matching the reference spacing.
-- Three `<image href={photoUrl} preserveAspectRatio="xMidYMid slice" clip-path="url(#stripN)" width="100%" height="100%" />` — each photo fills the SVG box but is visible only through its clipPath.
-- Small dotted-grid decorations remain as they are.
+**1. Landscape illustration (inline SVG)**
+- One full-width inline `<svg>` at the top of the footer (viewBox `0 0 1440 480`, `preserveAspectRatio="xMidYMax slice"`, height ~380–460px responsive).
+- Layered silhouettes back → front, each a smooth `<path>`:
+  - Sky gradient (cream → pale teal) as `<rect>` background.
+  - Far mountain range — palest teal (`#cfe0dc`), low jagged peaks.
+  - Mid mountains — muted teal (`#7fa8a2`), taller peaks, small lake gap.
+  - Pine tree cluster on the left ridge — simple triangular `<polygon>` stacks in `#3d6b66`.
+  - Front hill — deep teal (`#264a48`), rolling curve.
+  - Family silhouette (parents + 2 kids) as small `<path>` group on the right hill crest, dark teal.
+  - Single tall pine on the far right of the front hill.
+- Soft fog band — white rect with low opacity + blur filter — between mid and front layers to get the hazy atmosphere.
 
-## Why SVG vs CSS
-The reference strip is a **capsule rotated so its flat end is clipped by the hero's top edge**. A rotated `overflow-hidden` div can't do that — the container itself rotates. SVG clipPath gives us the exact shape without rotating the photo's bounding box, and the top of the strip gets cropped naturally by the SVG viewport.
+**2. Foreground link band**
+- Below the SVG, a `#1a3d3b` (deep teal) band containing the existing 4 link columns, restyled:
+  - Section headings uppercase, small, light teal (`#8fb5b0`).
+  - Links in cream/off-white, hover to full white.
+  - Columns grouped as in the reference: LEARN | GENERAL (2 sub-cols) | RESOURCES (2 sub-cols).
+- Bottom row: copyright left, secondary link right, thin divider above, muted teal text.
+
+**3. Color tokens**
+- Use inline hex on the SVG (illustration colors are specific to this scene, not part of the design system).
+- Keep link/text colors as Tailwind classes using new local classes or arbitrary values; no changes to `src/styles.css` tokens.
+
+**4. Content**
+- Preserve existing link structure (Explore / Company / Legal) but regroup into the 3-heading layout from the reference (LEARN, GENERAL, RESOURCES) using the current links — no new routes.
+- Keep brand line + tagline out (reference has none in the link band); move the "Ulmind Travel" wordmark to sit subtly on the front hill as a small serif label, and keep the descriptive tagline in the bottom copyright row.
 
 ## Scope
-- Only `src/routes/about.tsx`.
-- Keep everything else from the last redesign (teal bg, left-side text, CTA, socials, dot grids, mobile fallback).
-- Replace the `[shapeAlps, heroBg, shapeKyoto].map(...)` `<div>` block with the SVG described above.
-- Mobile: keep the current 3-column rounded thumbnail fallback (SVG-clipped version only renders at `lg+`).
+- Only `src/components/layout/footer.tsx`.
+- No new assets, no new routes, no token changes.
 
 ## Non-goals
-- No changes to the collage section below, other routes, or the token file.
-- No new dependencies.
+- No parallax or animation.
+- No changes to header, pages, or other components.
+- Not a pixel-perfect trace of the reference figures — silhouettes are stylized approximations in the same palette and composition.
