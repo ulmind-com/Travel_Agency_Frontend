@@ -68,12 +68,18 @@ export const wishlistQuery = () =>
   queryOptions({
     queryKey: ["wishlist"] as const,
     queryFn: () => wishlistService.list(),
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
+    staleTime: 30_000,
   });
 
 export const myBookingsQuery = () =>
   queryOptions({
     queryKey: ["bookings", "mine"] as const,
     queryFn: () => bookingsService.myBookings(),
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
+    staleTime: 30_000,
   });
 
 export const packageReviewsQuery = (packageId: string) =>
@@ -86,6 +92,9 @@ export const travelersQuery = () =>
   queryOptions({
     queryKey: ["travelers"] as const,
     queryFn: () => travelersService.list(),
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
+    staleTime: 30_000,
   });
 
 export const heroSlidesQuery = () =>

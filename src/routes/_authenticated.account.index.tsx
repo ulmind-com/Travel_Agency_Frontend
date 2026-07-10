@@ -104,8 +104,12 @@ function Overview() {
   const wishlist = useQuery(wishlistQuery());
   const travelers = useQuery(travelersQuery());
 
+  const isFetching = bookings.isFetching || wishlist.isFetching || travelers.isFetching;
   const isLoading = bookings.isLoading || wishlist.isLoading || travelers.isLoading;
-  const hasError = bookings.isError || wishlist.isError || travelers.isError;
+  // Only show error when ALL queries failed with no data at all
+  const allFailed = bookings.isError && wishlist.isError && travelers.isError;
+  const hasAnyData = bookings.data || wishlist.data || travelers.data;
+  const showError = allFailed && !hasAnyData;
 
   const active = (bookings.data ?? []).filter((b) =>
     ["PENDING", "CONFIRMED", "CANCELLATION_REQUESTED"].includes(b.status),
@@ -114,7 +118,7 @@ function Overview() {
   return (
     <div className="space-y-8">
       {/* error banner */}
-      {hasError && (
+      {showError && (
         <ErrorBanner
           message="Some data couldn't be loaded. Your connection or the server may be momentarily unavailable."
           onRetry={() => {
