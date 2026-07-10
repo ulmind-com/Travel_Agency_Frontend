@@ -178,11 +178,13 @@ function AboutPage() {
                 // Anchor everything at the top-right corner: rightmost
                 // strip sits at the right edge, siblings stack to its left
                 // and fan diagonally down-left from the +24° rotation.
+                // Fan from the top-right corner: rightmost strip hugs
+                // the right edge, the others step left with clean gaps.
                 const strips = [
-                  { cx: 470, cy: 0 },
-                  { cx: 590, cy: 0 },
-                  { cx: 710, cy: 0 },
-                  { cx: 830, cy: 0 },
+                  { cx: 320, cy: 0 },
+                  { cx: 480, cy: 0 },
+                  { cx: 640, cy: 0 },
+                  { cx: 800, cy: 0 },
                 ];
                 return (
                   <svg
