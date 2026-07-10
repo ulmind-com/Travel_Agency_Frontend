@@ -147,36 +147,41 @@ function AboutPage() {
             {/* Right: diagonal photo strips (SVG capsule clip) */}
             <div className="relative hidden min-h-[600px] lg:block">
               {(() => {
-                // Capsule strip: flat top (clipped by viewport), rounded bottom.
-                // width = 150, drawn from y=-150 down to y=650, then semicircle (r=75).
-                const W = 150;
-                const R = 75;
-                const TOP = -150;
-                const BOT = 650; // bottom of straight section; rounded end reaches BOT + R
-                const ANGLE = 22; // degrees, tilt like reference
-                const PIVOT_Y = 100; // rotation pivot y (strip-local)
-                const stripPath = `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`;
-                const strips = [
-                  { img: shapeAlps, cx: 210 },
-                  { img: heroBg, cx: 400 },
-                  { img: shapeKyoto, cx: 590 },
-                ];
+                // Three parallel capsule strips (flat top clipped by viewport,
+                // rounded bottom) filled with the SAME image — matches the
+                // reference where one scenic photo peeks through 3 tilted windows.
+                const W = 105;
+                const R = 52;
+                const TOP = -260;
+                const BOT = 470; // straight section ends here; arc reaches BOT + R
+                const ANGLE = 24;
+                const PIVOT_X = W / 2;
+                const PIVOT_Y = 100;
+                const singleStrip = `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`;
+                const centers = [190, 355, 520];
+                const unionPath = centers
+                  .map(
+                    (cx) =>
+                      `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`,
+                  )
+                  .join(" ");
                 return (
                   <svg
-                    viewBox="0 0 700 780"
+                    viewBox="0 0 700 720"
                     preserveAspectRatio="xMidYMid slice"
                     className="absolute inset-0 h-full w-full"
                     aria-hidden
                   >
                     <defs>
-                      {strips.map((s, i) => (
-                        <clipPath id={`about-strip-${i}`} key={i}>
+                      <clipPath id="about-strips">
+                        {centers.map((cx, i) => (
                           <path
-                            d={stripPath}
-                            transform={`translate(${s.cx - W / 2} 0) rotate(${ANGLE} ${W / 2} ${PIVOT_Y})`}
+                            key={i}
+                            d={singleStrip}
+                            transform={`translate(${cx - PIVOT_X} 0) rotate(${ANGLE} ${PIVOT_X} ${PIVOT_Y})`}
                           />
-                        </clipPath>
-                      ))}
+                        ))}
+                      </clipPath>
                       <filter
                         id="about-strip-shadow"
                         x="-20%"
@@ -193,19 +198,15 @@ function AboutPage() {
                         />
                       </filter>
                     </defs>
-                    <g filter="url(#about-strip-shadow)">
-                      {strips.map((s, i) => (
-                        <image
-                          key={i}
-                          href={s.img}
-                          x="0"
-                          y="0"
-                          width="700"
-                          height="780"
-                          preserveAspectRatio="xMidYMid slice"
-                          clipPath={`url(#about-strip-${i})`}
-                        />
-                      ))}
+                    <g filter="url(#about-strip-shadow)" clipPath="url(#about-strips)">
+                      <image
+                        href={heroBg}
+                        x="0"
+                        y="0"
+                        width="700"
+                        height="720"
+                        preserveAspectRatio="xMidYMid slice"
+                      />
                     </g>
                   </svg>
                 );
