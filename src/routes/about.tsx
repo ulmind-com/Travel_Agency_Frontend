@@ -173,11 +173,14 @@ function AboutPage() {
                 // around each anchor point (y=0).
                 // Anchor all strips near the top-right corner and fan
                 // outward down-left because of the +24° rotation.
+                // Anchor everything at the top-right corner: rightmost
+                // strip sits at the right edge, siblings stack to its left
+                // and fan diagonally down-left from the +24° rotation.
                 const strips = [
-                  { cx: 560, cy: 0 },
-                  { cx: 660, cy: 0 },
-                  { cx: 760, cy: 0 },
-                  { cx: 860, cy: 0 },
+                  { cx: 470, cy: 0 },
+                  { cx: 590, cy: 0 },
+                  { cx: 710, cy: 0 },
+                  { cx: 830, cy: 0 },
                 ];
                 return (
                   <svg
@@ -217,7 +220,7 @@ function AboutPage() {
                     <g opacity="0.28">
                       <path
                         d={pill}
-                        transform={`translate(710 0) rotate(${ANGLE}) scale(3.4 1)`}
+                        transform={`translate(680 0) rotate(${ANGLE}) scale(3.4 1)`}
                         fill="#8FC4B9"
                       />
                     </g>
