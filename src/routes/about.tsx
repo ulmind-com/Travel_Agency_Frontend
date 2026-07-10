@@ -182,7 +182,7 @@ function AboutPage() {
                 return (
                   <svg
                     viewBox={`0 0 ${VBW} ${VBH}`}
-                    preserveAspectRatio="xMidYMid slice"
+                    preserveAspectRatio="xMaxYMin slice"
                     className="absolute inset-0 h-full w-full"
                     aria-hidden
                   >
