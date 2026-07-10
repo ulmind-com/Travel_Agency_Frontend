@@ -1,13 +1,13 @@
 import { Link } from "@tanstack/react-router";
 
-import footerBg from "@/assets/footer-landscape.png.asset.json";
+import footerBg from "@/assets/footer-landscape.png";
 
 export function Footer() {
   return (
     <footer className="relative m-0 block w-full bg-[#0d2b2b] p-0 text-white">
       <div className="relative w-full">
         <img
-          src={footerBg.url}
+          src={footerBg}
           alt=""
           className="block w-full select-none"
           draggable={false}
