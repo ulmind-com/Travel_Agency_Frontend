@@ -147,31 +147,35 @@ function AboutPage() {
             {/* Right: diagonal photo strips (SVG capsule clip) */}
             <div className="relative hidden min-h-[600px] lg:block">
               {(() => {
-                // Parallel capsule strips tilted like "/" (top-right to
-                // bottom-left). Each strip is a rounded-both-ends pill
-                // filled with the SAME photo — matches the reference where
-                // one scenic image peeks through several tilted windows.
+                // Strips descend from top-right corner toward bottom-left,
+                // flat where they exit the top of the hero, rounded only
+                // at the bottom end. We draw tall vertical "flat-top,
+                // rounded-bottom" capsules whose tops start ABOVE the
+                // viewBox (so the top edge is clipped flat by the SVG
+                // viewport) and rotate them so they lean like "\".
                 const VBW = 780;
-                const VBH = 720;
-                const W = 130;               // strip thickness
-                const R = W / 2;             // cap radius
-                const LEN = 900;             // straight length (huge — cropped by viewport)
-                const ANGLE = -22;           // negative → leans like "/"
-                // Rounded-both-ends capsule centered on origin, tall (vertical),
-                // then rotated. Straight section from -LEN/2..LEN/2, caps beyond.
+                const VBH = 780;
+                const W = 120;               // strip thickness
+                const R = W / 2;             // bottom cap radius
+                const TOP = -260;            // starts above viewport (flat-cut)
+                const BOT = 620;             // rounded end inside viewport
+                const ANGLE = 22;            // positive → leans like "\"
+                // Flat top, rounded bottom capsule (vertical), centered on x=0.
                 const pill = [
-                  `M ${-R},${-LEN / 2}`,
-                  `A ${R},${R} 0 0 1 ${R},${-LEN / 2}`,
-                  `L ${R},${LEN / 2}`,
-                  `A ${R},${R} 0 0 1 ${-R},${LEN / 2}`,
+                  `M ${-R},${TOP}`,
+                  `L ${R},${TOP}`,
+                  `L ${R},${BOT - R}`,
+                  `A ${R},${R} 0 0 1 ${-R},${BOT - R}`,
                   "Z",
                 ].join(" ");
-                // Strip centers along the diagonal — spaced across the panel.
+                // Anchors at the TOP edge of the panel; strips fan from the
+                // top-right corner down-left because of the +22° rotation
+                // around each anchor point (y=0).
                 const strips = [
-                  { cx: 180, cy: 320 },
-                  { cx: 360, cy: 340 },
-                  { cx: 540, cy: 360 },
-                  { cx: 720, cy: 380 },
+                  { cx: 320, cy: 0 },
+                  { cx: 470, cy: 0 },
+                  { cx: 620, cy: 0 },
+                  { cx: 770, cy: 0 },
                 ];
                 return (
                   <svg
@@ -181,9 +185,6 @@ function AboutPage() {
                     aria-hidden
                   >
                     <defs>
-                      <clipPath id="about-band">
-                        {/* Lighter diagonal band behind strips */}
-                      </clipPath>
                       <clipPath id="about-strips">
                         {strips.map((s, i) => (
                           <path
@@ -211,10 +212,10 @@ function AboutPage() {
                     </defs>
 
                     {/* Faint lighter-teal parallel band behind strips */}
-                    <g opacity="0.35">
+                    <g opacity="0.3">
                       <path
                         d={pill}
-                        transform={`translate(640 380) rotate(${ANGLE}) scale(2.2 1)`}
+                        transform={`translate(545 0) rotate(${ANGLE}) scale(3 1)`}
                         fill="#8FC4B9"
                       />
                     </g>
