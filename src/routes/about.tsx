@@ -159,12 +159,6 @@ function AboutPage() {
                 const PIVOT_Y = 100;
                 const singleStrip = `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`;
                 const centers = [190, 355, 520];
-                const unionPath = centers
-                  .map(
-                    (cx) =>
-                      `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`,
-                  )
-                  .join(" ");
                 return (
                   <svg
                     viewBox="0 0 700 720"
