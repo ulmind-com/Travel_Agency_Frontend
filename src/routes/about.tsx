@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronsRight, Compass, UserRound } from "lucide-react";
+import { ArrowRight, Compass, UserRound } from "lucide-react";
 
 import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
@@ -62,200 +62,23 @@ function RoundedPhoto({
 function AboutPage() {
   return (
     <div>
-      {/* Hero banner — teal with diagonal photo strips */}
-      <section className="relative w-full overflow-hidden bg-[#5FA79A] pt-28 lg:pt-32">
-        {/* Decorative dot grids */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-[38%] top-24 h-16 w-16 opacity-60"
-          style={{
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.55) 1.5px, transparent 1.5px)",
-            backgroundSize: "12px 12px",
-          }}
+      {/* Hero banner */}
+      <section className="relative h-[420px] w-full overflow-hidden lg:h-[520px]">
+        <img
+          src={heroBg}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
         />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute bottom-16 left-[30%] h-14 w-14 opacity-50"
-          style={{
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.55) 1.5px, transparent 1.5px)",
-            backgroundSize: "12px 12px",
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute right-10 top-6 h-12 w-24 opacity-50"
-          style={{
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.6) 1.5px, transparent 1.5px)",
-            backgroundSize: "12px 12px",
-          }}
-        />
-
-        <Container>
-          <div className="relative grid min-h-[560px] gap-10 pb-20 lg:min-h-[680px] lg:grid-cols-[1.05fr_1fr] lg:gap-6 lg:pb-28">
-            {/* Left: text */}
-            <div className="relative z-10 flex flex-col justify-center text-cream-50">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cream-50/80">
-                About Ulmind Travel
-              </p>
-              <h1 className="mt-6 flex flex-wrap items-center gap-x-4 font-sans text-6xl font-extrabold uppercase leading-[0.95] tracking-tight text-cream-50 sm:text-7xl lg:text-[88px]">
-                <span>
-                  Travel
-                  <br />
-                  The World
-                </span>
-                <ChevronsRight
-                  className="mt-3 hidden size-10 text-cream-50/70 lg:inline"
-                  strokeWidth={2.5}
-                />
-              </h1>
-              <p className="mt-8 max-w-lg font-serif text-2xl italic leading-snug text-cream-50">
-                “Explore the world with a trusted travel partner — discover new
-                destinations, unforgettable experiences & endless adventures.”
-              </p>
-              <p className="mt-6 max-w-md text-sm leading-relaxed text-cream-50/85">
-                At Ulmind Travel, we are committed to turning your travel dreams
-                into reality. With years of experience in the travel and tourism
-                industry, we offer personalized services, curated itineraries,
-                and unforgettable experiences.
-              </p>
-
-              <div className="mt-10 flex items-center gap-6">
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-3 rounded-full bg-ink-900 px-8 py-4 text-xs font-medium uppercase tracking-[0.25em] text-cream-50 shadow-lg transition-transform hover:-translate-y-0.5"
-                >
-                  Book Now
-                  <ArrowRight className="size-4" />
-                </Link>
-
-                <div className="flex items-center gap-3">
-                  {["IG", "FB", "TW"].map((label) => (
-                    <span
-                      key={label}
-                      className="grid size-9 place-items-center rounded-full bg-cream-50/15 text-[10px] font-semibold text-cream-50 ring-1 ring-cream-50/25 backdrop-blur-sm"
-                    >
-                      {label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right: diagonal photo strips (SVG capsule clip).
-                Breaks out of the grid column so the strips can anchor
-                against the true top-right corner of the hero. */}
-            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[58%] lg:block">
-              {(() => {
-                // Strips descend from top-right corner toward bottom-left,
-                // flat where they exit the top of the hero, rounded only
-                // at the bottom end. We draw tall vertical "flat-top,
-                // rounded-bottom" capsules whose tops start ABOVE the
-                // viewBox (so the top edge is clipped flat by the SVG
-                // viewport) and rotate them so they lean like "\".
-                const VBW = 780;
-                const VBH = 780;
-                const W = 116;               // strip thickness
-                const R = W / 2;             // bottom cap radius
-                const TOP = -320;            // starts well above viewport (flat-cut)
-                const BOT = 680;             // rounded end inside viewport
-                const ANGLE = 24;            // positive → leans like "\"
-                // Flat top, rounded bottom capsule (vertical), centered on x=0.
-                const pill = [
-                  `M ${-R},${TOP}`,
-                  `L ${R},${TOP}`,
-                  `L ${R},${BOT - R}`,
-                  `A ${R},${R} 0 0 1 ${-R},${BOT - R}`,
-                  "Z",
-                ].join(" ");
-                // Anchors at the TOP edge of the panel; strips fan from the
-                // top-right corner down-left because of the +22° rotation
-                // around each anchor point (y=0).
-                // Anchor all strips near the top-right corner and fan
-                // outward down-left because of the +24° rotation.
-                // Anchor everything at the top-right corner: rightmost
-                // strip sits at the right edge, siblings stack to its left
-                // and fan diagonally down-left from the +24° rotation.
-                // Fan from the top-right corner: rightmost strip hugs
-                // the right edge, the others step left with clean gaps.
-                const strips = [
-                  { cx: 210, cy: 0 },
-                  { cx: 400, cy: 0 },
-                  { cx: 590, cy: 0 },
-                  { cx: 780, cy: 0 },
-                ];
-                return (
-                  <svg
-                    viewBox={`0 0 ${VBW} ${VBH}`}
-                    preserveAspectRatio="xMaxYMin slice"
-                    className="absolute inset-0 h-full w-full"
-                    aria-hidden
-                  >
-                    <defs>
-                      <clipPath id="about-strips">
-                        {strips.map((s, i) => (
-                          <path
-                            key={i}
-                            d={pill}
-                            transform={`translate(${s.cx} ${s.cy}) rotate(${ANGLE})`}
-                          />
-                        ))}
-                      </clipPath>
-                      <filter
-                        id="about-strip-shadow"
-                        x="-20%"
-                        y="-20%"
-                        width="140%"
-                        height="140%"
-                      >
-                        <feDropShadow
-                          dx="0"
-                          dy="14"
-                          stdDeviation="16"
-                          floodColor="#000"
-                          floodOpacity="0.3"
-                        />
-                      </filter>
-                    </defs>
-
-                    {/* Faint lighter-teal parallel band behind strips */}
-                    <g opacity="0.28">
-                      <path
-                        d={pill}
-                        transform={`translate(680 0) rotate(${ANGLE}) scale(3.4 1)`}
-                        fill="#8FC4B9"
-                      />
-                    </g>
-
-                    <g filter="url(#about-strip-shadow)" clipPath="url(#about-strips)">
-                      <image
-                        href={heroBg}
-                        x="0"
-                        y="0"
-                        width={VBW}
-                        height={VBH}
-                        preserveAspectRatio="xMidYMid slice"
-                      />
-                    </g>
-                  </svg>
-                );
-              })()}
-            </div>
-          </div>
-        </Container>
-
-        {/* Mobile strips */}
-        <div className="relative -mt-6 grid grid-cols-3 gap-3 px-6 pb-12 lg:hidden">
-          {[shapeAlps, heroBg, shapeKyoto].map((img, i) => (
-            <div
-              key={i}
-              className="h-52 overflow-hidden rounded-full shadow-lg"
-            >
-              <img src={img} alt="" className="h-full w-full object-cover" />
-            </div>
-          ))}
+        <div className="absolute inset-0 bg-gradient-to-b from-ink-900/70 via-ink-900/55 to-ink-900/70" />
+        <div className="relative flex h-full flex-col items-center justify-center text-center text-cream-50">
+          <h1 className="font-sans text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+            About
+          </h1>
+          <nav className="mt-4 flex items-center gap-3 text-sm text-cream-50/90">
+            <Link to="/" className="hover:text-cream-50">Home</Link>
+            <ArrowRight className="size-4" />
+            <span>About</span>
+          </nav>
         </div>
       </section>
 
