@@ -144,30 +144,67 @@ function AboutPage() {
               </div>
             </div>
 
-            {/* Right: diagonal photo strips */}
+            {/* Right: diagonal photo strips (SVG capsule clip) */}
             <div className="relative hidden min-h-[600px] lg:block">
-              {[
-                { img: shapeAlps, left: "8%", delay: 0 },
-                { img: heroBg, left: "38%", delay: 0.05 },
-                { img: shapeKyoto, left: "68%", delay: 0.1 },
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  className="absolute -top-40 h-[1100px] w-[190px] overflow-hidden rounded-full shadow-[0_30px_60px_-20px_rgba(0,0,0,0.4)]"
-                  style={{
-                    left: s.left,
-                    transform: "rotate(25deg)",
-                    transformOrigin: "center",
-                  }}
-                >
-                  <img
-                    src={s.img}
-                    alt=""
-                    className="h-full w-full object-cover"
-                    style={{ transform: "rotate(-25deg) scale(1.6)" }}
-                  />
-                </div>
-              ))}
+              {(() => {
+                // Three parallel capsule strips (flat top clipped by viewport,
+                // rounded bottom) filled with the SAME image — matches the
+                // reference where one scenic photo peeks through 3 tilted windows.
+                const W = 105;
+                const R = 52;
+                const TOP = -260;
+                const BOT = 470; // straight section ends here; arc reaches BOT + R
+                const ANGLE = 24;
+                const PIVOT_X = W / 2;
+                const PIVOT_Y = 100;
+                const singleStrip = `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`;
+                const centers = [190, 355, 520];
+                return (
+                  <svg
+                    viewBox="0 0 700 720"
+                    preserveAspectRatio="xMidYMid slice"
+                    className="absolute inset-0 h-full w-full"
+                    aria-hidden
+                  >
+                    <defs>
+                      <clipPath id="about-strips">
+                        {centers.map((cx, i) => (
+                          <path
+                            key={i}
+                            d={singleStrip}
+                            transform={`translate(${cx - PIVOT_X} 0) rotate(${ANGLE} ${PIVOT_X} ${PIVOT_Y})`}
+                          />
+                        ))}
+                      </clipPath>
+                      <filter
+                        id="about-strip-shadow"
+                        x="-20%"
+                        y="-20%"
+                        width="140%"
+                        height="140%"
+                      >
+                        <feDropShadow
+                          dx="0"
+                          dy="18"
+                          stdDeviation="18"
+                          floodColor="#000"
+                          floodOpacity="0.35"
+                        />
+                      </filter>
+                    </defs>
+                    <g filter="url(#about-strip-shadow)" clipPath="url(#about-strips)">
+                      <image
+                        href={heroBg}
+                        x="0"
+                        y="0"
+                        width="700"
+                        height="720"
+                        preserveAspectRatio="xMidYMid slice"
+                      />
+                    </g>
+                  </svg>
+                );
+              })()}
             </div>
           </div>
         </Container>
