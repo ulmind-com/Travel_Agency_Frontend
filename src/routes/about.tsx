@@ -147,18 +147,25 @@ function AboutPage() {
             {/* Right: diagonal photo strips (SVG capsule clip) */}
             <div className="relative hidden min-h-[600px] lg:block">
               {(() => {
+                // Capsule strip: flat top (clipped by viewport), rounded bottom.
+                // width = 150, drawn from y=-150 down to y=650, then semicircle (r=75).
+                const W = 150;
+                const R = 75;
+                const TOP = -150;
+                const BOT = 650; // bottom of straight section; rounded end reaches BOT + R
+                const ANGLE = 22; // degrees, tilt like reference
+                const PIVOT_Y = 100; // rotation pivot y (strip-local)
+                const stripPath = `M 0,${TOP} L ${W},${TOP} L ${W},${BOT} A ${R},${R} 0 0 1 0,${BOT} Z`;
                 const strips = [
-                  { img: shapeAlps, cx: 120 },
-                  { img: heroBg, cx: 300 },
-                  { img: shapeKyoto, cx: 480 },
+                  { img: shapeAlps, cx: 210 },
+                  { img: heroBg, cx: 400 },
+                  { img: shapeKyoto, cx: 590 },
                 ];
-                const stripPath =
-                  "M 0,-260 L 160,-260 L 160,900 A 80,80 0 0 1 0,900 Z";
                 return (
                   <svg
-                    viewBox="0 0 600 720"
+                    viewBox="0 0 700 780"
                     preserveAspectRatio="xMidYMid slice"
-                    className="absolute inset-0 h-full w-full overflow-visible"
+                    className="absolute inset-0 h-full w-full"
                     aria-hidden
                   >
                     <defs>
@@ -166,7 +173,7 @@ function AboutPage() {
                         <clipPath id={`about-strip-${i}`} key={i}>
                           <path
                             d={stripPath}
-                            transform={`translate(${s.cx - 80} 0) rotate(25 80 320)`}
+                            transform={`translate(${s.cx - W / 2} 0) rotate(${ANGLE} ${W / 2} ${PIVOT_Y})`}
                           />
                         </clipPath>
                       ))}
@@ -193,8 +200,8 @@ function AboutPage() {
                           href={s.img}
                           x="0"
                           y="0"
-                          width="600"
-                          height="720"
+                          width="700"
+                          height="780"
                           preserveAspectRatio="xMidYMid slice"
                           clipPath={`url(#about-strip-${i})`}
                         />
