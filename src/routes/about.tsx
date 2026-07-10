@@ -144,8 +144,10 @@ function AboutPage() {
               </div>
             </div>
 
-            {/* Right: diagonal photo strips (SVG capsule clip) */}
-            <div className="relative hidden min-h-[600px] lg:block">
+            {/* Right: diagonal photo strips (SVG capsule clip).
+                Breaks out of the grid column so the strips can anchor
+                against the true top-right corner of the hero. */}
+            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[58%] lg:block">
               {(() => {
                 // Strips descend from top-right corner toward bottom-left,
                 // flat where they exit the top of the hero, rounded only
