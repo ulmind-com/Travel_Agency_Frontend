@@ -159,8 +159,6 @@ function AboutPage() {
                 const ANGLE = -22;           // negative → leans like "/"
                 // Rounded-both-ends capsule centered on origin, tall (vertical),
                 // then rotated. Straight section from -LEN/2..LEN/2, caps beyond.
-                const capsule = `M ${-R},${-LEN / 2} L ${R},${-LEN / 2} A ${R},${R} 0 0 1 ${R},${-LEN / 2 + 0} L ${R},${LEN / 2} A ${R},${R} 0 0 1 ${-R},${LEN / 2} Z`;
-                // Better capsule path: two semicircle caps.
                 const pill = [
                   `M ${-R},${-LEN / 2}`,
                   `A ${R},${R} 0 0 1 ${R},${-LEN / 2}`,
