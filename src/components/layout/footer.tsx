@@ -5,12 +5,18 @@ import footerBg from "@/assets/footer-landscape.png.asset.json";
 export function Footer() {
   return (
     <footer className="relative m-0 block w-full bg-[#0d2b2b] p-0 text-white">
-      <img
-        src={footerBg.url}
-        alt=""
-        className="block w-full select-none"
-        draggable={false}
-      />
+      <div className="relative w-full">
+        <img
+          src={footerBg.url}
+          alt=""
+          className="block w-full select-none"
+          draggable={false}
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-cream-50 to-transparent sm:h-40 lg:h-48"
+          aria-hidden="true"
+        />
+      </div>
 
       <div className="bg-[#0d2b2b]">
         <div className="mx-auto max-w-7xl px-6 pb-10 pt-4 lg:px-10 lg:pb-14">
