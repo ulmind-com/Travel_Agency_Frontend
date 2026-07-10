@@ -16,6 +16,10 @@ export function Footer() {
           className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-cream-50 to-transparent sm:h-40 lg:h-48"
           aria-hidden="true"
         />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0d2b2b] to-transparent sm:h-32 lg:h-40"
+          aria-hidden="true"
+        />
       </div>
 
       <div className="bg-[#0d2b2b]">
