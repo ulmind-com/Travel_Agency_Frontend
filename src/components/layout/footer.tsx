@@ -23,8 +23,8 @@ export function Footer() {
       </div>
 
       <div className="bg-[#0d2b2b]">
-        <div className="mx-auto max-w-7xl px-6 pb-10 pt-4 lg:px-10 lg:pb-14">
-          <p className="mb-8 font-serif text-3xl text-white/90 lg:text-4xl">
+        <div className="mx-auto max-w-7xl px-4 pb-10 pt-4 sm:px-6 lg:px-10 lg:pb-14">
+          <p className="mb-8 font-serif text-2xl text-white/90 sm:text-3xl lg:text-4xl">
             Ulmind Travel
           </p>
 
