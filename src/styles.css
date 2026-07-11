@@ -275,3 +275,50 @@
   background: rgba(28, 25, 23, 0.12);
   border-radius: 4px;
 }
+
+/* ============================================================
+   Admin Studio — mobile tuning
+   ============================================================ */
+@media (max-width: 640px) {
+  .admin-studio h1.font-serif {
+    font-size: 1.75rem !important;
+    line-height: 1.1 !important;
+  }
+  .admin-studio h2 {
+    font-size: 1.25rem !important;
+    line-height: 1.2 !important;
+  }
+  .admin-studio .rounded-3xl {
+    border-radius: 1.25rem;
+    padding: 1rem !important;
+  }
+  .admin-studio .rounded-3xl .rounded-3xl,
+  .admin-studio .rounded-3xl .rounded-2xl {
+    padding: 0.75rem;
+  }
+  /* Force header action rows to wrap and buttons to fill width */
+  .admin-studio button.rounded-full,
+  .admin-studio a.rounded-full {
+    font-size: 10px;
+    padding: 0.5rem 0.85rem;
+  }
+  /* Publish/save buttons full width in header */
+  .admin-studio .bg-ink-900 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  /* Any grid with the 220px preview column becomes single-column */
+  .admin-studio [class*="lg:grid-cols-[220px"],
+  .admin-studio [class*="lg:grid-cols-[240px"],
+  .admin-studio [class*="lg:grid-cols-[260px"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Prevent oversized headings anywhere from causing horizontal scroll */
+@media (max-width: 640px) {
+  h1, h2, h3 {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+}
