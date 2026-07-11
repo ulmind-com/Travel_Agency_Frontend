@@ -133,16 +133,16 @@ function BookingPage() {
   };
 
   return (
-    <div className="pt-24 pb-24">
+    <div className="pt-20 pb-16 sm:pt-24 sm:pb-24">
       <Container>
         <FadeUp>
           <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">Reserve</p>
           <h1 className="mt-3 font-serif text-2xl text-ink-900 sm:text-4xl md:text-5xl">{pkg.title}</h1>
         </FadeUp>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="min-w-0 space-y-8">
-            <section className="rounded-3xl border border-ink-900/5 bg-cream-50 p-6">
+        <div className="mt-8 grid gap-8 sm:mt-12 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-10">
+          <div className="min-w-0 space-y-6 sm:space-y-8">
+            <section className="rounded-3xl border border-ink-900/5 bg-cream-50 p-4 sm:p-6">
               <h2 className="font-serif text-2xl text-ink-900">1 · Travel details</h2>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 <label className="block">
