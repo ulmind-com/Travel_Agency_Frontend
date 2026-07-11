@@ -110,7 +110,7 @@ function AdminHeroPage() {
   const restoreDefaults = () => setSlides(defaultHeroSlides);
 
   return (
-    <div className="bg-cream-50">
+    <div className="admin-studio">
       <Container className="py-16">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>
