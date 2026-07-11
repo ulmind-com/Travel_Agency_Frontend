@@ -1,9 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { AlertCircle, Heart, Package } from "lucide-react";
+import { Heart } from "lucide-react";
 
 import { PackageCard } from "@/components/packages/package-card";
+import {
+  AdminScopeCard,
+  ErrorStateCard,
+  StateCard,
+  httpStatus,
+} from "@/components/account/state-card";
 import { wishlistQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/account/wishlist")({
@@ -33,7 +39,8 @@ function WishlistSkeleton() {
 }
 
 function WishlistPage() {
-  const { data, isLoading, isError, refetch } = useQuery(wishlistQuery());
+  const { data, isLoading, isError, error, isFetching, refetch } =
+    useQuery(wishlistQuery());
 
   /* loading */
   if (isLoading) {
@@ -42,27 +49,13 @@ function WishlistPage() {
 
   /* error */
   if (isError) {
+    if (httpStatus(error) === 403) return <AdminScopeCard section="Wishlist" />;
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-3xl border border-red-200/60 bg-red-50/40 p-10 text-center backdrop-blur-sm"
-      >
-        <AlertCircle className="mx-auto size-8 text-red-300" />
-        <p className="mt-4 font-serif text-2xl text-red-800/80">
-          Couldn&apos;t load your wishlist
-        </p>
-        <p className="mt-2 text-sm text-red-600/60">
-          Please check your connection and try again.
-        </p>
-        <button
-          type="button"
-          onClick={() => refetch()}
-          className="mt-6 rounded-full bg-red-600/90 px-6 py-3 text-[12px] font-medium uppercase tracking-widest text-white transition-colors hover:bg-red-700"
-        >
-          Try again
-        </button>
-      </motion.div>
+      <ErrorStateCard
+        section="your wishlist"
+        onRetry={() => refetch()}
+        retrying={isFetching}
+      />
     );
   }
 
@@ -71,37 +64,13 @@ function WishlistPage() {
   /* empty */
   if (packages.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-        className="relative overflow-hidden rounded-3xl border border-ink-900/5 bg-cream-50 p-14 text-center"
-      >
-        <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-rose-400/[0.06] blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-10 -left-10 size-32 rounded-full bg-pink-400/[0.06] blur-3xl" />
-
-        <div className="relative">
-          <motion.div
-            animate={{ scale: [1, 1.15, 1] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            className="mx-auto grid size-16 place-items-center rounded-3xl bg-rose-50/60"
-          >
-            <Heart className="size-7 text-rose-300" />
-          </motion.div>
-          <p className="mt-5 font-serif text-3xl text-ink-900">
-            Your wishlist is empty.
-          </p>
-          <p className="mt-2 text-sm text-ink-900/50">
-            Save escapes that inspire you and return to them anytime.
-          </p>
-          <Link
-            to="/packages"
-            className="mt-7 inline-flex rounded-full bg-ink-900 px-6 py-3 text-[12px] font-medium uppercase tracking-widest text-cream-50 transition-transform active:scale-95"
-          >
-            Explore escapes
-          </Link>
-        </div>
-      </motion.div>
+      <StateCard
+        icon={Heart}
+        eyebrow="Your wishlist"
+        title="Nothing saved just yet."
+        description="Bookmark the journeys that speak to you — they'll live here, curated and quiet, ready when you are."
+        primary={{ label: "Explore escapes", to: "/packages" }}
+      />
     );
   }
 
