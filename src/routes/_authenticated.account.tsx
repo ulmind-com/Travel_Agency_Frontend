@@ -20,14 +20,14 @@ function AccountLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdminRoute = pathname.startsWith("/account/admin");
   return (
-    <div className="pt-24 pb-24">
+    <div className="pt-20 pb-16 sm:pt-24 sm:pb-24">
       <Container>
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 sm:mb-10">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">
+            <p className="text-[10px] uppercase tracking-[0.28em] text-ink-900/40 sm:text-[11px]">
               {isAdminRoute ? "Admin Studio" : `Member since ${new Date().getFullYear()}`}
             </p>
-            <h1 className="mt-2 font-serif text-4xl text-ink-900 lg:text-5xl">
+            <h1 className="mt-2 font-serif text-3xl text-ink-900 sm:text-4xl lg:text-5xl">
               {isAdminRoute ? "Content Studio" : `Welcome, ${me.name.split(" ")[0]}.`}
             </h1>
           </div>
@@ -38,7 +38,7 @@ function AccountLayout() {
             </div>
           )}
         </div>
-        <div className="grid gap-10 lg:grid-cols-[260px_minmax(0,1fr)]">
+        <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
           <aside className="admin-sidebar-sticky lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-2">
             <AccountSidebar />
           </aside>
