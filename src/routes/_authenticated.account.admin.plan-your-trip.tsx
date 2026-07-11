@@ -132,7 +132,7 @@ function AdminPlanYourTripPage() {
   const restoreDefaults = () => setC(defaultPlanYourTrip);
 
   return (
-    <div className="relative bg-cream-50">
+    <div className="admin-studio relative">
       <PlanShapeClipDefs />
       <Container className="py-16">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
