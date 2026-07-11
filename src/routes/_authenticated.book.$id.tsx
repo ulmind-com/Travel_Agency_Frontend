@@ -137,7 +137,7 @@ function BookingPage() {
       <Container>
         <FadeUp>
           <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">Reserve</p>
-          <h1 className="mt-3 font-serif text-4xl text-ink-900 md:text-5xl">{pkg.title}</h1>
+          <h1 className="mt-3 font-serif text-2xl text-ink-900 sm:text-4xl md:text-5xl">{pkg.title}</h1>
         </FadeUp>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">

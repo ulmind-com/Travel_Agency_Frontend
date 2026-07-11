@@ -328,7 +328,7 @@ function DestinationHero({ d }: { d: DestinationDetail }) {
               <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.3em] text-cream-50/90">
                 {d.eyebrow}
               </p>
-              <h1 className="font-serif text-5xl leading-[1.02] tracking-tight text-cream-50 sm:text-6xl lg:text-8xl">
+              <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-cream-50 sm:text-6xl lg:text-8xl">
                 <LetterReveal text={d.headlinePrefix} />
                 <br />
                 <span className="italic">
@@ -401,7 +401,7 @@ function DestinationDetailPage() {
       <DestinationHero d={d} />
 
       {/* Shape section: text left, shapes right */}
-      <section className="relative bg-cream-50 py-24 lg:py-32">
+      <section className="relative bg-cream-50 py-14 sm:py-24 lg:py-32">
         <PlanShapeClipDefs />
         <Container>
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center lg:gap-24">
@@ -411,7 +411,7 @@ function DestinationDetailPage() {
                 <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
                   {d.script}
                 </p>
-                <h2 className="mt-3 font-serif text-4xl font-medium leading-[1.05] text-ink-900 sm:text-5xl lg:text-6xl">
+                <h2 className="mt-3 font-serif text-3xl font-medium leading-[1.1] text-ink-900 sm:text-5xl lg:text-6xl">
                   {d.title}
                 </h2>
                 {d.paragraphs.map((p, i) => (
