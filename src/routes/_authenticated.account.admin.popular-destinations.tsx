@@ -104,13 +104,13 @@ function AdminPopularDestinationsPage() {
 
   return (
     <div className="admin-studio">
-      <Container className="py-16">
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+      <Container className="py-8 sm:py-16">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4 sm:mb-10 sm:gap-6">
           <div>
             <p className="mb-2 text-[11px] uppercase tracking-[0.3em] text-ink-900/40">
               Admin · Homepage
             </p>
-            <h1 className="font-serif text-4xl text-ink-900 lg:text-5xl">
+            <h1 className="font-serif text-2xl text-ink-900 sm:text-4xl lg:text-5xl">
               Popular destinations
             </h1>
             <p className="mt-3 max-w-lg text-sm text-ink-900/60">
