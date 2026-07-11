@@ -72,10 +72,10 @@ function PackageDetailPage() {
           <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">
             {pkg.category.toLowerCase()} · {pkg.destinations.join(" · ")}
           </p>
-          <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-tight text-ink-900 md:text-6xl">
+          <h1 className="mt-4 max-w-3xl font-serif text-3xl leading-tight text-ink-900 sm:text-5xl md:text-6xl">
             {pkg.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-900/70">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-900/70 sm:text-base">
             {pkg.description}
           </p>
         </FadeUp>
@@ -85,19 +85,19 @@ function PackageDetailPage() {
         <Gallery images={pkg.gallery_images} fallback={pkg.thumbnail} title={pkg.title} />
       </Container>
 
-      <Container className="grid gap-16 py-16 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 space-y-16">
+      <Container className="grid gap-10 py-10 sm:py-16 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16">
+        <div className="min-w-0 space-y-12 sm:space-y-16">
           {pkg.itinerary.length > 0 && (
             <section>
               <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">
                 Journey
               </p>
-              <h2 className="mt-3 mb-8 font-serif text-4xl text-ink-900">The itinerary</h2>
+              <h2 className="mt-3 mb-6 font-serif text-2xl text-ink-900 sm:mb-8 sm:text-4xl">The itinerary</h2>
               <ItineraryTabs days={pkg.itinerary} />
             </section>
           )}
 
-          <section className="grid gap-10 md:grid-cols-2">
+          <section className="grid gap-8 md:grid-cols-2 md:gap-10">
             <IncExc title="What is included" items={pkg.inclusions} icon={<Check className="size-4" />} tone="pos" />
             <IncExc title="What is not" items={pkg.exclusions} icon={<X className="size-4" />} tone="neg" />
           </section>

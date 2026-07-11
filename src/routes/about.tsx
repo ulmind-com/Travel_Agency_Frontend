@@ -71,7 +71,7 @@ function AboutPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink-900/70 via-ink-900/55 to-ink-900/70" />
         <div className="relative flex h-full flex-col items-center justify-center text-center text-cream-50">
-          <h1 className="font-sans text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="font-sans text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
             About
           </h1>
           <nav className="mt-4 flex items-center gap-3 text-sm text-cream-50/90">
@@ -83,7 +83,7 @@ function AboutPage() {
       </section>
 
       {/* Shape collage section */}
-      <section className="relative bg-cream-50 py-24 lg:py-32">
+      <section className="relative bg-cream-50 py-14 sm:py-24 lg:py-32">
         <Container>
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center lg:gap-24">
             <div className="relative order-2 lg:order-1">
@@ -121,7 +121,7 @@ function AboutPage() {
                 <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
                   Welcome To Ulmind Travel
                 </p>
-                <h2 className="mt-3 font-serif text-4xl font-medium leading-[1.05] text-ink-900 sm:text-5xl lg:text-6xl">
+                <h2 className="mt-3 font-serif text-3xl font-medium leading-[1.1] text-ink-900 sm:text-5xl lg:text-6xl">
                   Explore the World with a Trusted Travel Partner
                 </h2>
                 <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-900/60 sm:text-lg">

@@ -11,20 +11,20 @@ export function Achievements() {
   const content = data ?? defaultAchievements;
 
   return (
-    <section className="relative overflow-hidden bg-cream-50 py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-cream-50 py-16 sm:py-24 lg:py-32">
       {/* decorative doodles */}
       <DecorAccents />
 
       <Container className="relative">
         {(content.eyebrow || content.title) && (
-          <div className="mb-16 text-center">
+          <div className="mb-10 text-center sm:mb-16">
             {content.eyebrow && (
               <p className="mb-3 font-serif text-lg italic text-ink-900/60">
                 {content.eyebrow}
               </p>
             )}
             {content.title && (
-              <h2 className="font-serif text-4xl text-ink-900 lg:text-6xl">
+              <h2 className="font-serif text-3xl text-ink-900 sm:text-4xl lg:text-6xl">
                 {content.title}
               </h2>
             )}
@@ -52,7 +52,7 @@ export function Achievements() {
             />
           </svg>
 
-          <div className="relative grid grid-cols-2 gap-y-16 md:grid-cols-4 md:gap-x-6">
+          <div className="relative grid grid-cols-2 gap-y-10 sm:gap-y-16 md:grid-cols-4 md:gap-x-6">
             {content.stats.map((s, i) => (
               <div
                 key={s.id}
@@ -109,7 +109,7 @@ function StatCircle({ stat, index }: { stat: AchievementStat; index: number }) {
       }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      className="group relative mx-auto aspect-square w-[190px] sm:w-[220px] lg:w-[260px]"
+      className="group relative mx-auto aspect-square w-[140px] sm:w-[220px] lg:w-[260px]"
     >
       {/* circle */}
       <motion.div

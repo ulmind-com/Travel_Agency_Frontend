@@ -41,7 +41,7 @@ export function FilterBar({ destination, category, minPrice, maxPrice }: Props) 
 
   return (
     <div className="border-b border-ink-900/5 bg-cream-100/50">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-8 lg:flex-row lg:items-end lg:justify-between lg:px-10">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:flex-row lg:items-end lg:justify-between lg:px-10">
         <div className="flex-1">
           <label className="mb-2 block text-[10px] uppercase tracking-widest text-ink-900/40">
             Search destination
@@ -73,7 +73,7 @@ export function FilterBar({ destination, category, minPrice, maxPrice }: Props) 
         </div>
       </div>
       <div className="no-scrollbar overflow-x-auto border-t border-ink-900/5">
-        <div className="mx-auto flex w-max max-w-full gap-2 px-6 py-4 lg:px-10">
+        <div className="mx-auto flex w-max max-w-full gap-2 px-4 py-3 sm:px-6 sm:py-4 lg:px-10">
           {CATEGORIES.map((c) => {
             const active =
               (c.value === "ALL" && !category) || c.value === category;

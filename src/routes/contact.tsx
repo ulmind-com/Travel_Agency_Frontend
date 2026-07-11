@@ -112,7 +112,7 @@ function ContactHero() {
               <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.3em] text-cream-50/90">
                 The Concierge · Ulmind
               </p>
-              <h1 className="font-serif text-5xl leading-[1.02] tracking-tight text-cream-50 sm:text-6xl lg:text-8xl">
+              <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-cream-50 sm:text-6xl lg:text-8xl">
                 <LetterReveal text="Tell us where" />
                 <br />
                 <span className="italic">
@@ -200,7 +200,7 @@ function ContactPage() {
       <ContactHero />
 
       {/* Editorial concierge + form */}
-      <section id="concierge-form" className="relative bg-cream-50 py-24 lg:py-32">
+      <section id="concierge-form" className="relative bg-cream-50 py-14 sm:py-24 lg:py-32">
         <Container>
           <div className="grid gap-16 lg:grid-cols-2 lg:items-start lg:gap-24">
             {/* Copy */}
@@ -209,7 +209,7 @@ function ContactPage() {
                 <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
                   A Private Line
                 </p>
-                <h2 className="mt-3 font-serif text-4xl font-medium leading-[1.05] text-ink-900 sm:text-5xl lg:text-6xl">
+                <h2 className="mt-3 font-serif text-3xl font-medium leading-[1.1] text-ink-900 sm:text-5xl lg:text-6xl">
                   One conversation, <br />
                   <span className="italic">an entire journey.</span>
                 </h2>
@@ -337,7 +337,7 @@ function ContactPage() {
       </section>
 
       {/* Closing dark CTA */}
-      <section className="relative overflow-hidden bg-ink-900 py-24 text-cream-50 lg:py-32">
+      <section className="relative overflow-hidden bg-ink-900 py-14 text-cream-50 sm:py-24 lg:py-32">
         <div
           aria-hidden
           className="pointer-events-none absolute -left-24 top-1/2 hidden size-96 -translate-y-1/2 rounded-full bg-cream-50/[0.04] blur-3xl lg:block"
@@ -348,7 +348,7 @@ function ContactPage() {
               <p className="font-script text-3xl text-cream-50/70 sm:text-4xl">
                 Ready when you are
               </p>
-              <h3 className="mt-3 font-serif text-4xl leading-[1.05] sm:text-5xl lg:text-6xl">
+              <h3 className="mt-3 font-serif text-3xl leading-[1.1] sm:text-5xl lg:text-6xl">
                 Begin a private <span className="italic">conversation.</span>
               </h3>
               <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-cream-50/70">

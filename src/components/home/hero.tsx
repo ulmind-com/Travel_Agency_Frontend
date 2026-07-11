@@ -117,7 +117,7 @@ export function Hero() {
       </AnimatePresence>
 
       {/* Text layer */}
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-16 pt-24 lg:px-10 lg:pb-24">
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-12 pt-24 sm:px-6 sm:pb-16 lg:px-10 lg:pb-24">
         <div className="max-w-3xl">
           <AnimatePresence mode="wait">
             <motion.div
@@ -132,7 +132,7 @@ export function Hero() {
               </p>
               <h1
                 aria-live="polite"
-                className="font-serif text-5xl leading-[1.02] tracking-tight text-cream-50 sm:text-6xl lg:text-8xl"
+                className="font-serif text-[2.5rem] leading-[1.05] tracking-tight text-cream-50 sm:text-6xl lg:text-8xl"
               >
                 <LetterReveal text={active.headlinePrefix} />
                 <br />
@@ -140,7 +140,7 @@ export function Hero() {
                   <LetterReveal text={active.headlineAccent} delay={0.35} />
                 </span>
               </h1>
-              <p className="mt-6 max-w-lg text-base leading-relaxed text-cream-50/85">
+              <p className="mt-5 max-w-lg text-sm leading-relaxed text-cream-50/85 sm:text-base">
                 {active.subtitle}
               </p>
             </motion.div>

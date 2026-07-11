@@ -29,7 +29,7 @@ export function AccountSidebar() {
   return (
     <div className="lg:space-y-6">
       {/* Mobile: horizontal chip rail combining everything */}
-      <nav className="flex flex-row gap-2 overflow-x-auto pb-4 lg:hidden">
+      <nav className="no-scrollbar -mx-4 flex snap-x snap-mandatory flex-row gap-2 overflow-x-auto px-4 pb-4 lg:hidden">
         {[...ITEMS, ...(isAdmin ? ADMIN_ITEMS : [])].map((it) => {
           const active = pathname === it.to;
           const Icon = it.icon;
@@ -38,7 +38,7 @@ export function AccountSidebar() {
               key={it.to}
               to={it.to}
               className={cn(
-                "flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-sm transition-colors",
+                "flex shrink-0 snap-start items-center gap-2 rounded-full px-4 py-2.5 text-sm transition-colors",
                 active ? "bg-ink-900 text-cream-50" : "border border-ink-900/10 bg-white text-ink-900/70",
               )}
             >

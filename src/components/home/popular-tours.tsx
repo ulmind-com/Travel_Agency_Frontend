@@ -27,7 +27,7 @@ function useContent(): PopularToursContent {
 
 function TourCard({ t, ctaLabel }: { t: PopularTour; ctaLabel: string }) {
   return (
-    <article className="pop-tour-card group relative flex w-[300px] shrink-0 flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-ink-900/8 shadow-[0_25px_60px_-30px_rgba(28,25,23,0.35)] transition-all duration-500 sm:w-[320px]">
+    <article className="pop-tour-card group relative flex w-[260px] shrink-0 flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-ink-900/8 shadow-[0_25px_60px_-30px_rgba(28,25,23,0.35)] transition-all duration-500 sm:w-[320px]">
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         {t.imageUrl ? (
           <img
@@ -93,17 +93,17 @@ export function PopularTours() {
   const loop = tours.length > 0 ? [...tours, ...tours, ...tours] : [];
 
   return (
-    <section className="relative overflow-hidden bg-cream-50 py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-cream-50 py-16 sm:py-24 lg:py-32">
       <Container>
         <FadeUp>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-script text-3xl text-ink-900/70 sm:text-4xl">
+            <p className="font-script text-2xl text-ink-900/70 sm:text-4xl">
               {content.eyebrow}
             </p>
-            <h2 className="mt-2 font-serif text-4xl font-medium text-ink-900 sm:text-5xl lg:text-6xl">
+            <h2 className="mt-2 font-serif text-3xl font-medium text-ink-900 sm:text-5xl lg:text-6xl">
               {content.title}
             </h2>
-            <p className="mt-5 text-sm leading-relaxed text-ink-900/60 sm:text-base">
+            <p className="mt-4 text-sm leading-relaxed text-ink-900/60 sm:text-base">
               {content.description}
             </p>
           </div>
@@ -111,7 +111,7 @@ export function PopularTours() {
       </Container>
 
       {/* 3D marquee */}
-      <div className="pop-tour-stage relative mt-16">
+      <div className="pop-tour-stage relative mt-10 sm:mt-16">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-cream-50 to-transparent sm:w-40"

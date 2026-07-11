@@ -68,7 +68,7 @@ function GalleryPage() {
           <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.3em] text-cream-50/80">
             Visual Journal
           </p>
-          <h1 className="font-serif text-5xl leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="font-serif text-4xl leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
             <LetterReveal text="Captured" />
             <br />
             <span className="italic">
@@ -89,7 +89,7 @@ function GalleryPage() {
             <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">
               Selected frames
             </p>
-            <h2 className="mt-4 font-serif text-4xl font-medium text-ink-900 md:text-5xl">
+            <h2 className="mt-4 font-serif text-3xl font-medium text-ink-900 md:text-5xl">
               Light, gathered from the journey.
             </h2>
           </FadeUp>

@@ -107,10 +107,10 @@ export function PlanYourTrip() {
   const content = useContent();
 
   return (
-    <section className="relative bg-cream-50 py-24 lg:py-32">
+    <section className="relative bg-cream-50 py-16 sm:py-24 lg:py-32">
       <PlanShapeClipDefs />
       <Container>
-        <div className="grid gap-16 lg:grid-cols-2 lg:items-center lg:gap-24">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-24">
           {/* Collage */}
           <div className="relative order-2 lg:order-1">
             <div
@@ -140,28 +140,28 @@ export function PlanYourTrip() {
           {/* Copy */}
           <div className="order-1 lg:order-2">
             <FadeUp>
-              <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
+              <p className="font-script text-2xl text-ink-900/80 sm:text-4xl">
                 {content.eyebrow}
               </p>
-              <h2 className="mt-3 font-serif text-4xl font-medium leading-[1.05] text-ink-900 sm:text-5xl lg:text-6xl">
+              <h2 className="mt-3 font-serif text-3xl font-medium leading-[1.05] text-ink-900 sm:text-5xl lg:text-6xl">
                 {content.title}
               </h2>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-900/60 sm:text-lg">
+              <p className="mt-5 max-w-xl text-sm leading-relaxed text-ink-900/60 sm:text-base lg:text-lg">
                 {content.description}
               </p>
             </FadeUp>
 
-            <div className="mt-10 space-y-8">
+            <div className="mt-8 space-y-6 sm:mt-10 sm:space-y-8">
               {content.features.map((f, i) => {
                 const Icon = FEATURE_ICONS[i % FEATURE_ICONS.length]!;
                 return (
                   <FadeUp key={f.id} delay={0.05 * (i + 1)}>
-                    <div className="flex items-start gap-5">
-                      <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-ink-900 text-cream-50 shadow-[0_15px_30px_-15px_rgba(28,25,23,0.5)]">
-                        <Icon className="size-6" strokeWidth={1.5} />
+                    <div className="flex items-start gap-4 sm:gap-5">
+                      <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-ink-900 text-cream-50 shadow-[0_15px_30px_-15px_rgba(28,25,23,0.5)] sm:size-14">
+                        <Icon className="size-5 sm:size-6" strokeWidth={1.5} />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="font-serif text-2xl text-ink-900">
+                        <h3 className="font-serif text-xl text-ink-900 sm:text-2xl">
                           {f.title}
                         </h3>
                         <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-900/60">
@@ -177,7 +177,7 @@ export function PlanYourTrip() {
             <FadeUp delay={0.25}>
               <Link
                 to="/about"
-                className="mt-12 inline-flex items-center gap-3 rounded-full bg-ink-900 px-8 py-4 text-xs uppercase tracking-[0.25em] text-cream-50 transition-transform hover:-translate-y-0.5"
+                className="mt-10 inline-flex items-center gap-3 rounded-full bg-ink-900 px-6 py-3.5 text-[11px] uppercase tracking-[0.25em] text-cream-50 transition-transform hover:-translate-y-0.5 sm:mt-12 sm:px-8 sm:py-4 sm:text-xs"
               >
                 {content.ctaLabel}
                 <ArrowRight className="size-4" />

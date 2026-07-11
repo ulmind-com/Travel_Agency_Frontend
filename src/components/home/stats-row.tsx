@@ -10,15 +10,15 @@ const STATS = [
 
 export function StatsRow() {
   return (
-    <section className="border-b border-ink-900/5 bg-cream-100 py-24">
+    <section className="border-b border-ink-900/5 bg-cream-100 py-16 sm:py-24">
       <Container>
-        <div className="grid grid-cols-2 gap-12 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 sm:gap-12 md:grid-cols-4">
           {STATS.map((s, i) => (
             <FadeUp key={s.n} delay={i * 0.08}>
-              <span className="block font-serif text-5xl font-medium text-ink-900">
+              <span className="block font-serif text-4xl font-medium text-ink-900 sm:text-5xl">
                 {s.n}
               </span>
-              <p className="mt-2 max-w-[20ch] text-sm text-ink-900/60">
+              <p className="mt-2 max-w-[20ch] text-xs text-ink-900/60 sm:text-sm">
                 {s.copy}
               </p>
             </FadeUp>

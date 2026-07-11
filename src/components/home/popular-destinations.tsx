@@ -82,20 +82,20 @@ export function PopularDestinations() {
   const prev = () => setActive((v) => (v - 1 + total) % total);
 
   return (
-    <section className="bg-cream-50 py-24">
+    <section className="bg-cream-50 py-16 sm:py-24">
       <Container className="text-center">
         <FadeUp>
-          <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
+          <p className="font-script text-2xl text-ink-900/80 sm:text-4xl">
             Top Destination
           </p>
-          <h2 className="mt-3 font-serif text-5xl font-medium text-ink-900 sm:text-6xl">
+          <h2 className="mt-3 font-serif text-3xl font-medium text-ink-900 sm:text-5xl lg:text-6xl">
             Popular Destination
           </h2>
         </FadeUp>
       </Container>
 
       <div
-        className="relative mt-16"
+        className="relative mt-10 sm:mt-16"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onTouchStart={(e) => {
@@ -110,7 +110,7 @@ export function PopularDestinations() {
         }}
       >
         <div
-          className="relative mx-auto flex h-[580px] max-w-6xl items-center justify-center sm:h-[640px]"
+          className="relative mx-auto flex h-[460px] max-w-6xl items-center justify-center sm:h-[640px]"
           style={{ perspective: "1400px" }}
         >
           {items.map((d, i) => {
@@ -148,7 +148,7 @@ export function PopularDestinations() {
                   transformStyle: "preserve-3d",
                   pointerEvents: abs >= 3 ? "none" : "auto",
                 }}
-                className="absolute h-[540px] w-[340px] overflow-hidden rounded-3xl shadow-[0_40px_80px_-30px_rgba(28,25,23,0.55)] ring-1 ring-black/10 sm:h-[600px] sm:w-[390px]"
+                className="absolute h-[420px] w-[260px] overflow-hidden rounded-3xl shadow-[0_40px_80px_-30px_rgba(28,25,23,0.55)] ring-1 ring-black/10 sm:h-[600px] sm:w-[390px]"
               >
                 <img
                   src={d.imageUrl}
@@ -159,12 +159,12 @@ export function PopularDestinations() {
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-ink-900/85 via-ink-900/40 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6">
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-6">
                   <div className="text-left">
-                    <h3 className="font-serif text-3xl font-medium text-cream-50">
+                    <h3 className="font-serif text-2xl font-medium text-cream-50 sm:text-3xl">
                       {d.name}
                     </h3>
-                    <p className="mt-1 text-xs uppercase tracking-widest text-cream-50/80">
+                    <p className="mt-1 text-[10px] uppercase tracking-widest text-cream-50/80 sm:text-xs">
                       {d.listingCount} Listing{d.listingCount === 1 ? "" : "s"}
                     </p>
                   </div>

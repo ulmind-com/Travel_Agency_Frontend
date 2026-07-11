@@ -1,58 +1,52 @@
-# Ultra-Premium Admin Panel Redesign
+## Goal
+Puro website ke mobile-friendly banano — frontend (public pages) + admin panel — sob kichu jate chhoto screen e (320px–480px) perfect dekhay. Kono feature/logic change hobe na, sudhu responsive layout, spacing, typography, and touch-target fixes.
 
-## Goals
-1. Fix sidebar scroll issue — left sidebar should stay visible (sticky) while the content area scrolls.
-2. Give the entire admin panel a cohesive, premium, travel-brand aesthetic — matching the elegant cream/ink/serif language of the public site, but elevated for a "back-of-house" studio feel.
-3. Redesign every admin page (Hero, Tour Categories, Popular Destinations, Plan Your Trip, Popular Tours, Recent Gallery, Achievements) to feel like a luxury CMS, not a form dump.
+## Scope
 
-## Design Language
-- **Palette:** cream-50 canvas, ink-900 primary, a new soft accent (warm brass / muted teal — TBD), subtle glass panels with `border-ink-900/8` + `bg-white/70 backdrop-blur`.
-- **Typography:** serif display for page titles + eyebrow tracking-widest labels; small-caps section headings.
-- **Cards:** rounded-3xl, layered shadow (`shadow-[0_1px_0_rgba(0,0,0,0.04),0_20px_40px_-24px_rgba(15,43,43,0.18)]`), 1px hairline borders.
-- **Inputs:** floating-label style, cream fill, ink underline on focus, generous padding.
-- **Buttons:** pill primary (ink → deep teal gradient), ghost secondary, destructive as bordered outline.
-- **Micro-interactions:** hover lift on cards, focus ring in brand tone, animated Publish button with success pulse.
+### 1. Global foundations (`src/styles.css`, `__root.tsx`)
+- Confirm `<meta name="viewport">` correct (width=device-width, initial-scale=1).
+- Add mobile-safe base: prevent horizontal overflow (`html, body { overflow-x: hidden }`), fluid typography clamps for `h1/h2/h3`, tap-target min 44px.
+- Container padding: `px-4 sm:px-6 lg:px-10` (currently `px-6 lg:px-10` — too tight-large on small phones).
 
-## Layout Changes (`_authenticated.account.tsx`)
-- Convert the account layout to a two-column shell where the sidebar column is `sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto` on `lg:` — so scrolling the page keeps the sidebar pinned.
-- Add a slim top "Admin Studio" bar above content on admin routes (breadcrumb + last-saved indicator + Publish CTA slot).
-- Give the account shell a subtle background texture (cream with faint gradient wash) so the white cards pop.
+### 2. Layout shell
+- **Navbar** (`components/layout/navbar.tsx`): mobile drawer already exists — audit spacing, ensure logo doesn't clip, mobile menu height/scroll, sign-in button full-width on mobile, admin link visible in mobile menu.
+- **Footer** (`components/layout/footer.tsx`): stack columns, resize landscape image, readable link sizes.
 
-## Sidebar Redesign (`components/account/sidebar.tsx`)
-- Group items into "Account" and "Admin · Content" with small-caps group labels and a hairline divider.
-- Active item: filled ink pill + soft glow; inactive: icon in muted ink, hover reveals accent underline.
-- Add a footer block in the sidebar (avatar, name, role badge, quick logout).
-- Mobile: horizontal scroll chip rail (keep current behavior, restyled).
+### 3. Home page sections (all under `src/components/home/`)
+Each section audited for: single-column stack < md, image aspect ratios, font-size clamps, padding scale, carousel/swipe support where grids exist.
+- `hero.tsx` — hero height, headline clamp, CTA stack, slide controls thumb-reachable.
+- `stats-row.tsx` — 2-col grid on mobile instead of 4.
+- `tour-categories.tsx` — horizontal snap-scroll on mobile.
+- `popular-destinations.tsx`, `popular-tours.tsx` — 1-col cards, horizontal scroll option.
+- `plan-your-trip.tsx` — form stack, full-width inputs.
+- `recent-gallery.tsx` — 2-col masonry on mobile.
+- `achievements.tsx` — stack numbers with proper hierarchy.
 
-## Per-Page Redesigns (all 7 admin routes)
-Shared pattern for each:
-1. **Hero header** — eyebrow ("Admin · Homepage"), serif H1, one-line description, right-aligned action cluster (Reset ghost + Publish primary with save-state icon).
-2. **Content sections** framed as labeled "cards" (e.g. "Section header", "Slides", "Stats") with generous spacing.
-3. **List/grid items** (slides, categories, tours, gallery slots, etc.) rendered as premium cards: image preview left, editable fields right on desktop; stacked on mobile. Drag handle affordance where reorder exists.
-4. **Image upload zones** — large dashed drop targets with iconography, hover state, uploading spinner overlay, "Replace / Remove" chip row.
-5. **Empty states** — illustrated placeholder + "Add first item" CTA.
-6. **Sticky action bar** at bottom of the viewport on scroll (Reset / Publish) so admins never lose the save button.
+### 4. Other public routes
+- `packages.tsx` — filter bar collapses to bottom-sheet / accordion on mobile; card grid 1-col.
+- `packages.$id.tsx` — gallery swipeable, booking panel becomes sticky bottom bar on mobile, tabs scroll horizontally.
+- `destinations.$slug.tsx`, `gallery.tsx`, `blogs.tsx`, `about.tsx`, `contact.tsx` — hero + content stacking, image sizing.
+- `auth.login.tsx`, `auth.register.tsx` — card full-width with padding, no split-screen on mobile.
+- `book.$id.tsx`, `book.success.$bookingId.tsx` — form single column, summary card above/below.
 
-Page-specific tweaks:
-- **Hero:** slide cards show live aspect-ratio preview with overlaid title, order controls as up/down arrows.
-- **Tour categories / Popular destinations / Popular tours:** grid of card editors, matching the public-site card shape so admin sees exactly what the visitor sees.
-- **Plan your trip:** step editor with numbered rail on the left.
-- **Recent gallery:** 5-slot collage editor visualized as the actual homepage collage layout, click any slot to swap.
-- **Achievements:** 4 circular stat editors laid out like the live section.
+### 5. Account + Admin panel
+- `_authenticated.account.tsx` — sidebar already collapses to horizontal chip rail on mobile (recent redesign); verify chip rail scrolls, header stacks, "Live preview synced" chip hidden on mobile (already `lg:inline-flex`).
+- `components/account/sidebar.tsx` — audit chip rail for overflow, add snap-scroll.
+- All 7 admin routes (`_authenticated.account.admin.*.tsx`) — page headers stack, action buttons full-width on mobile, sticky action bar becomes bottom-fixed bar with safe-area padding, form fields single column, image upload zones smaller on mobile, card padding reduced (`p-4 sm:p-6 lg:p-8`), tables/lists convert to stacked cards.
+- `_authenticated.account.profile.tsx`, `.bookings.tsx`, `.wishlist.tsx`, `.travelers.tsx`, `.index.tsx` — grid to 1-col, avatar/name row wrap-safe using `grid-cols-[minmax(0,1fr)_auto]` + `min-w-0 truncate` pattern.
 
-## Technical Notes
-- Introduce a shared `AdminPageHeader`, `AdminCard`, `AdminField`, `AdminStickyActions` in `src/components/admin/` to keep every page consistent and reduce duplication.
-- Add a `useStickyActions` helper (IntersectionObserver) for the floating save bar.
-- No backend/service changes — pure presentation.
-- Add tokens (accent color, shadow) to `src/styles.css` under `@theme`.
+### 6. Reusable patterns applied everywhere
+- Every header row with icon+text+widget: `grid grid-cols-[minmax(0,1fr)_auto] sm:flex` + `min-w-0` + `shrink-0` + `truncate` (per responsive-layout skill).
+- Buttons: `w-full sm:w-auto` for primary CTAs in forms.
+- Modals/dialogs: full-screen sheet on mobile.
+- Font sizes: replace fixed `text-5xl` with `text-3xl sm:text-4xl lg:text-5xl`.
+- Long horizontal grids → `overflow-x-auto snap-x` with scroll hint.
 
-## Out of Scope
-- No changes to services, data models, or auth.
-- Public site UI untouched.
+## Non-goals
+- No logic, data, backend, copy, color, or feature changes.
+- No new components except tiny helpers if a pattern repeats (e.g., mobile sticky action bar).
+- Desktop/tablet appearance stays identical.
 
-## Deliverables
-- Updated `_authenticated.account.tsx` (sticky sidebar + admin shell).
-- Redesigned `components/account/sidebar.tsx`.
-- New shared admin components in `src/components/admin/`.
-- All 7 admin route files restyled to the new system.
-- Token additions in `src/styles.css`.
+## Verification
+- Playwright screenshots at 375×812 (iPhone), 390×844, 414×896 for: `/`, `/packages`, `/packages/:id`, `/gallery`, `/contact`, `/auth/login`, `/account`, and each of the 7 `/account/admin/*` routes.
+- Check no horizontal scroll, tap targets ≥ 44px, text legible, images not cropped awkwardly.

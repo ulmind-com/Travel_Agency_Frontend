@@ -76,20 +76,20 @@ export function TourCategories() {
   );
 
   return (
-    <section className="bg-cream-50 py-24">
+    <section className="bg-cream-50 py-16 sm:py-24">
       <Container className="text-center">
         <FadeUp>
-          <p className="font-script text-3xl text-ink-900/80 sm:text-4xl">
+          <p className="font-script text-2xl text-ink-900/80 sm:text-4xl">
             Wonderful Place For You
           </p>
-          <h2 className="mt-3 font-serif text-5xl font-medium text-ink-900 sm:text-6xl">
+          <h2 className="mt-3 font-serif text-3xl font-medium text-ink-900 sm:text-5xl lg:text-6xl">
             Tour Categories
           </h2>
         </FadeUp>
       </Container>
 
       <div
-        className="relative mt-16 [perspective:1400px]"
+        className="relative mt-10 sm:mt-16 [perspective:1400px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onTouchStart={(e) => {
@@ -107,7 +107,7 @@ export function TourCategories() {
           touchX.current = null;
         }}
       >
-        <div className="mx-auto flex max-w-[1400px] items-center justify-center gap-6 px-6 lg:gap-10 lg:px-10">
+        <div className="mx-auto flex max-w-[1400px] items-center justify-center gap-4 px-4 sm:gap-6 sm:px-6 lg:gap-10 lg:px-10">
           {window_.map((item, i) => (
             <TiltCard
               key={item.id + ":" + start + ":" + i}
@@ -168,7 +168,7 @@ function TiltCard({
         delay: (index / Math.max(total, 1)) * 0.15,
       }}
       whileHover={{ rotateZ: 0, y: lift - 16, scale: 1.04 }}
-      className="group flex w-40 shrink-0 flex-col items-center [transform-style:preserve-3d] sm:w-52 lg:w-60"
+      className="group flex w-32 shrink-0 flex-col items-center [transform-style:preserve-3d] sm:w-52 lg:w-60"
       style={{ transformOrigin: "center bottom" }}
     >
       <Link

@@ -88,7 +88,7 @@ function BlogsPage() {
           <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.3em] text-cream-50/80">
             The Journal
           </p>
-          <h1 className="font-serif text-5xl leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="font-serif text-4xl leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
             <LetterReveal text="Notes from" />
             <br />
             <span className="italic">
@@ -109,7 +109,7 @@ function BlogsPage() {
             <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">
               Latest entries
             </p>
-            <h2 className="mt-4 font-serif text-4xl font-medium text-ink-900 md:text-5xl">
+            <h2 className="mt-4 font-serif text-3xl font-medium text-ink-900 md:text-5xl">
               Read the journey.
             </h2>
           </FadeUp>

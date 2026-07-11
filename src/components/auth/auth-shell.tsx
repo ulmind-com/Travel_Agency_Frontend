@@ -22,7 +22,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
   }, []);
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-ink-900 px-6 py-16">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-ink-900 px-4 py-10 sm:px-6 sm:py-16">
       {/* Background slideshow */}
       <div className="absolute inset-0">
         {bgImages.map((img, i) => (
@@ -45,7 +45,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
 
       {/* Liquid glass card */}
       <div className="relative z-10 w-full max-w-[440px]">
-        <div className="relative overflow-hidden rounded-[2rem] border border-cream-50/15 bg-gradient-to-b from-cream-50/[0.07] to-cream-50/[0.02] p-8 shadow-2xl shadow-ink-900/30 ring-1 ring-inset ring-cream-50/5 backdrop-blur-3xl md:p-10">
+        <div className="relative overflow-hidden rounded-[2rem] border border-cream-50/15 bg-gradient-to-b from-cream-50/[0.07] to-cream-50/[0.02] p-6 shadow-2xl shadow-ink-900/30 ring-1 ring-inset ring-cream-50/5 backdrop-blur-3xl sm:p-8 md:p-10">
           {/* Decorative liquid highlight along the top edge */}
           <div className="pointer-events-none absolute top-0 left-1/2 z-10 h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-cream-50/30 to-transparent" />
 
@@ -63,7 +63,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
           </p>
 
           {/* Title */}
-          <h1 className="mt-2 text-center font-serif text-4xl text-cream-50">
+          <h1 className="mt-2 text-center font-serif text-3xl text-cream-50 sm:text-4xl">
             {title}
           </h1>
 

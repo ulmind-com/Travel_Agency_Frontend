@@ -71,7 +71,7 @@ export function RecentGallery() {
   const s = content.slots;
 
   return (
-    <section className="relative overflow-hidden bg-cream-50 py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-cream-50 py-16 sm:py-24 lg:py-32">
       {/* decorative side accents */}
       <svg
         aria-hidden
@@ -114,17 +114,17 @@ export function RecentGallery() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-2 font-serif text-5xl font-semibold tracking-tight text-ink-900 sm:text-6xl lg:text-7xl"
+            className="mt-2 font-serif text-3xl font-semibold tracking-tight text-ink-900 sm:text-5xl md:text-6xl lg:text-7xl"
           >
             {content.title}
           </motion.h2>
         </div>
 
         {/* Collage — mirrors reference layout */}
-        <div className="mx-auto mt-16 max-w-6xl">
-          <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-3 md:gap-8">
+        <div className="mx-auto mt-10 max-w-6xl sm:mt-16">
+          <div className="grid grid-cols-2 items-center gap-4 sm:gap-6 md:grid-cols-3 md:gap-8">
             {/* Column 1 */}
-            <div className="flex flex-col gap-6 md:gap-8">
+            <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
               {s[0] && (
                 <Tile src={s[0].imageUrl} alt={s[0].alt} index={0} className="aspect-square" />
               )}
@@ -133,7 +133,7 @@ export function RecentGallery() {
               )}
             </div>
             {/* Column 2 — center, offset */}
-            <div className="flex items-center justify-center md:translate-y-8">
+            <div className="col-span-2 flex items-center justify-center md:col-span-1 md:translate-y-8">
               {s[1] && (
                 <Tile
                   src={s[1].imageUrl}
@@ -144,7 +144,7 @@ export function RecentGallery() {
               )}
             </div>
             {/* Column 3 */}
-            <div className="flex flex-col gap-6 md:gap-8">
+            <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
               {s[2] && (
                 <Tile src={s[2].imageUrl} alt={s[2].alt} index={2} className="aspect-square" />
               )}

@@ -70,15 +70,15 @@ function PackagesPage() {
 
   return (
     <div className="pt-20">
-      <Container className="py-14 lg:py-20">
+      <Container className="py-10 sm:py-14 lg:py-20">
         <FadeUp>
           <p className="text-[11px] uppercase tracking-[0.3em] text-ink-900/40">
             The full portfolio
           </p>
-          <h1 className="mt-4 font-serif text-5xl font-medium text-ink-900 md:text-6xl">
+          <h1 className="mt-4 font-serif text-3xl font-medium text-ink-900 sm:text-5xl md:text-6xl">
             Every escape, thoughtfully composed.
           </h1>
-          <p className="mt-4 max-w-xl text-base text-ink-900/60">
+          <p className="mt-4 max-w-xl text-sm text-ink-900/60 sm:text-base">
             Filter by intent, destination or budget. Each package is designed
             with our concierge team.
           </p>
@@ -90,9 +90,9 @@ function PackagesPage() {
         minPrice={min_price}
         maxPrice={max_price}
       />
-      <Container className="py-16">
+      <Container className="py-10 sm:py-16">
         {data.length === 0 ? (
-          <div className="rounded-3xl border border-ink-900/5 bg-cream-100 p-16 text-center">
+          <div className="rounded-3xl border border-ink-900/5 bg-cream-100 p-8 text-center sm:p-16">
             <p className="font-serif text-2xl text-ink-900">Nothing quite matches.</p>
             <p className="mt-3 text-sm text-ink-900/60">
               Try broadening your filters — or ask our concierge to design one
@@ -100,7 +100,7 @@ function PackagesPage() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
             {data.map((pkg, i) => (
               <FadeUp key={pkg.id} delay={(i % 6) * 0.05}>
                 <PackageCard pkg={pkg} />
