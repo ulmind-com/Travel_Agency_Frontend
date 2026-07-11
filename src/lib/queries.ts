@@ -1,4 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
+import axios from "axios";
 
 import {
   bookingsService,
@@ -17,6 +18,15 @@ import { planYourTripService } from "@/services/plan-your-trip.service";
 import { popularToursService } from "@/services/popular-tours.service";
 import { recentGalleryService } from "@/services/recent-gallery.service";
 import { achievementsService } from "@/services/achievements.service";
+
+/** Don't waste retries on client-side errors (401/403/404). */
+const smartRetry = (failureCount: number, error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const s = error.response?.status ?? 0;
+    if (s >= 400 && s < 500) return false;
+  }
+  return failureCount < 3;
+};
 
 export const authKeys = {
   me: ["auth", "me"] as const,
@@ -68,7 +78,7 @@ export const wishlistQuery = () =>
   queryOptions({
     queryKey: ["wishlist"] as const,
     queryFn: () => wishlistService.list(),
-    retry: 3,
+    retry: smartRetry,
     retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
     staleTime: 30_000,
   });
@@ -77,7 +87,7 @@ export const myBookingsQuery = () =>
   queryOptions({
     queryKey: ["bookings", "mine"] as const,
     queryFn: () => bookingsService.myBookings(),
-    retry: 3,
+    retry: smartRetry,
     retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
     staleTime: 30_000,
   });
@@ -92,7 +102,7 @@ export const travelersQuery = () =>
   queryOptions({
     queryKey: ["travelers"] as const,
     queryFn: () => travelersService.list(),
-    retry: 3,
+    retry: smartRetry,
     retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
     staleTime: 30_000,
   });

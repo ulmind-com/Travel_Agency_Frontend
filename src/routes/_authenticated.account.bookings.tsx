@@ -3,7 +3,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
-  AlertCircle,
   CalendarDays,
   Compass,
   Loader2,
@@ -19,6 +18,12 @@ import { myBookingsQuery } from "@/lib/queries";
 import { bookingsService } from "@/services/bookings.service";
 import { cn } from "@/lib/utils";
 import type { BookingStatus } from "@/types/api";
+import {
+  AdminScopeCard,
+  ErrorStateCard,
+  StateCard,
+} from "@/components/account/state-card";
+import { httpStatus } from "@/components/account/state-card";
 
 const STATUS_CONFIG: Record<
   BookingStatus,
@@ -102,7 +107,8 @@ function StatusBadge({ status }: { status: BookingStatus }) {
 
 function BookingsPage() {
   const qc = useQueryClient();
-  const { data, isLoading, isError, refetch } = useQuery(myBookingsQuery());
+  const { data, isLoading, isError, error, isFetching, refetch } =
+    useQuery(myBookingsQuery());
 
   const cancel = useMutation({
     mutationFn: (id: string) => bookingsService.requestCancel(id),
@@ -127,27 +133,13 @@ function BookingsPage() {
 
   /* error */
   if (isError) {
+    if (httpStatus(error) === 403) return <AdminScopeCard section="Bookings" />;
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-3xl border border-red-200/60 bg-red-50/40 p-10 text-center backdrop-blur-sm"
-      >
-        <AlertCircle className="mx-auto size-8 text-red-300" />
-        <p className="mt-4 font-serif text-2xl text-red-800/80">
-          Couldn&apos;t load your bookings
-        </p>
-        <p className="mt-2 text-sm text-red-600/60">
-          Please check your connection and try again.
-        </p>
-        <button
-          type="button"
-          onClick={() => refetch()}
-          className="mt-6 rounded-full bg-red-600/90 px-6 py-3 text-[12px] font-medium uppercase tracking-widest text-white transition-colors hover:bg-red-700"
-        >
-          Try again
-        </button>
-      </motion.div>
+      <ErrorStateCard
+        section="your bookings"
+        onRetry={() => refetch()}
+        retrying={isFetching}
+      />
     );
   }
 
@@ -156,33 +148,13 @@ function BookingsPage() {
   /* empty */
   if (bookings.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-        className="relative overflow-hidden rounded-3xl border border-ink-900/5 bg-cream-50 p-14 text-center"
-      >
-        <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-blue-400/[0.06] blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-10 -left-10 size-32 rounded-full bg-amber-400/[0.06] blur-3xl" />
-
-        <div className="relative">
-          <div className="mx-auto grid size-16 place-items-center rounded-3xl bg-ink-900/[0.04]">
-            <Compass className="size-7 text-ink-900/25" />
-          </div>
-          <p className="mt-5 font-serif text-3xl text-ink-900">
-            No bookings yet.
-          </p>
-          <p className="mt-2 text-sm text-ink-900/50">
-            When you reserve an escape, it will appear here.
-          </p>
-          <Link
-            to="/packages"
-            className="mt-7 inline-flex rounded-full bg-ink-900 px-6 py-3 text-[12px] font-medium uppercase tracking-widest text-cream-50 transition-transform active:scale-95"
-          >
-            Explore escapes
-          </Link>
-        </div>
-      </motion.div>
+      <StateCard
+        icon={Compass}
+        eyebrow="Your journeys"
+        title="No reservations yet."
+        description="When you set sail with us, every itinerary lands here — private, organized, always within reach."
+        primary={{ label: "Explore escapes", to: "/packages" }}
+      />
     );
   }
 
