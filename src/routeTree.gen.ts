@@ -16,6 +16,7 @@ import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PackagesIndexRouteImport } from './routes/packages.index'
 import { Route as PackagesIdRouteImport } from './routes/packages.$id'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as AuthRegisterRouteImport } from './routes/auth.register'
@@ -29,6 +30,7 @@ import { Route as AuthenticatedAccountProfileRouteImport } from './routes/_authe
 import { Route as AuthenticatedAccountBookingsRouteImport } from './routes/_authenticated.account.bookings'
 import { Route as AuthenticatedBookSuccessBookingIdRouteImport } from './routes/_authenticated.book.success.$bookingId'
 import { Route as AuthenticatedAccountAdminTourCategoriesRouteImport } from './routes/_authenticated.account.admin.tour-categories'
+import { Route as AuthenticatedAccountAdminSettingsRouteImport } from './routes/_authenticated.account.admin.settings'
 import { Route as AuthenticatedAccountAdminRecentGalleryRouteImport } from './routes/_authenticated.account.admin.recent-gallery'
 import { Route as AuthenticatedAccountAdminPopularToursRouteImport } from './routes/_authenticated.account.admin.popular-tours'
 import { Route as AuthenticatedAccountAdminPopularDestinationsRouteImport } from './routes/_authenticated.account.admin.popular-destinations'
@@ -69,6 +71,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesIndexRoute = PackagesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PackagesRoute,
 } as any)
 const PackagesIdRoute = PackagesIdRouteImport.update({
   id: '/$id',
@@ -142,6 +149,12 @@ const AuthenticatedAccountAdminTourCategoriesRoute =
     path: '/admin/tour-categories',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
+const AuthenticatedAccountAdminSettingsRoute =
+  AuthenticatedAccountAdminSettingsRouteImport.update({
+    id: '/admin/settings',
+    path: '/admin/settings',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 const AuthenticatedAccountAdminRecentGalleryRoute =
   AuthenticatedAccountAdminRecentGalleryRouteImport.update({
     id: '/admin/recent-gallery',
@@ -191,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/packages/$id': typeof PackagesIdRoute
+  '/packages/': typeof PackagesIndexRoute
   '/account/bookings': typeof AuthenticatedAccountBookingsRoute
   '/account/profile': typeof AuthenticatedAccountProfileRoute
   '/account/travelers': typeof AuthenticatedAccountTravelersRoute
@@ -203,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/account/admin/popular-tours': typeof AuthenticatedAccountAdminPopularToursRoute
   '/account/admin/recent-gallery': typeof AuthenticatedAccountAdminRecentGalleryRoute
+  '/account/admin/settings': typeof AuthenticatedAccountAdminSettingsRoute
   '/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
@@ -212,11 +227,11 @@ export interface FileRoutesByTo {
   '/blogs': typeof BlogsRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/packages': typeof PackagesRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/packages/$id': typeof PackagesIdRoute
+  '/packages': typeof PackagesIndexRoute
   '/account/bookings': typeof AuthenticatedAccountBookingsRoute
   '/account/profile': typeof AuthenticatedAccountProfileRoute
   '/account/travelers': typeof AuthenticatedAccountTravelersRoute
@@ -229,6 +244,7 @@ export interface FileRoutesByTo {
   '/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/account/admin/popular-tours': typeof AuthenticatedAccountAdminPopularToursRoute
   '/account/admin/recent-gallery': typeof AuthenticatedAccountAdminRecentGalleryRoute
+  '/account/admin/settings': typeof AuthenticatedAccountAdminSettingsRoute
   '/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
@@ -246,6 +262,7 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/packages/$id': typeof PackagesIdRoute
+  '/packages/': typeof PackagesIndexRoute
   '/_authenticated/account/bookings': typeof AuthenticatedAccountBookingsRoute
   '/_authenticated/account/profile': typeof AuthenticatedAccountProfileRoute
   '/_authenticated/account/travelers': typeof AuthenticatedAccountTravelersRoute
@@ -258,6 +275,7 @@ export interface FileRoutesById {
   '/_authenticated/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/_authenticated/account/admin/popular-tours': typeof AuthenticatedAccountAdminPopularToursRoute
   '/_authenticated/account/admin/recent-gallery': typeof AuthenticatedAccountAdminRecentGalleryRoute
+  '/_authenticated/account/admin/settings': typeof AuthenticatedAccountAdminSettingsRoute
   '/_authenticated/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
   '/_authenticated/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
 }
@@ -275,6 +293,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/destinations/$slug'
     | '/packages/$id'
+    | '/packages/'
     | '/account/bookings'
     | '/account/profile'
     | '/account/travelers'
@@ -287,6 +306,7 @@ export interface FileRouteTypes {
     | '/account/admin/popular-destinations'
     | '/account/admin/popular-tours'
     | '/account/admin/recent-gallery'
+    | '/account/admin/settings'
     | '/account/admin/tour-categories'
     | '/book/success/$bookingId'
   fileRoutesByTo: FileRoutesByTo
@@ -296,11 +316,11 @@ export interface FileRouteTypes {
     | '/blogs'
     | '/contact'
     | '/gallery'
-    | '/packages'
     | '/auth/login'
     | '/auth/register'
     | '/destinations/$slug'
     | '/packages/$id'
+    | '/packages'
     | '/account/bookings'
     | '/account/profile'
     | '/account/travelers'
@@ -313,6 +333,7 @@ export interface FileRouteTypes {
     | '/account/admin/popular-destinations'
     | '/account/admin/popular-tours'
     | '/account/admin/recent-gallery'
+    | '/account/admin/settings'
     | '/account/admin/tour-categories'
     | '/book/success/$bookingId'
   id:
@@ -329,6 +350,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/destinations/$slug'
     | '/packages/$id'
+    | '/packages/'
     | '/_authenticated/account/bookings'
     | '/_authenticated/account/profile'
     | '/_authenticated/account/travelers'
@@ -341,6 +363,7 @@ export interface FileRouteTypes {
     | '/_authenticated/account/admin/popular-destinations'
     | '/_authenticated/account/admin/popular-tours'
     | '/_authenticated/account/admin/recent-gallery'
+    | '/_authenticated/account/admin/settings'
     | '/_authenticated/account/admin/tour-categories'
     | '/_authenticated/book/success/$bookingId'
   fileRoutesById: FileRoutesById
@@ -408,6 +431,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/packages/': {
+      id: '/packages/'
+      path: '/'
+      fullPath: '/packages/'
+      preLoaderRoute: typeof PackagesIndexRouteImport
+      parentRoute: typeof PackagesRoute
     }
     '/packages/$id': {
       id: '/packages/$id'
@@ -500,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountAdminTourCategoriesRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
+    '/_authenticated/account/admin/settings': {
+      id: '/_authenticated/account/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/account/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAccountAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
     '/_authenticated/account/admin/recent-gallery': {
       id: '/_authenticated/account/admin/recent-gallery'
       path: '/admin/recent-gallery'
@@ -557,6 +594,7 @@ interface AuthenticatedAccountRouteChildren {
   AuthenticatedAccountAdminPopularDestinationsRoute: typeof AuthenticatedAccountAdminPopularDestinationsRoute
   AuthenticatedAccountAdminPopularToursRoute: typeof AuthenticatedAccountAdminPopularToursRoute
   AuthenticatedAccountAdminRecentGalleryRoute: typeof AuthenticatedAccountAdminRecentGalleryRoute
+  AuthenticatedAccountAdminSettingsRoute: typeof AuthenticatedAccountAdminSettingsRoute
   AuthenticatedAccountAdminTourCategoriesRoute: typeof AuthenticatedAccountAdminTourCategoriesRoute
 }
 
@@ -577,6 +615,8 @@ const AuthenticatedAccountRouteChildren: AuthenticatedAccountRouteChildren = {
     AuthenticatedAccountAdminPopularToursRoute,
   AuthenticatedAccountAdminRecentGalleryRoute:
     AuthenticatedAccountAdminRecentGalleryRoute,
+  AuthenticatedAccountAdminSettingsRoute:
+    AuthenticatedAccountAdminSettingsRoute,
   AuthenticatedAccountAdminTourCategoriesRoute:
     AuthenticatedAccountAdminTourCategoriesRoute,
 }
@@ -603,10 +643,12 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface PackagesRouteChildren {
   PackagesIdRoute: typeof PackagesIdRoute
+  PackagesIndexRoute: typeof PackagesIndexRoute
 }
 
 const PackagesRouteChildren: PackagesRouteChildren = {
   PackagesIdRoute: PackagesIdRoute,
+  PackagesIndexRoute: PackagesIndexRoute,
 }
 
 const PackagesRouteWithChildren = PackagesRoute._addFileChildren(
@@ -628,3 +670,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

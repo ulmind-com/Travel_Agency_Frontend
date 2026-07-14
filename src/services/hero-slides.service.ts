@@ -73,43 +73,32 @@ export const defaultHeroSlides: HeroSlide[] = [
   },
 ];
 
-function readLocal(): HeroSlide[] | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as HeroSlide[];
-    if (!Array.isArray(parsed) || parsed.length === 0) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
-function writeLocal(slides: HeroSlide[]) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slides));
-    window.dispatchEvent(new CustomEvent("ulmind:hero-slides-changed"));
-  } catch {
-    /* no-op */
-  }
-}
+import { api } from "@/lib/api";
 
 export const heroSlidesService = {
   async list(): Promise<HeroSlide[]> {
-    // Backend has no dedicated hero-slides endpoint yet. Persist admin edits
-    // in localStorage; fall back to the bundled curated defaults so the
-    // hero is never empty.
-    return readLocal() ?? defaultHeroSlides;
+    try {
+      const { data } = await api.get<{ data: any }>("/cms/hero_slides");
+      if (data.data && Array.isArray(data.data.slides) && data.data.slides.length > 0) {
+        return data.data.slides as HeroSlide[];
+      }
+    } catch {
+      // fallback if API fails
+    }
+    return defaultHeroSlides;
   },
   async save(slides: HeroSlide[]): Promise<HeroSlide[]> {
-    writeLocal(slides);
-    return slides;
+    const { data } = await api.post<{ data: any }>("/cms/hero_slides", {
+      data: { slides },
+    });
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ulmind:hero-slides-changed"));
+    }
+    return data.data.slides as HeroSlide[];
   },
   async reset(): Promise<HeroSlide[]> {
+    await api.delete("/cms/hero_slides");
     if (typeof window !== "undefined") {
-      window.localStorage.removeItem(STORAGE_KEY);
       window.dispatchEvent(new CustomEvent("ulmind:hero-slides-changed"));
     }
     return defaultHeroSlides;

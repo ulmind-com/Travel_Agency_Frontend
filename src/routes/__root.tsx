@@ -125,11 +125,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Scripts />
       </body>
@@ -153,15 +153,18 @@ function RootComponent() {
 function AppShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const bare = pathname.startsWith("/auth/");
+  const isAdminPanel = pathname.startsWith("/account/admin");
+  const showNavFooter = !bare && !isAdminPanel;
+  
   return (
     <>
       <LenisProvider />
       <div className="flex min-h-screen flex-col bg-cream-50 text-ink-900">
-        {!bare && <Navbar />}
+        {showNavFooter && <Navbar />}
         <main className="flex-1">
           <Outlet />
         </main>
-        {!bare && <Footer />}
+        {showNavFooter && <Footer />}
       </div>
     </>
   );

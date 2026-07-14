@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bookmark, CalendarCheck, Compass, Heart, Image, Images, LayoutGrid, LogOut, MapPin, Shield, Sparkles, Trophy, User, Users } from "lucide-react";
+import { Bookmark, CalendarCheck, Compass, Heart, Image, Images, LayoutGrid, LogOut, MapPin, Shield, Sparkles, Trophy, User, Users, Settings } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -20,11 +21,23 @@ const ADMIN_ITEMS = [
   { to: "/account/admin/popular-tours", label: "Popular tours", icon: Sparkles },
   { to: "/account/admin/recent-gallery", label: "Recent gallery", icon: Images },
   { to: "/account/admin/achievements", label: "Achievements", icon: Trophy },
+  { to: "/account/admin/settings", label: "Site Settings", icon: Settings },
 ];
 
 export function AccountSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isAdmin, user, logout } = useAuth();
+
+  useEffect(() => {
+    // Automatically scroll the active sidebar link into view if it is not visible
+    const timeout = setTimeout(() => {
+      const activeEl = document.querySelector('.sidebar-active-link');
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, [pathname]);
 
   return (
     <div className="lg:space-y-6">
@@ -120,7 +133,7 @@ function SidebarGroup({
               className={cn(
                 "group relative flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition-all",
                 active
-                  ? "bg-gradient-to-r from-ink-900 to-ink-800 text-cream-50 shadow-[0_10px_28px_-12px_rgba(28,25,23,0.55)]"
+                  ? "sidebar-active-link bg-gradient-to-r from-ink-900 to-ink-800 text-cream-50 shadow-[0_10px_28px_-12px_rgba(28,25,23,0.55)]"
                   : "text-ink-900/70 hover:bg-white hover:text-ink-900 hover:shadow-[0_6px_18px_-12px_rgba(28,25,23,0.35)]",
               )}
             >

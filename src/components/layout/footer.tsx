@@ -72,11 +72,16 @@ export function Footer() {
             />
           </div>
 
-          <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row md:items-center">
+          <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row md:items-center md:gap-2">
             <span>
               &copy; {new Date().getFullYear()} Ulmind Travel · Crafted with intention
             </span>
-            <span className="opacity-80">Curating high-fidelity journeys</span>
+            <div className="flex items-center gap-6">
+              <Link to="/auth/login" className="uppercase tracking-widest text-gold/70 transition-colors hover:text-gold">
+                Super Admin Login
+              </Link>
+              <span className="opacity-80">Curating high-fidelity journeys</span>
+            </div>
           </div>
         </div>
       </div>

@@ -39,7 +39,7 @@ function AccountLayout() {
           )}
         </div>
         <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
-          <aside className="admin-sidebar-sticky lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-2">
+          <aside data-lenis-prevent="true" className="admin-sidebar-sticky sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
             <AccountSidebar />
           </aside>
           <div className="min-w-0">

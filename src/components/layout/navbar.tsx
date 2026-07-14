@@ -141,7 +141,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-cream-50/10 bg-cream-50/[0.03] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
+                  className="absolute left-1/2 top-full z-50 mt-4 w-[620px] -translate-x-1/2 rounded-2xl border border-cream-50/15 bg-ink-900/60 p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150"
                   onMouseEnter={handleEnter}
                   onMouseLeave={handleLeave}
                 >
@@ -216,28 +216,21 @@ export function Navbar() {
         </nav>
 
         {/* Right actions */}
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-5 md:flex">
           <span className="h-4 w-px bg-cream-50/20" />
-          {isAuthenticated ? (
-            <div className="flex items-center gap-4">
-              {isAdmin && (
-                <Link
-                  to="/account/admin/hero"
-                  className="text-[11px] uppercase tracking-widest transition-colors text-cream-50/60 hover:text-cream-50"
-                >
-                  Admin
-                </Link>
-              )}
+          {isAuthenticated && !isAdmin ? (
+            <div className="flex items-center gap-5">
               <Link
                 to="/account"
-                className="text-[13px] font-medium transition-colors text-cream-50 hover:text-cream-50/80"
+                className="text-[12px] font-medium uppercase tracking-widest transition-colors text-cream-50 hover:text-cream-50/80"
               >
                 {user?.name?.split(" ")[0] ?? "Account"}
               </Link>
+              <span className="h-3 w-px bg-cream-50/20" />
               <button
                 type="button"
                 onClick={logout}
-                className="text-[12px] uppercase tracking-widest transition-colors text-cream-50/60 hover:text-cream-50"
+                className="text-[11px] uppercase tracking-widest transition-colors text-cream-50/50 hover:text-cream-50"
               >
                 Sign out
               </button>
@@ -341,7 +334,7 @@ export function Navbar() {
               </div>
 
               <div className="mt-2 border-t border-ink-900/5 pt-3">
-                {isAuthenticated ? (
+                {isAuthenticated && !isAdmin ? (
                   <>
                     <Link
                       to="/account"

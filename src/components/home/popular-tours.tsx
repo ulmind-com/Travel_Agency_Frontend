@@ -11,6 +11,7 @@ import {
   type PopularTour,
   type PopularToursContent,
 } from "@/services/popular-tours.service";
+import { packagesService } from "@/services/packages.service";
 
 function useContent(): PopularToursContent {
   const { data } = useSuspenseQuery(popularToursQuery());
@@ -88,7 +89,26 @@ function TourCard({ t, ctaLabel }: { t: PopularTour; ctaLabel: string }) {
 
 export function PopularTours() {
   const content = useContent();
-  const tours = content.tours;
+  const { data: realPackages } = useSuspenseQuery({
+    queryKey: ["public-packages", {}],
+    queryFn: () => packagesService.publicSearch(),
+  });
+
+  // Use real featured packages if available, otherwise fallback to CMS mock content
+  const featured = realPackages?.filter((p) => p.is_featured) ?? [];
+  
+  const tours = featured.length > 0 
+    ? featured.map((p) => ({
+        id: p.id,
+        name: p.title,
+        rating: 5,
+        ratingCount: Math.floor(Math.random() * 20) + 5,
+        days: p.duration_days,
+        ctaHref: `/packages/${p.id}`,
+        imageUrl: p.thumbnail?.url ?? p.gallery_images?.[0]?.url ?? "",
+      }))
+    : content.tours;
+
   // Repeat the list for a seamless infinite marquee
   const loop = tours.length > 0 ? [...tours, ...tours, ...tours] : [];
 
@@ -141,12 +161,10 @@ export function PopularTours() {
 
       <style>{`
         .pop-tour-stage {
-          perspective: 1600px;
-          perspective-origin: 50% 50%;
+          /* Removed 3D perspective to fix click hitboxes and trembling */
         }
         .pop-tour-viewport {
           overflow: hidden;
-          transform-style: preserve-3d;
           padding: 40px 0 60px;
           -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
                   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -156,20 +174,18 @@ export function PopularTours() {
           gap: 28px;
           width: max-content;
           animation: pop-tour-scroll 45s linear infinite;
-          transform-style: preserve-3d;
-          will-change: transform;
         }
         .pop-tour-stage:hover .pop-tour-track {
           animation-play-state: paused;
         }
         .pop-tour-card {
-          transform: rotateY(-8deg) translateZ(0);
-          transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
-                      box-shadow 700ms cubic-bezier(0.22, 1, 0.36, 1);
+          /* Simple, stable transition without 3D transforms */
+          transition: transform 500ms ease, box-shadow 500ms ease;
+          transform: translateY(0);
         }
         .pop-tour-card:hover {
-          transform: rotateY(0deg) translateY(-8px) translateZ(40px);
-          box-shadow: 0 40px 80px -30px rgba(28, 25, 23, 0.45);
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px -20px rgba(28, 25, 23, 0.25);
         }
         @keyframes pop-tour-scroll {
           from { transform: translateX(0); }

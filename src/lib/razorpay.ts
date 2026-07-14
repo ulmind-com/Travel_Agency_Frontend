@@ -21,6 +21,22 @@ export type RazorpayOptions = {
     razorpay_signature: string;
   }) => void;
   modal?: { ondismiss?: () => void };
+  config?: {
+    display?: {
+      blocks?: Record<string, { name: string; instruments: Array<{ method: string; banks?: string[]; wallets?: string[] }> }>;
+      sequence?: string[];
+      preferences?: { show_default_blocks?: boolean };
+    };
+  };
+  method?: {
+    upi?: boolean | { flow?: string };
+    card?: boolean;
+    netbanking?: boolean;
+    wallet?: boolean;
+    emi?: boolean;
+    paylater?: boolean;
+    qr?: boolean;
+  };
 };
 
 export function loadRazorpay(): Promise<boolean> {
