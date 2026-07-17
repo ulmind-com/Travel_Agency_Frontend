@@ -145,9 +145,8 @@ function LoginPage() {
           type="button"
           disabled={isGoogleLoading}
           onClick={async () => {
-            setIsGoogleLoading(true);
             try {
-              await authService.loginWithGoogle();
+              await authService.loginWithGoogle(() => setIsGoogleLoading(true));
               await refresh();
               toast.success("Welcome back");
               navigate({ to: redirect ?? "/account" });

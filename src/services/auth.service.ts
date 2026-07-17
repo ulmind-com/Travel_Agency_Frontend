@@ -75,11 +75,12 @@ export const authService = {
   },
 
   /** Login with Google using Firebase Auth */
-  async loginWithGoogle(): Promise<TokenResponse> {
+  async loginWithGoogle(onPopupClosed?: () => void): Promise<TokenResponse> {
     if (!auth || !googleProvider) {
       throw new Error("Google authentication is not configured.");
     }
     const result = await signInWithPopup(auth, googleProvider);
+    if (onPopupClosed) onPopupClosed();
     const idToken = await result.user.getIdToken();
     
     const { data } = await api.post<TokenResponse>("/auth/google", { id_token: idToken });
