@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Calendar, ChevronLeft, ChevronRight, MapPin, Users } from "lucide-react";
+import { ArrowRight, Calendar, ChevronLeft, ChevronRight, MapPin, Users, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { LetterReveal } from "@/components/motion/letter-reveal";
@@ -9,16 +9,51 @@ import { heroSlidesQuery } from "@/lib/queries";
 import { defaultHeroSlides, type HeroSlide } from "@/services/hero-slides.service";
 
 const SLIDE_DURATION_MS = 6500;
+const AUDIO_FADE_DURATION = 800; // ms for fade-in/out
 
 let audioCtx: AudioContext | null = null;
 let noiseBuffer: AudioBuffer | null = null;
 let currentAudio: HTMLAudioElement | null = null;
 let audioStopTimeout: number | null = null;
 
+/** Whether the user has interacted with the page (unlocks autoplay). */
+let userHasInteracted = false;
+
+/** Whether sound is enabled (user preference). */
+let soundEnabled = (() => {
+  if (typeof window === "undefined") return true;
+  const saved = localStorage.getItem("ulmind:hero-sound");
+  return saved !== "off";
+})();
+
+// Track first user interaction to unlock audio autoplay.
+if (typeof window !== "undefined") {
+  const markInteracted = () => {
+    userHasInteracted = true;
+    window.removeEventListener("click", markInteracted);
+    window.removeEventListener("touchstart", markInteracted);
+    window.removeEventListener("keydown", markInteracted);
+  };
+  window.addEventListener("click", markInteracted, { once: true });
+  window.addEventListener("touchstart", markInteracted, { once: true });
+  window.addEventListener("keydown", markInteracted, { once: true });
+}
+
 export const stopTravelSound = () => {
   if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
+    // Fade out smoothly instead of abrupt stop
+    const audio = currentAudio;
+    const fadeStep = 0.05;
+    const fadeInterval = setInterval(() => {
+      if (audio.volume > fadeStep) {
+        audio.volume -= fadeStep;
+      } else {
+        audio.volume = 0;
+        audio.pause();
+        audio.currentTime = 0;
+        clearInterval(fadeInterval);
+      }
+    }, 30);
     currentAudio = null;
   }
   if (audioStopTimeout) {
@@ -39,6 +74,7 @@ const getNoiseBuffer = () => {
 
 const playTravelSound = (index: number) => {
   if (typeof window === "undefined") return;
+  if (!soundEnabled || !userHasInteracted) return;
 
   stopTravelSound();
 
@@ -52,8 +88,27 @@ const playTravelSound = (index: number) => {
   ];
 
   if (index < audioSources.length) {
-    currentAudio = new Audio(audioSources[index]);
-    currentAudio.play().catch(() => {});
+    const audio = new Audio(audioSources[index]);
+    audio.volume = 0;
+    currentAudio = audio;
+
+    audio.play().then(() => {
+      // Fade in smoothly
+      const targetVolume = 0.6;
+      const fadeStep = targetVolume / (AUDIO_FADE_DURATION / 30);
+      const fadeIn = setInterval(() => {
+        if (audio.volume < targetVolume - fadeStep) {
+          audio.volume = Math.min(audio.volume + fadeStep, targetVolume);
+        } else {
+          audio.volume = targetVolume;
+          clearInterval(fadeIn);
+        }
+      }, 30);
+    }).catch(() => {
+      // Autoplay was blocked — user hasn't interacted yet
+      currentAudio = null;
+    });
+
     audioStopTimeout = window.setTimeout(stopTravelSound, SLIDE_DURATION_MS);
     return;
   }
@@ -231,6 +286,7 @@ export function Hero() {
   const touchStartX = useRef<number | null>(null);
   const heroRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [isSoundOn, setIsSoundOn] = useState(soundEnabled);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -245,11 +301,31 @@ export function Hero() {
   useEffect(() => {
     if (!isVisible) {
       stopTravelSound();
-    } else {
+    } else if (isSoundOn) {
       playTravelSound(index);
     }
     prevIndex.current = index;
-  }, [index, isVisible]);
+  }, [index, isVisible, isSoundOn]);
+
+  // Clean up on unmount
+  useEffect(() => {
+    return () => stopTravelSound();
+  }, []);
+
+  const toggleSound = useCallback(() => {
+    const next = !isSoundOn;
+    setIsSoundOn(next);
+    soundEnabled = next;
+    localStorage.setItem("ulmind:hero-sound", next ? "on" : "off");
+    
+    if (!next) {
+      stopTravelSound();
+    } else {
+      // Mark interaction so audio can play
+      userHasInteracted = true;
+      playTravelSound(index);
+    }
+  }, [isSoundOn, index]);
 
   const total = slides.length;
   const active = slides[index] ?? slides[0];
@@ -370,6 +446,26 @@ export function Hero() {
         </div>
       </div>
 
+      {/* Sound toggle button */}
+      <button
+        type="button"
+        aria-label={isSoundOn ? "Mute slide audio" : "Enable slide audio"}
+        onClick={toggleSound}
+        className="absolute left-6 bottom-6 z-20 grid size-10 place-items-center rounded-full border border-cream-50/30 text-cream-50 backdrop-blur-md transition-all duration-300 hover:bg-cream-50/10 hover:border-cream-50/50 lg:left-10 lg:bottom-10"
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={isSoundOn ? "on" : "off"}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isSoundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
+          </motion.span>
+        </AnimatePresence>
+      </button>
+
       {/* Progress rail (right) */}
       <div className="pointer-events-none absolute right-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-3 lg:right-10 lg:flex">
         {slides.map((s, i) => (
@@ -487,3 +583,4 @@ function FieldGroup({
     </label>
   );
 }
+
