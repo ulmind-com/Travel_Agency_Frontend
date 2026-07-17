@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, Star } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ import {
 import { packagesService } from "@/services/packages.service";
 
 function useContent(): PopularToursContent {
-  const { data } = useSuspenseQuery(popularToursQuery());
+  const { data } = useQuery(popularToursQuery());
   const [, force] = useState(0);
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -89,7 +89,7 @@ function TourCard({ t, ctaLabel }: { t: PopularTour; ctaLabel: string }) {
 
 export function PopularTours() {
   const content = useContent();
-  const { data: realPackages } = useSuspenseQuery({
+  const { data: realPackages } = useQuery({
     queryKey: ["public-packages", {}],
     queryFn: () => packagesService.publicSearch(),
   });

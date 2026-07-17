@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Calendar, ChevronLeft, ChevronRight, MapPin, Users, Volume2, VolumeX } from "lucide-react";
@@ -266,7 +266,7 @@ function usePrefersReducedMotion() {
 }
 
 function useHeroSlides(): HeroSlide[] {
-  const { data } = useSuspenseQuery(heroSlidesQuery());
+  const { data } = useQuery(heroSlidesQuery());
   // Re-sync when admin edits localStorage.
   const [, force] = useState(0);
   useEffect(() => {

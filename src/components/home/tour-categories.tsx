@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -44,7 +44,7 @@ function useViewportSize() {
 }
 
 function useTourCategories(): TourCategory[] {
-  const { data } = useSuspenseQuery(tourCategoriesQuery());
+  const { data } = useQuery(tourCategoriesQuery());
   const [, force] = useState(0);
   useEffect(() => {
     if (typeof window === "undefined") return;

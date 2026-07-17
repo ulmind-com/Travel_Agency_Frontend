@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -10,7 +10,7 @@ import {
 } from "@/services/recent-gallery.service";
 
 function useContent(): RecentGalleryContent {
-  const { data } = useSuspenseQuery(recentGalleryQuery());
+  const { data } = useQuery(recentGalleryQuery());
   const [, force] = useState(0);
   useEffect(() => {
     if (typeof window === "undefined") return;

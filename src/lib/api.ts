@@ -27,7 +27,13 @@ export function setToken(token: string | null) {
 
 export const api = axios.create({
   baseURL: `${env.API_BASE_URL}/api/v1`,
-  timeout: 30_000,
+  // On the server (SSR on Vercel) the whole serverless function is killed after
+  // ~10s, so any request that outlives that window turns into a hard
+  // FUNCTION_INVOCATION_FAILED. Keep the server-side timeout comfortably under
+  // that limit so a slow/cold backend surfaces as a handled error instead of a
+  // crashed function. On the client a longer timeout is fine (it's just a
+  // loading state), which also lets a cold-started backend finish waking up.
+  timeout: typeof window === "undefined" ? 7_000 : 30_000,
 });
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {

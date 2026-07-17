@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Compass, UserRound } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import {
 } from "@/services/plan-your-trip.service";
 
 function useContent(): PlanYourTripContent {
-  const { data } = useSuspenseQuery(planYourTripQuery());
+  const { data } = useQuery(planYourTripQuery());
   const [, force] = useState(0);
   useEffect(() => {
     if (typeof window === "undefined") return;
