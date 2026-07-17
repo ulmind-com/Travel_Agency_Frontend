@@ -10,6 +10,7 @@ import { ReviewsSection } from "@/components/package-detail/reviews-section";
 import { Container } from "@/components/layout/container";
 import { FadeUp } from "@/components/motion/fade-up";
 import { packageDetailQuery } from "@/lib/queries";
+import { usePackageViewTracking } from "@/hooks/usePackageViewTracking";
 
 export const Route = createFileRoute("/packages/$id")({
   loader: async ({ context, params }) => {
@@ -64,6 +65,8 @@ export const Route = createFileRoute("/packages/$id")({
 function PackageDetailPage() {
   const { id } = Route.useParams();
   const { data: pkg } = useSuspenseQuery(packageDetailQuery(id));
+  // Real impression tracking → Package Analytics (views, sources, heatmap)
+  usePackageViewTracking(id);
 
   return (
     <div className="pt-24">

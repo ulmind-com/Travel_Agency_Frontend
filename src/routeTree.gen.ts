@@ -17,26 +17,50 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PackagesIndexRouteImport } from './routes/packages.index'
+import { Route as BlogsIndexRouteImport } from './routes/blogs.index'
 import { Route as PackagesIdRouteImport } from './routes/packages.$id'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
+import { Route as BookIdRouteImport } from './routes/book.$id'
+import { Route as BlogsSlugRouteImport } from './routes/blogs.$slug'
 import { Route as AuthRegisterRouteImport } from './routes/auth.register'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated.account'
 import { Route as AuthenticatedAccountIndexRouteImport } from './routes/_authenticated.account.index'
-import { Route as AuthenticatedBookIdRouteImport } from './routes/_authenticated.book.$id'
 import { Route as AuthenticatedAccountWishlistRouteImport } from './routes/_authenticated.account.wishlist'
 import { Route as AuthenticatedAccountTravelersRouteImport } from './routes/_authenticated.account.travelers'
+import { Route as AuthenticatedAccountSupportRouteImport } from './routes/_authenticated.account.support'
 import { Route as AuthenticatedAccountProfileRouteImport } from './routes/_authenticated.account.profile'
+import { Route as AuthenticatedAccountDocumentsRouteImport } from './routes/_authenticated.account.documents'
 import { Route as AuthenticatedAccountBookingsRouteImport } from './routes/_authenticated.account.bookings'
+import { Route as AuthenticatedAccountAdminIndexRouteImport } from './routes/_authenticated.account.admin.index'
 import { Route as AuthenticatedBookSuccessBookingIdRouteImport } from './routes/_authenticated.book.success.$bookingId'
+import { Route as AuthenticatedAccountAdminUsersRouteImport } from './routes/_authenticated.account.admin.users'
 import { Route as AuthenticatedAccountAdminTourCategoriesRouteImport } from './routes/_authenticated.account.admin.tour-categories'
+import { Route as AuthenticatedAccountAdminSupportRouteImport } from './routes/_authenticated.account.admin.support'
 import { Route as AuthenticatedAccountAdminSettingsRouteImport } from './routes/_authenticated.account.admin.settings'
+import { Route as AuthenticatedAccountAdminSecurityRouteImport } from './routes/_authenticated.account.admin.security'
+import { Route as AuthenticatedAccountAdminRevenueRouteImport } from './routes/_authenticated.account.admin.revenue'
+import { Route as AuthenticatedAccountAdminReportsRouteImport } from './routes/_authenticated.account.admin.reports'
 import { Route as AuthenticatedAccountAdminRecentGalleryRouteImport } from './routes/_authenticated.account.admin.recent-gallery'
+import { Route as AuthenticatedAccountAdminQrRouteImport } from './routes/_authenticated.account.admin.qr'
 import { Route as AuthenticatedAccountAdminPopularToursRouteImport } from './routes/_authenticated.account.admin.popular-tours'
 import { Route as AuthenticatedAccountAdminPopularDestinationsRouteImport } from './routes/_authenticated.account.admin.popular-destinations'
 import { Route as AuthenticatedAccountAdminPlanYourTripRouteImport } from './routes/_authenticated.account.admin.plan-your-trip'
+import { Route as AuthenticatedAccountAdminPaymentsRouteImport } from './routes/_authenticated.account.admin.payments'
+import { Route as AuthenticatedAccountAdminOperationsRouteImport } from './routes/_authenticated.account.admin.operations'
+import { Route as AuthenticatedAccountAdminMonitoringRouteImport } from './routes/_authenticated.account.admin.monitoring'
+import { Route as AuthenticatedAccountAdminMarketingRouteImport } from './routes/_authenticated.account.admin.marketing'
+import { Route as AuthenticatedAccountAdminMapRouteImport } from './routes/_authenticated.account.admin.map'
 import { Route as AuthenticatedAccountAdminHeroRouteImport } from './routes/_authenticated.account.admin.hero'
+import { Route as AuthenticatedAccountAdminDocumentsRouteImport } from './routes/_authenticated.account.admin.documents'
+import { Route as AuthenticatedAccountAdminCrmRouteImport } from './routes/_authenticated.account.admin.crm'
+import { Route as AuthenticatedAccountAdminBookingsRouteImport } from './routes/_authenticated.account.admin.bookings'
+import { Route as AuthenticatedAccountAdminBlogsRouteImport } from './routes/_authenticated.account.admin.blogs'
+import { Route as AuthenticatedAccountAdminAuditRouteImport } from './routes/_authenticated.account.admin.audit'
+import { Route as AuthenticatedAccountAdminAnalyticsRouteImport } from './routes/_authenticated.account.admin.analytics'
 import { Route as AuthenticatedAccountAdminAchievementsRouteImport } from './routes/_authenticated.account.admin.achievements'
+import { Route as AuthenticatedAccountAdminUsersIdRouteImport } from './routes/_authenticated.account.admin.users.$id'
+import { Route as AuthenticatedAccountAdminBlogsEditorRouteImport } from './routes/_authenticated.account.admin.blogs.editor'
 
 const PackagesRoute = PackagesRouteImport.update({
   id: '/packages',
@@ -77,6 +101,11 @@ const PackagesIndexRoute = PackagesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PackagesRoute,
 } as any)
+const BlogsIndexRoute = BlogsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogsRoute,
+} as any)
 const PackagesIdRoute = PackagesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -86,6 +115,16 @@ const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/destinations/$slug',
   path: '/destinations/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BookIdRoute = BookIdRouteImport.update({
+  id: '/book/$id',
+  path: '/book/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsSlugRoute = BlogsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogsRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
@@ -108,11 +147,6 @@ const AuthenticatedAccountIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
-const AuthenticatedBookIdRoute = AuthenticatedBookIdRouteImport.update({
-  id: '/book/$id',
-  path: '/book/$id',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedAccountWishlistRoute =
   AuthenticatedAccountWishlistRouteImport.update({
     id: '/wishlist',
@@ -125,10 +159,22 @@ const AuthenticatedAccountTravelersRoute =
     path: '/travelers',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
+const AuthenticatedAccountSupportRoute =
+  AuthenticatedAccountSupportRouteImport.update({
+    id: '/support',
+    path: '/support',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 const AuthenticatedAccountProfileRoute =
   AuthenticatedAccountProfileRouteImport.update({
     id: '/profile',
     path: '/profile',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountDocumentsRoute =
+  AuthenticatedAccountDocumentsRouteImport.update({
+    id: '/documents',
+    path: '/documents',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
 const AuthenticatedAccountBookingsRoute =
@@ -137,16 +183,34 @@ const AuthenticatedAccountBookingsRoute =
     path: '/bookings',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
+const AuthenticatedAccountAdminIndexRoute =
+  AuthenticatedAccountAdminIndexRouteImport.update({
+    id: '/admin/',
+    path: '/admin/',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 const AuthenticatedBookSuccessBookingIdRoute =
   AuthenticatedBookSuccessBookingIdRouteImport.update({
     id: '/book/success/$bookingId',
     path: '/book/success/$bookingId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAccountAdminUsersRoute =
+  AuthenticatedAccountAdminUsersRouteImport.update({
+    id: '/admin/users',
+    path: '/admin/users',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 const AuthenticatedAccountAdminTourCategoriesRoute =
   AuthenticatedAccountAdminTourCategoriesRouteImport.update({
     id: '/admin/tour-categories',
     path: '/admin/tour-categories',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminSupportRoute =
+  AuthenticatedAccountAdminSupportRouteImport.update({
+    id: '/admin/support',
+    path: '/admin/support',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
 const AuthenticatedAccountAdminSettingsRoute =
@@ -155,10 +219,34 @@ const AuthenticatedAccountAdminSettingsRoute =
     path: '/admin/settings',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
+const AuthenticatedAccountAdminSecurityRoute =
+  AuthenticatedAccountAdminSecurityRouteImport.update({
+    id: '/admin/security',
+    path: '/admin/security',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminRevenueRoute =
+  AuthenticatedAccountAdminRevenueRouteImport.update({
+    id: '/admin/revenue',
+    path: '/admin/revenue',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminReportsRoute =
+  AuthenticatedAccountAdminReportsRouteImport.update({
+    id: '/admin/reports',
+    path: '/admin/reports',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 const AuthenticatedAccountAdminRecentGalleryRoute =
   AuthenticatedAccountAdminRecentGalleryRouteImport.update({
     id: '/admin/recent-gallery',
     path: '/admin/recent-gallery',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminQrRoute =
+  AuthenticatedAccountAdminQrRouteImport.update({
+    id: '/admin/qr',
+    path: '/admin/qr',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
 const AuthenticatedAccountAdminPopularToursRoute =
@@ -179,10 +267,76 @@ const AuthenticatedAccountAdminPlanYourTripRoute =
     path: '/admin/plan-your-trip',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
+const AuthenticatedAccountAdminPaymentsRoute =
+  AuthenticatedAccountAdminPaymentsRouteImport.update({
+    id: '/admin/payments',
+    path: '/admin/payments',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminOperationsRoute =
+  AuthenticatedAccountAdminOperationsRouteImport.update({
+    id: '/admin/operations',
+    path: '/admin/operations',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminMonitoringRoute =
+  AuthenticatedAccountAdminMonitoringRouteImport.update({
+    id: '/admin/monitoring',
+    path: '/admin/monitoring',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminMarketingRoute =
+  AuthenticatedAccountAdminMarketingRouteImport.update({
+    id: '/admin/marketing',
+    path: '/admin/marketing',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminMapRoute =
+  AuthenticatedAccountAdminMapRouteImport.update({
+    id: '/admin/map',
+    path: '/admin/map',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 const AuthenticatedAccountAdminHeroRoute =
   AuthenticatedAccountAdminHeroRouteImport.update({
     id: '/admin/hero',
     path: '/admin/hero',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminDocumentsRoute =
+  AuthenticatedAccountAdminDocumentsRouteImport.update({
+    id: '/admin/documents',
+    path: '/admin/documents',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminCrmRoute =
+  AuthenticatedAccountAdminCrmRouteImport.update({
+    id: '/admin/crm',
+    path: '/admin/crm',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminBookingsRoute =
+  AuthenticatedAccountAdminBookingsRouteImport.update({
+    id: '/admin/bookings',
+    path: '/admin/bookings',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminBlogsRoute =
+  AuthenticatedAccountAdminBlogsRouteImport.update({
+    id: '/admin/blogs',
+    path: '/admin/blogs',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminAuditRoute =
+  AuthenticatedAccountAdminAuditRouteImport.update({
+    id: '/admin/audit',
+    path: '/admin/audit',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
+const AuthenticatedAccountAdminAnalyticsRoute =
+  AuthenticatedAccountAdminAnalyticsRouteImport.update({
+    id: '/admin/analytics',
+    path: '/admin/analytics',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
 const AuthenticatedAccountAdminAchievementsRoute =
@@ -191,93 +345,176 @@ const AuthenticatedAccountAdminAchievementsRoute =
     path: '/admin/achievements',
     getParentRoute: () => AuthenticatedAccountRoute,
   } as any)
+const AuthenticatedAccountAdminUsersIdRoute =
+  AuthenticatedAccountAdminUsersIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAccountAdminUsersRoute,
+  } as any)
+const AuthenticatedAccountAdminBlogsEditorRoute =
+  AuthenticatedAccountAdminBlogsEditorRouteImport.update({
+    id: '/editor',
+    path: '/editor',
+    getParentRoute: () => AuthenticatedAccountAdminBlogsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blogs': typeof BlogsRoute
+  '/blogs': typeof BlogsRouteWithChildren
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/packages': typeof PackagesRouteWithChildren
   '/account': typeof AuthenticatedAccountRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/book/$id': typeof BookIdRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/packages/$id': typeof PackagesIdRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/packages/': typeof PackagesIndexRoute
   '/account/bookings': typeof AuthenticatedAccountBookingsRoute
+  '/account/documents': typeof AuthenticatedAccountDocumentsRoute
   '/account/profile': typeof AuthenticatedAccountProfileRoute
+  '/account/support': typeof AuthenticatedAccountSupportRoute
   '/account/travelers': typeof AuthenticatedAccountTravelersRoute
   '/account/wishlist': typeof AuthenticatedAccountWishlistRoute
-  '/book/$id': typeof AuthenticatedBookIdRoute
   '/account/': typeof AuthenticatedAccountIndexRoute
   '/account/admin/achievements': typeof AuthenticatedAccountAdminAchievementsRoute
+  '/account/admin/analytics': typeof AuthenticatedAccountAdminAnalyticsRoute
+  '/account/admin/audit': typeof AuthenticatedAccountAdminAuditRoute
+  '/account/admin/blogs': typeof AuthenticatedAccountAdminBlogsRouteWithChildren
+  '/account/admin/bookings': typeof AuthenticatedAccountAdminBookingsRoute
+  '/account/admin/crm': typeof AuthenticatedAccountAdminCrmRoute
+  '/account/admin/documents': typeof AuthenticatedAccountAdminDocumentsRoute
   '/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
+  '/account/admin/map': typeof AuthenticatedAccountAdminMapRoute
+  '/account/admin/marketing': typeof AuthenticatedAccountAdminMarketingRoute
+  '/account/admin/monitoring': typeof AuthenticatedAccountAdminMonitoringRoute
+  '/account/admin/operations': typeof AuthenticatedAccountAdminOperationsRoute
+  '/account/admin/payments': typeof AuthenticatedAccountAdminPaymentsRoute
   '/account/admin/plan-your-trip': typeof AuthenticatedAccountAdminPlanYourTripRoute
   '/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/account/admin/popular-tours': typeof AuthenticatedAccountAdminPopularToursRoute
+  '/account/admin/qr': typeof AuthenticatedAccountAdminQrRoute
   '/account/admin/recent-gallery': typeof AuthenticatedAccountAdminRecentGalleryRoute
+  '/account/admin/reports': typeof AuthenticatedAccountAdminReportsRoute
+  '/account/admin/revenue': typeof AuthenticatedAccountAdminRevenueRoute
+  '/account/admin/security': typeof AuthenticatedAccountAdminSecurityRoute
   '/account/admin/settings': typeof AuthenticatedAccountAdminSettingsRoute
+  '/account/admin/support': typeof AuthenticatedAccountAdminSupportRoute
   '/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
+  '/account/admin/users': typeof AuthenticatedAccountAdminUsersRouteWithChildren
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
+  '/account/admin/': typeof AuthenticatedAccountAdminIndexRoute
+  '/account/admin/blogs/editor': typeof AuthenticatedAccountAdminBlogsEditorRoute
+  '/account/admin/users/$id': typeof AuthenticatedAccountAdminUsersIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blogs': typeof BlogsRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/book/$id': typeof BookIdRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/packages/$id': typeof PackagesIdRoute
+  '/blogs': typeof BlogsIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/account/bookings': typeof AuthenticatedAccountBookingsRoute
+  '/account/documents': typeof AuthenticatedAccountDocumentsRoute
   '/account/profile': typeof AuthenticatedAccountProfileRoute
+  '/account/support': typeof AuthenticatedAccountSupportRoute
   '/account/travelers': typeof AuthenticatedAccountTravelersRoute
   '/account/wishlist': typeof AuthenticatedAccountWishlistRoute
-  '/book/$id': typeof AuthenticatedBookIdRoute
   '/account': typeof AuthenticatedAccountIndexRoute
   '/account/admin/achievements': typeof AuthenticatedAccountAdminAchievementsRoute
+  '/account/admin/analytics': typeof AuthenticatedAccountAdminAnalyticsRoute
+  '/account/admin/audit': typeof AuthenticatedAccountAdminAuditRoute
+  '/account/admin/blogs': typeof AuthenticatedAccountAdminBlogsRouteWithChildren
+  '/account/admin/bookings': typeof AuthenticatedAccountAdminBookingsRoute
+  '/account/admin/crm': typeof AuthenticatedAccountAdminCrmRoute
+  '/account/admin/documents': typeof AuthenticatedAccountAdminDocumentsRoute
   '/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
+  '/account/admin/map': typeof AuthenticatedAccountAdminMapRoute
+  '/account/admin/marketing': typeof AuthenticatedAccountAdminMarketingRoute
+  '/account/admin/monitoring': typeof AuthenticatedAccountAdminMonitoringRoute
+  '/account/admin/operations': typeof AuthenticatedAccountAdminOperationsRoute
+  '/account/admin/payments': typeof AuthenticatedAccountAdminPaymentsRoute
   '/account/admin/plan-your-trip': typeof AuthenticatedAccountAdminPlanYourTripRoute
   '/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/account/admin/popular-tours': typeof AuthenticatedAccountAdminPopularToursRoute
+  '/account/admin/qr': typeof AuthenticatedAccountAdminQrRoute
   '/account/admin/recent-gallery': typeof AuthenticatedAccountAdminRecentGalleryRoute
+  '/account/admin/reports': typeof AuthenticatedAccountAdminReportsRoute
+  '/account/admin/revenue': typeof AuthenticatedAccountAdminRevenueRoute
+  '/account/admin/security': typeof AuthenticatedAccountAdminSecurityRoute
   '/account/admin/settings': typeof AuthenticatedAccountAdminSettingsRoute
+  '/account/admin/support': typeof AuthenticatedAccountAdminSupportRoute
   '/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
+  '/account/admin/users': typeof AuthenticatedAccountAdminUsersRouteWithChildren
   '/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
+  '/account/admin': typeof AuthenticatedAccountAdminIndexRoute
+  '/account/admin/blogs/editor': typeof AuthenticatedAccountAdminBlogsEditorRoute
+  '/account/admin/users/$id': typeof AuthenticatedAccountAdminUsersIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
-  '/blogs': typeof BlogsRoute
+  '/blogs': typeof BlogsRouteWithChildren
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/packages': typeof PackagesRouteWithChildren
   '/_authenticated/account': typeof AuthenticatedAccountRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/book/$id': typeof BookIdRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/packages/$id': typeof PackagesIdRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/packages/': typeof PackagesIndexRoute
   '/_authenticated/account/bookings': typeof AuthenticatedAccountBookingsRoute
+  '/_authenticated/account/documents': typeof AuthenticatedAccountDocumentsRoute
   '/_authenticated/account/profile': typeof AuthenticatedAccountProfileRoute
+  '/_authenticated/account/support': typeof AuthenticatedAccountSupportRoute
   '/_authenticated/account/travelers': typeof AuthenticatedAccountTravelersRoute
   '/_authenticated/account/wishlist': typeof AuthenticatedAccountWishlistRoute
-  '/_authenticated/book/$id': typeof AuthenticatedBookIdRoute
   '/_authenticated/account/': typeof AuthenticatedAccountIndexRoute
   '/_authenticated/account/admin/achievements': typeof AuthenticatedAccountAdminAchievementsRoute
+  '/_authenticated/account/admin/analytics': typeof AuthenticatedAccountAdminAnalyticsRoute
+  '/_authenticated/account/admin/audit': typeof AuthenticatedAccountAdminAuditRoute
+  '/_authenticated/account/admin/blogs': typeof AuthenticatedAccountAdminBlogsRouteWithChildren
+  '/_authenticated/account/admin/bookings': typeof AuthenticatedAccountAdminBookingsRoute
+  '/_authenticated/account/admin/crm': typeof AuthenticatedAccountAdminCrmRoute
+  '/_authenticated/account/admin/documents': typeof AuthenticatedAccountAdminDocumentsRoute
   '/_authenticated/account/admin/hero': typeof AuthenticatedAccountAdminHeroRoute
+  '/_authenticated/account/admin/map': typeof AuthenticatedAccountAdminMapRoute
+  '/_authenticated/account/admin/marketing': typeof AuthenticatedAccountAdminMarketingRoute
+  '/_authenticated/account/admin/monitoring': typeof AuthenticatedAccountAdminMonitoringRoute
+  '/_authenticated/account/admin/operations': typeof AuthenticatedAccountAdminOperationsRoute
+  '/_authenticated/account/admin/payments': typeof AuthenticatedAccountAdminPaymentsRoute
   '/_authenticated/account/admin/plan-your-trip': typeof AuthenticatedAccountAdminPlanYourTripRoute
   '/_authenticated/account/admin/popular-destinations': typeof AuthenticatedAccountAdminPopularDestinationsRoute
   '/_authenticated/account/admin/popular-tours': typeof AuthenticatedAccountAdminPopularToursRoute
+  '/_authenticated/account/admin/qr': typeof AuthenticatedAccountAdminQrRoute
   '/_authenticated/account/admin/recent-gallery': typeof AuthenticatedAccountAdminRecentGalleryRoute
+  '/_authenticated/account/admin/reports': typeof AuthenticatedAccountAdminReportsRoute
+  '/_authenticated/account/admin/revenue': typeof AuthenticatedAccountAdminRevenueRoute
+  '/_authenticated/account/admin/security': typeof AuthenticatedAccountAdminSecurityRoute
   '/_authenticated/account/admin/settings': typeof AuthenticatedAccountAdminSettingsRoute
+  '/_authenticated/account/admin/support': typeof AuthenticatedAccountAdminSupportRoute
   '/_authenticated/account/admin/tour-categories': typeof AuthenticatedAccountAdminTourCategoriesRoute
+  '/_authenticated/account/admin/users': typeof AuthenticatedAccountAdminUsersRouteWithChildren
   '/_authenticated/book/success/$bookingId': typeof AuthenticatedBookSuccessBookingIdRoute
+  '/_authenticated/account/admin/': typeof AuthenticatedAccountAdminIndexRoute
+  '/_authenticated/account/admin/blogs/editor': typeof AuthenticatedAccountAdminBlogsEditorRoute
+  '/_authenticated/account/admin/users/$id': typeof AuthenticatedAccountAdminUsersIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -291,51 +528,98 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth/login'
     | '/auth/register'
+    | '/blogs/$slug'
+    | '/book/$id'
     | '/destinations/$slug'
     | '/packages/$id'
+    | '/blogs/'
     | '/packages/'
     | '/account/bookings'
+    | '/account/documents'
     | '/account/profile'
+    | '/account/support'
     | '/account/travelers'
     | '/account/wishlist'
-    | '/book/$id'
     | '/account/'
     | '/account/admin/achievements'
+    | '/account/admin/analytics'
+    | '/account/admin/audit'
+    | '/account/admin/blogs'
+    | '/account/admin/bookings'
+    | '/account/admin/crm'
+    | '/account/admin/documents'
     | '/account/admin/hero'
+    | '/account/admin/map'
+    | '/account/admin/marketing'
+    | '/account/admin/monitoring'
+    | '/account/admin/operations'
+    | '/account/admin/payments'
     | '/account/admin/plan-your-trip'
     | '/account/admin/popular-destinations'
     | '/account/admin/popular-tours'
+    | '/account/admin/qr'
     | '/account/admin/recent-gallery'
+    | '/account/admin/reports'
+    | '/account/admin/revenue'
+    | '/account/admin/security'
     | '/account/admin/settings'
+    | '/account/admin/support'
     | '/account/admin/tour-categories'
+    | '/account/admin/users'
     | '/book/success/$bookingId'
+    | '/account/admin/'
+    | '/account/admin/blogs/editor'
+    | '/account/admin/users/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/blogs'
     | '/contact'
     | '/gallery'
     | '/auth/login'
     | '/auth/register'
+    | '/blogs/$slug'
+    | '/book/$id'
     | '/destinations/$slug'
     | '/packages/$id'
+    | '/blogs'
     | '/packages'
     | '/account/bookings'
+    | '/account/documents'
     | '/account/profile'
+    | '/account/support'
     | '/account/travelers'
     | '/account/wishlist'
-    | '/book/$id'
     | '/account'
     | '/account/admin/achievements'
+    | '/account/admin/analytics'
+    | '/account/admin/audit'
+    | '/account/admin/blogs'
+    | '/account/admin/bookings'
+    | '/account/admin/crm'
+    | '/account/admin/documents'
     | '/account/admin/hero'
+    | '/account/admin/map'
+    | '/account/admin/marketing'
+    | '/account/admin/monitoring'
+    | '/account/admin/operations'
+    | '/account/admin/payments'
     | '/account/admin/plan-your-trip'
     | '/account/admin/popular-destinations'
     | '/account/admin/popular-tours'
+    | '/account/admin/qr'
     | '/account/admin/recent-gallery'
+    | '/account/admin/reports'
+    | '/account/admin/revenue'
+    | '/account/admin/security'
     | '/account/admin/settings'
+    | '/account/admin/support'
     | '/account/admin/tour-categories'
+    | '/account/admin/users'
     | '/book/success/$bookingId'
+    | '/account/admin'
+    | '/account/admin/blogs/editor'
+    | '/account/admin/users/$id'
   id:
     | '__root__'
     | '/'
@@ -348,36 +632,61 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/auth/login'
     | '/auth/register'
+    | '/blogs/$slug'
+    | '/book/$id'
     | '/destinations/$slug'
     | '/packages/$id'
+    | '/blogs/'
     | '/packages/'
     | '/_authenticated/account/bookings'
+    | '/_authenticated/account/documents'
     | '/_authenticated/account/profile'
+    | '/_authenticated/account/support'
     | '/_authenticated/account/travelers'
     | '/_authenticated/account/wishlist'
-    | '/_authenticated/book/$id'
     | '/_authenticated/account/'
     | '/_authenticated/account/admin/achievements'
+    | '/_authenticated/account/admin/analytics'
+    | '/_authenticated/account/admin/audit'
+    | '/_authenticated/account/admin/blogs'
+    | '/_authenticated/account/admin/bookings'
+    | '/_authenticated/account/admin/crm'
+    | '/_authenticated/account/admin/documents'
     | '/_authenticated/account/admin/hero'
+    | '/_authenticated/account/admin/map'
+    | '/_authenticated/account/admin/marketing'
+    | '/_authenticated/account/admin/monitoring'
+    | '/_authenticated/account/admin/operations'
+    | '/_authenticated/account/admin/payments'
     | '/_authenticated/account/admin/plan-your-trip'
     | '/_authenticated/account/admin/popular-destinations'
     | '/_authenticated/account/admin/popular-tours'
+    | '/_authenticated/account/admin/qr'
     | '/_authenticated/account/admin/recent-gallery'
+    | '/_authenticated/account/admin/reports'
+    | '/_authenticated/account/admin/revenue'
+    | '/_authenticated/account/admin/security'
     | '/_authenticated/account/admin/settings'
+    | '/_authenticated/account/admin/support'
     | '/_authenticated/account/admin/tour-categories'
+    | '/_authenticated/account/admin/users'
     | '/_authenticated/book/success/$bookingId'
+    | '/_authenticated/account/admin/'
+    | '/_authenticated/account/admin/blogs/editor'
+    | '/_authenticated/account/admin/users/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
-  BlogsRoute: typeof BlogsRoute
+  BlogsRoute: typeof BlogsRouteWithChildren
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
   PackagesRoute: typeof PackagesRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  BookIdRoute: typeof BookIdRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
 }
 
@@ -439,6 +748,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PackagesIndexRouteImport
       parentRoute: typeof PackagesRoute
     }
+    '/blogs/': {
+      id: '/blogs/'
+      path: '/'
+      fullPath: '/blogs/'
+      preLoaderRoute: typeof BlogsIndexRouteImport
+      parentRoute: typeof BlogsRoute
+    }
     '/packages/$id': {
       id: '/packages/$id'
       path: '/$id'
@@ -452,6 +768,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/destinations/$slug'
       preLoaderRoute: typeof DestinationsSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/book/$id': {
+      id: '/book/$id'
+      path: '/book/$id'
+      fullPath: '/book/$id'
+      preLoaderRoute: typeof BookIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs/$slug': {
+      id: '/blogs/$slug'
+      path: '/$slug'
+      fullPath: '/blogs/$slug'
+      preLoaderRoute: typeof BlogsSlugRouteImport
+      parentRoute: typeof BlogsRoute
     }
     '/auth/register': {
       id: '/auth/register'
@@ -481,13 +811,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountIndexRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
-    '/_authenticated/book/$id': {
-      id: '/_authenticated/book/$id'
-      path: '/book/$id'
-      fullPath: '/book/$id'
-      preLoaderRoute: typeof AuthenticatedBookIdRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/account/wishlist': {
       id: '/_authenticated/account/wishlist'
       path: '/wishlist'
@@ -502,11 +825,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountTravelersRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
+    '/_authenticated/account/support': {
+      id: '/_authenticated/account/support'
+      path: '/support'
+      fullPath: '/account/support'
+      preLoaderRoute: typeof AuthenticatedAccountSupportRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
     '/_authenticated/account/profile': {
       id: '/_authenticated/account/profile'
       path: '/profile'
       fullPath: '/account/profile'
       preLoaderRoute: typeof AuthenticatedAccountProfileRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/documents': {
+      id: '/_authenticated/account/documents'
+      path: '/documents'
+      fullPath: '/account/documents'
+      preLoaderRoute: typeof AuthenticatedAccountDocumentsRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
     '/_authenticated/account/bookings': {
@@ -516,6 +853,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountBookingsRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
+    '/_authenticated/account/admin/': {
+      id: '/_authenticated/account/admin/'
+      path: '/admin'
+      fullPath: '/account/admin/'
+      preLoaderRoute: typeof AuthenticatedAccountAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
     '/_authenticated/book/success/$bookingId': {
       id: '/_authenticated/book/success/$bookingId'
       path: '/book/success/$bookingId'
@@ -523,11 +867,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBookSuccessBookingIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/account/admin/users': {
+      id: '/_authenticated/account/admin/users'
+      path: '/admin/users'
+      fullPath: '/account/admin/users'
+      preLoaderRoute: typeof AuthenticatedAccountAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
     '/_authenticated/account/admin/tour-categories': {
       id: '/_authenticated/account/admin/tour-categories'
       path: '/admin/tour-categories'
       fullPath: '/account/admin/tour-categories'
       preLoaderRoute: typeof AuthenticatedAccountAdminTourCategoriesRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/support': {
+      id: '/_authenticated/account/admin/support'
+      path: '/admin/support'
+      fullPath: '/account/admin/support'
+      preLoaderRoute: typeof AuthenticatedAccountAdminSupportRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
     '/_authenticated/account/admin/settings': {
@@ -537,11 +895,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
+    '/_authenticated/account/admin/security': {
+      id: '/_authenticated/account/admin/security'
+      path: '/admin/security'
+      fullPath: '/account/admin/security'
+      preLoaderRoute: typeof AuthenticatedAccountAdminSecurityRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/revenue': {
+      id: '/_authenticated/account/admin/revenue'
+      path: '/admin/revenue'
+      fullPath: '/account/admin/revenue'
+      preLoaderRoute: typeof AuthenticatedAccountAdminRevenueRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/reports': {
+      id: '/_authenticated/account/admin/reports'
+      path: '/admin/reports'
+      fullPath: '/account/admin/reports'
+      preLoaderRoute: typeof AuthenticatedAccountAdminReportsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
     '/_authenticated/account/admin/recent-gallery': {
       id: '/_authenticated/account/admin/recent-gallery'
       path: '/admin/recent-gallery'
       fullPath: '/account/admin/recent-gallery'
       preLoaderRoute: typeof AuthenticatedAccountAdminRecentGalleryRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/qr': {
+      id: '/_authenticated/account/admin/qr'
+      path: '/admin/qr'
+      fullPath: '/account/admin/qr'
+      preLoaderRoute: typeof AuthenticatedAccountAdminQrRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
     '/_authenticated/account/admin/popular-tours': {
@@ -565,11 +951,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountAdminPlanYourTripRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
+    '/_authenticated/account/admin/payments': {
+      id: '/_authenticated/account/admin/payments'
+      path: '/admin/payments'
+      fullPath: '/account/admin/payments'
+      preLoaderRoute: typeof AuthenticatedAccountAdminPaymentsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/operations': {
+      id: '/_authenticated/account/admin/operations'
+      path: '/admin/operations'
+      fullPath: '/account/admin/operations'
+      preLoaderRoute: typeof AuthenticatedAccountAdminOperationsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/monitoring': {
+      id: '/_authenticated/account/admin/monitoring'
+      path: '/admin/monitoring'
+      fullPath: '/account/admin/monitoring'
+      preLoaderRoute: typeof AuthenticatedAccountAdminMonitoringRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/marketing': {
+      id: '/_authenticated/account/admin/marketing'
+      path: '/admin/marketing'
+      fullPath: '/account/admin/marketing'
+      preLoaderRoute: typeof AuthenticatedAccountAdminMarketingRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/map': {
+      id: '/_authenticated/account/admin/map'
+      path: '/admin/map'
+      fullPath: '/account/admin/map'
+      preLoaderRoute: typeof AuthenticatedAccountAdminMapRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
     '/_authenticated/account/admin/hero': {
       id: '/_authenticated/account/admin/hero'
       path: '/admin/hero'
       fullPath: '/account/admin/hero'
       preLoaderRoute: typeof AuthenticatedAccountAdminHeroRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/documents': {
+      id: '/_authenticated/account/admin/documents'
+      path: '/admin/documents'
+      fullPath: '/account/admin/documents'
+      preLoaderRoute: typeof AuthenticatedAccountAdminDocumentsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/crm': {
+      id: '/_authenticated/account/admin/crm'
+      path: '/admin/crm'
+      fullPath: '/account/admin/crm'
+      preLoaderRoute: typeof AuthenticatedAccountAdminCrmRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/bookings': {
+      id: '/_authenticated/account/admin/bookings'
+      path: '/admin/bookings'
+      fullPath: '/account/admin/bookings'
+      preLoaderRoute: typeof AuthenticatedAccountAdminBookingsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/blogs': {
+      id: '/_authenticated/account/admin/blogs'
+      path: '/admin/blogs'
+      fullPath: '/account/admin/blogs'
+      preLoaderRoute: typeof AuthenticatedAccountAdminBlogsRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/audit': {
+      id: '/_authenticated/account/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/account/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAccountAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
+    '/_authenticated/account/admin/analytics': {
+      id: '/_authenticated/account/admin/analytics'
+      path: '/admin/analytics'
+      fullPath: '/account/admin/analytics'
+      preLoaderRoute: typeof AuthenticatedAccountAdminAnalyticsRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
     '/_authenticated/account/admin/achievements': {
@@ -579,46 +1042,140 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountAdminAchievementsRouteImport
       parentRoute: typeof AuthenticatedAccountRoute
     }
+    '/_authenticated/account/admin/users/$id': {
+      id: '/_authenticated/account/admin/users/$id'
+      path: '/$id'
+      fullPath: '/account/admin/users/$id'
+      preLoaderRoute: typeof AuthenticatedAccountAdminUsersIdRouteImport
+      parentRoute: typeof AuthenticatedAccountAdminUsersRoute
+    }
+    '/_authenticated/account/admin/blogs/editor': {
+      id: '/_authenticated/account/admin/blogs/editor'
+      path: '/editor'
+      fullPath: '/account/admin/blogs/editor'
+      preLoaderRoute: typeof AuthenticatedAccountAdminBlogsEditorRouteImport
+      parentRoute: typeof AuthenticatedAccountAdminBlogsRoute
+    }
   }
 }
 
+interface AuthenticatedAccountAdminBlogsRouteChildren {
+  AuthenticatedAccountAdminBlogsEditorRoute: typeof AuthenticatedAccountAdminBlogsEditorRoute
+}
+
+const AuthenticatedAccountAdminBlogsRouteChildren: AuthenticatedAccountAdminBlogsRouteChildren =
+  {
+    AuthenticatedAccountAdminBlogsEditorRoute:
+      AuthenticatedAccountAdminBlogsEditorRoute,
+  }
+
+const AuthenticatedAccountAdminBlogsRouteWithChildren =
+  AuthenticatedAccountAdminBlogsRoute._addFileChildren(
+    AuthenticatedAccountAdminBlogsRouteChildren,
+  )
+
+interface AuthenticatedAccountAdminUsersRouteChildren {
+  AuthenticatedAccountAdminUsersIdRoute: typeof AuthenticatedAccountAdminUsersIdRoute
+}
+
+const AuthenticatedAccountAdminUsersRouteChildren: AuthenticatedAccountAdminUsersRouteChildren =
+  {
+    AuthenticatedAccountAdminUsersIdRoute:
+      AuthenticatedAccountAdminUsersIdRoute,
+  }
+
+const AuthenticatedAccountAdminUsersRouteWithChildren =
+  AuthenticatedAccountAdminUsersRoute._addFileChildren(
+    AuthenticatedAccountAdminUsersRouteChildren,
+  )
+
 interface AuthenticatedAccountRouteChildren {
   AuthenticatedAccountBookingsRoute: typeof AuthenticatedAccountBookingsRoute
+  AuthenticatedAccountDocumentsRoute: typeof AuthenticatedAccountDocumentsRoute
   AuthenticatedAccountProfileRoute: typeof AuthenticatedAccountProfileRoute
+  AuthenticatedAccountSupportRoute: typeof AuthenticatedAccountSupportRoute
   AuthenticatedAccountTravelersRoute: typeof AuthenticatedAccountTravelersRoute
   AuthenticatedAccountWishlistRoute: typeof AuthenticatedAccountWishlistRoute
   AuthenticatedAccountIndexRoute: typeof AuthenticatedAccountIndexRoute
   AuthenticatedAccountAdminAchievementsRoute: typeof AuthenticatedAccountAdminAchievementsRoute
+  AuthenticatedAccountAdminAnalyticsRoute: typeof AuthenticatedAccountAdminAnalyticsRoute
+  AuthenticatedAccountAdminAuditRoute: typeof AuthenticatedAccountAdminAuditRoute
+  AuthenticatedAccountAdminBlogsRoute: typeof AuthenticatedAccountAdminBlogsRouteWithChildren
+  AuthenticatedAccountAdminBookingsRoute: typeof AuthenticatedAccountAdminBookingsRoute
+  AuthenticatedAccountAdminCrmRoute: typeof AuthenticatedAccountAdminCrmRoute
+  AuthenticatedAccountAdminDocumentsRoute: typeof AuthenticatedAccountAdminDocumentsRoute
   AuthenticatedAccountAdminHeroRoute: typeof AuthenticatedAccountAdminHeroRoute
+  AuthenticatedAccountAdminMapRoute: typeof AuthenticatedAccountAdminMapRoute
+  AuthenticatedAccountAdminMarketingRoute: typeof AuthenticatedAccountAdminMarketingRoute
+  AuthenticatedAccountAdminMonitoringRoute: typeof AuthenticatedAccountAdminMonitoringRoute
+  AuthenticatedAccountAdminOperationsRoute: typeof AuthenticatedAccountAdminOperationsRoute
+  AuthenticatedAccountAdminPaymentsRoute: typeof AuthenticatedAccountAdminPaymentsRoute
   AuthenticatedAccountAdminPlanYourTripRoute: typeof AuthenticatedAccountAdminPlanYourTripRoute
   AuthenticatedAccountAdminPopularDestinationsRoute: typeof AuthenticatedAccountAdminPopularDestinationsRoute
   AuthenticatedAccountAdminPopularToursRoute: typeof AuthenticatedAccountAdminPopularToursRoute
+  AuthenticatedAccountAdminQrRoute: typeof AuthenticatedAccountAdminQrRoute
   AuthenticatedAccountAdminRecentGalleryRoute: typeof AuthenticatedAccountAdminRecentGalleryRoute
+  AuthenticatedAccountAdminReportsRoute: typeof AuthenticatedAccountAdminReportsRoute
+  AuthenticatedAccountAdminRevenueRoute: typeof AuthenticatedAccountAdminRevenueRoute
+  AuthenticatedAccountAdminSecurityRoute: typeof AuthenticatedAccountAdminSecurityRoute
   AuthenticatedAccountAdminSettingsRoute: typeof AuthenticatedAccountAdminSettingsRoute
+  AuthenticatedAccountAdminSupportRoute: typeof AuthenticatedAccountAdminSupportRoute
   AuthenticatedAccountAdminTourCategoriesRoute: typeof AuthenticatedAccountAdminTourCategoriesRoute
+  AuthenticatedAccountAdminUsersRoute: typeof AuthenticatedAccountAdminUsersRouteWithChildren
+  AuthenticatedAccountAdminIndexRoute: typeof AuthenticatedAccountAdminIndexRoute
 }
 
 const AuthenticatedAccountRouteChildren: AuthenticatedAccountRouteChildren = {
   AuthenticatedAccountBookingsRoute: AuthenticatedAccountBookingsRoute,
+  AuthenticatedAccountDocumentsRoute: AuthenticatedAccountDocumentsRoute,
   AuthenticatedAccountProfileRoute: AuthenticatedAccountProfileRoute,
+  AuthenticatedAccountSupportRoute: AuthenticatedAccountSupportRoute,
   AuthenticatedAccountTravelersRoute: AuthenticatedAccountTravelersRoute,
   AuthenticatedAccountWishlistRoute: AuthenticatedAccountWishlistRoute,
   AuthenticatedAccountIndexRoute: AuthenticatedAccountIndexRoute,
   AuthenticatedAccountAdminAchievementsRoute:
     AuthenticatedAccountAdminAchievementsRoute,
+  AuthenticatedAccountAdminAnalyticsRoute:
+    AuthenticatedAccountAdminAnalyticsRoute,
+  AuthenticatedAccountAdminAuditRoute: AuthenticatedAccountAdminAuditRoute,
+  AuthenticatedAccountAdminBlogsRoute:
+    AuthenticatedAccountAdminBlogsRouteWithChildren,
+  AuthenticatedAccountAdminBookingsRoute:
+    AuthenticatedAccountAdminBookingsRoute,
+  AuthenticatedAccountAdminCrmRoute: AuthenticatedAccountAdminCrmRoute,
+  AuthenticatedAccountAdminDocumentsRoute:
+    AuthenticatedAccountAdminDocumentsRoute,
   AuthenticatedAccountAdminHeroRoute: AuthenticatedAccountAdminHeroRoute,
+  AuthenticatedAccountAdminMapRoute: AuthenticatedAccountAdminMapRoute,
+  AuthenticatedAccountAdminMarketingRoute:
+    AuthenticatedAccountAdminMarketingRoute,
+  AuthenticatedAccountAdminMonitoringRoute:
+    AuthenticatedAccountAdminMonitoringRoute,
+  AuthenticatedAccountAdminOperationsRoute:
+    AuthenticatedAccountAdminOperationsRoute,
+  AuthenticatedAccountAdminPaymentsRoute:
+    AuthenticatedAccountAdminPaymentsRoute,
   AuthenticatedAccountAdminPlanYourTripRoute:
     AuthenticatedAccountAdminPlanYourTripRoute,
   AuthenticatedAccountAdminPopularDestinationsRoute:
     AuthenticatedAccountAdminPopularDestinationsRoute,
   AuthenticatedAccountAdminPopularToursRoute:
     AuthenticatedAccountAdminPopularToursRoute,
+  AuthenticatedAccountAdminQrRoute: AuthenticatedAccountAdminQrRoute,
   AuthenticatedAccountAdminRecentGalleryRoute:
     AuthenticatedAccountAdminRecentGalleryRoute,
+  AuthenticatedAccountAdminReportsRoute: AuthenticatedAccountAdminReportsRoute,
+  AuthenticatedAccountAdminRevenueRoute: AuthenticatedAccountAdminRevenueRoute,
+  AuthenticatedAccountAdminSecurityRoute:
+    AuthenticatedAccountAdminSecurityRoute,
   AuthenticatedAccountAdminSettingsRoute:
     AuthenticatedAccountAdminSettingsRoute,
+  AuthenticatedAccountAdminSupportRoute: AuthenticatedAccountAdminSupportRoute,
   AuthenticatedAccountAdminTourCategoriesRoute:
     AuthenticatedAccountAdminTourCategoriesRoute,
+  AuthenticatedAccountAdminUsersRoute:
+    AuthenticatedAccountAdminUsersRouteWithChildren,
+  AuthenticatedAccountAdminIndexRoute: AuthenticatedAccountAdminIndexRoute,
 }
 
 const AuthenticatedAccountRouteWithChildren =
@@ -626,13 +1183,11 @@ const AuthenticatedAccountRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRouteWithChildren
-  AuthenticatedBookIdRoute: typeof AuthenticatedBookIdRoute
   AuthenticatedBookSuccessBookingIdRoute: typeof AuthenticatedBookSuccessBookingIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRouteWithChildren,
-  AuthenticatedBookIdRoute: AuthenticatedBookIdRoute,
   AuthenticatedBookSuccessBookingIdRoute:
     AuthenticatedBookSuccessBookingIdRoute,
 }
@@ -640,6 +1195,18 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
+
+interface BlogsRouteChildren {
+  BlogsSlugRoute: typeof BlogsSlugRoute
+  BlogsIndexRoute: typeof BlogsIndexRoute
+}
+
+const BlogsRouteChildren: BlogsRouteChildren = {
+  BlogsSlugRoute: BlogsSlugRoute,
+  BlogsIndexRoute: BlogsIndexRoute,
+}
+
+const BlogsRouteWithChildren = BlogsRoute._addFileChildren(BlogsRouteChildren)
 
 interface PackagesRouteChildren {
   PackagesIdRoute: typeof PackagesIdRoute
@@ -659,12 +1226,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
-  BlogsRoute: BlogsRoute,
+  BlogsRoute: BlogsRouteWithChildren,
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
   PackagesRoute: PackagesRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  BookIdRoute: BookIdRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
 }
 export const routeTree = rootRouteImport

@@ -19,6 +19,7 @@ type AuthContextValue = {
   user: UserResponse | null;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   isLoading: boolean;
   refresh: () => Promise<void>;
   logout: () => void;
@@ -59,7 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user: hasToken ? data ?? null : null,
       isAuthenticated: hasToken && Boolean(data),
-      isAdmin: hasToken && data?.role === "ADMIN",
+      isAdmin: hasToken && (data?.role === "ADMIN" || data?.role === "SUPER_ADMIN"),
+      isSuperAdmin: hasToken && data?.role === "SUPER_ADMIN",
       isLoading: hasToken && isLoading,
       refresh: async () => {
         await refetch();

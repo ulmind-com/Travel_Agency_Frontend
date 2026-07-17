@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
@@ -42,9 +43,26 @@ function LoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
+  const [challenge, setChallenge] = useState<{
+    pre_auth_token: string; methods: ("TOTP" | "EMAIL_OTP" | "RECOVERY_CODE")[];
+  } | null>(null);
+  const [method, setMethod] = useState<"TOTP" | "EMAIL_OTP" | "RECOVERY_CODE">("TOTP");
+  const [code, setCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
+
   const onSubmit = async (values: LoginValues) => {
     try {
-      await authService.login(values.email, values.password);
+      const res = await authService.login(values.email, values.password);
+      if (res.requires_2fa && res.pre_auth_token) {
+        const methods = (res.methods ?? ["TOTP"]) as ("TOTP" | "EMAIL_OTP" | "RECOVERY_CODE")[];
+        setChallenge({ pre_auth_token: res.pre_auth_token, methods });
+        setMethod(methods[0]);
+        if (methods[0] === "EMAIL_OTP") {
+          const sent = await authService.request2faEmailOtp(res.pre_auth_token);
+          toast.info(`Verification code sent to ${sent.to}`);
+        }
+        return;
+      }
       await refresh();
       toast.success("Welcome back");
       navigate({ to: redirect ?? "/account" });
@@ -52,6 +70,71 @@ function LoginPage() {
       toast.error(apiErrorMessage(e, "Invalid credentials"));
     }
   };
+
+  const onVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!challenge) return;
+    setVerifying(true);
+    try {
+      await authService.verify2fa(challenge.pre_auth_token, code, method);
+      await refresh();
+      toast.success("Identity verified — welcome back");
+      navigate({ to: redirect ?? "/account" });
+    } catch (err) {
+      toast.error(apiErrorMessage(err, "Invalid code"));
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const pickMethod = async (m: "TOTP" | "EMAIL_OTP" | "RECOVERY_CODE") => {
+    setMethod(m);
+    setCode("");
+    if (m === "EMAIL_OTP" && challenge) {
+      try {
+        const sent = await authService.request2faEmailOtp(challenge.pre_auth_token);
+        toast.info(`Verification code sent to ${sent.to}`);
+      } catch (err) {
+        toast.error(apiErrorMessage(err, "Could not send the code"));
+      }
+    }
+  };
+
+  if (challenge) {
+    return (
+      <AuthShell subtitle="Two-factor authentication" title="Verify it's you">
+        <form onSubmit={onVerify} className="space-y-5">
+          {challenge.methods.length > 1 && (
+            <div className="flex gap-1.5">
+              {challenge.methods.map((m) => (
+                <button key={m} type="button" onClick={() => pickMethod(m)}
+                  className={`flex-1 rounded-full px-3 py-2 text-[10.5px] font-medium uppercase tracking-wider transition-colors ${
+                    method === m ? "bg-cream-50 text-ink-900" : "border border-cream-50/20 text-cream-50/60 hover:text-cream-50"}`}>
+                  {m === "TOTP" ? "Authenticator" : m === "EMAIL_OTP" ? "Email code" : "Recovery"}
+                </button>
+              ))}
+            </div>
+          )}
+          <Field label={method === "RECOVERY_CODE" ? "Recovery code" : "One-time code"}>
+            <input
+              autoFocus value={code} onChange={(e) => setCode(e.target.value)}
+              inputMode={method === "RECOVERY_CODE" ? "text" : "numeric"}
+              placeholder={method === "RECOVERY_CODE" ? "XXXX-XXXX-XXXX" : "6-digit code"}
+              className={`${inputClass} text-center text-lg tracking-[0.35em]`}
+            />
+          </Field>
+          <button type="submit" disabled={verifying || code.trim().length < 4}
+            className="w-full rounded-full bg-cream-50 py-4 text-[12px] font-medium uppercase tracking-widest text-ink-900 transition-all duration-300 hover:bg-cream-100 hover:shadow-lg disabled:opacity-50">
+            {verifying ? "Verifying…" : "Verify & sign in"}
+          </button>
+          <button type="button" onClick={() => { setChallenge(null); setCode(""); }}
+            className="w-full text-center text-sm text-cream-50/60 underline-offset-4 hover:underline">
+            Back to sign in
+          </button>
+        </form>
+      </AuthShell>
+    );
+  }
 
   return (
     <AuthShell subtitle="Private members" title="Welcome back">

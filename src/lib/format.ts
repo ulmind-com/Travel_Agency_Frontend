@@ -24,6 +24,22 @@ export function formatDate(iso?: string | null): string {
   }
 }
 
+/** Human-readable date + time (e.g. "14 Jul 2026, 4:30 PM"). */
+export function formatDateTime(iso?: string | null): string {
+  if (!iso) return "—";
+  try {
+    return new Date(iso).toLocaleString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return "—";
+  }
+}
+
 export function pluralize(n: number, one: string, many: string): string {
   return `${n} ${n === 1 ? one : many}`;
 }

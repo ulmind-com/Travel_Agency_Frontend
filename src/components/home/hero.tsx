@@ -10,6 +10,193 @@ import { defaultHeroSlides, type HeroSlide } from "@/services/hero-slides.servic
 
 const SLIDE_DURATION_MS = 6500;
 
+let audioCtx: AudioContext | null = null;
+let noiseBuffer: AudioBuffer | null = null;
+let currentAudio: HTMLAudioElement | null = null;
+let audioStopTimeout: number | null = null;
+
+export const stopTravelSound = () => {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (audioStopTimeout) {
+    clearTimeout(audioStopTimeout);
+    audioStopTimeout = null;
+  }
+};
+
+const getNoiseBuffer = () => {
+  if (!audioCtx) return null;
+  if (noiseBuffer) return noiseBuffer;
+  const bufferSize = audioCtx.sampleRate * 3;
+  noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  return noiseBuffer;
+};
+
+const playTravelSound = (index: number) => {
+  if (typeof window === "undefined") return;
+
+  stopTravelSound();
+
+  const audioSources = [
+    "/Music/freesound_community-asia-travel-orchestra-short-62977.mp3",
+    "/Music/freesound_community-slow-sea-travel-in-new-world-62974.mp3",
+    "/Music/grand_project-dreamy-travel-vlog-gentle-wind_outro-477854.mp3",
+    "/Music/audiorezout-cutiefly-sting-corporate-presentation-travel-vlog-music-213418.mp3",
+    "/Music/audiorezout-oregano-sting-inspiring-summer-success-travel-vlog-music-196931.mp3",
+    "/Music/grand_project-dreamy-travel-vlog-gentle-wind_outro-477854.mp3"
+  ];
+
+  if (index < audioSources.length) {
+    currentAudio = new Audio(audioSources[index]);
+    currentAudio.play().catch(() => {});
+    audioStopTimeout = window.setTimeout(stopTravelSound, SLIDE_DURATION_MS);
+    return;
+  }
+
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
+    
+    const type = index % 5; 
+    const t = audioCtx.currentTime;
+
+    if (type === 0) {
+      // Ocean Wave
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = getNoiseBuffer();
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      const gain = audioCtx.createGain();
+
+      filter.frequency.setValueAtTime(100, t);
+      filter.frequency.exponentialRampToValueAtTime(800, t + 1.5);
+      filter.frequency.exponentialRampToValueAtTime(100, t + 3);
+
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.5, t + 1.5);
+      gain.gain.linearRampToValueAtTime(0, t + 3);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(t);
+      noise.stop(t + 3);
+    } 
+    else if (type === 1) {
+      // Airplane Jet Swoosh
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = getNoiseBuffer();
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.Q.value = 1;
+      const gain = audioCtx.createGain();
+
+      filter.frequency.setValueAtTime(3000, t);
+      filter.frequency.exponentialRampToValueAtTime(100, t + 2.5);
+
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.8, t + 1);
+      gain.gain.linearRampToValueAtTime(0, t + 2.5);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(t);
+      noise.stop(t + 2.5);
+    }
+    else if (type === 2) {
+      // Camera Shutter
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = getNoiseBuffer();
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "highpass";
+      filter.frequency.value = 4000;
+      const gain = audioCtx.createGain();
+
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.setValueAtTime(1, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+
+      const osc = audioCtx.createOscillator();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(800, t);
+      const oscGain = audioCtx.createGain();
+      oscGain.gain.setValueAtTime(0, t);
+      oscGain.gain.setValueAtTime(0.5, t + 0.02);
+      oscGain.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.connect(oscGain);
+      oscGain.connect(audioCtx.destination);
+
+      noise.start(t);
+      noise.stop(t + 0.15);
+      osc.start(t);
+      osc.stop(t + 0.1);
+    }
+    else if (type === 3) {
+      // Ship Horn
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      osc1.type = "sawtooth";
+      osc2.type = "sawtooth";
+      osc1.frequency.value = 73.42; // D2
+      osc2.frequency.value = 74;    // Slightly detuned
+      
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 400;
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.6, t + 0.2);
+      gain.gain.linearRampToValueAtTime(0.4, t + 1.5);
+      gain.gain.linearRampToValueAtTime(0, t + 2);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc1.start(t);
+      osc2.start(t);
+      osc1.stop(t + 2);
+      osc2.stop(t + 2);
+    }
+    else if (type === 4) {
+      // Wind / Breeze
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = getNoiseBuffer();
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      
+      const gain = audioCtx.createGain();
+
+      filter.frequency.setValueAtTime(200, t);
+      filter.frequency.linearRampToValueAtTime(500, t + 1);
+      filter.frequency.linearRampToValueAtTime(200, t + 2);
+
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.3, t + 1);
+      gain.gain.linearRampToValueAtTime(0, t + 2);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(t);
+      noise.stop(t + 2);
+    }
+  } catch (err) {}
+};
+
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
@@ -42,6 +229,27 @@ export function Hero() {
   const [index, setIndex] = useState(0);
   const [focused, setFocused] = useState(false);
   const touchStartX = useRef<number | null>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, []);
+  
+  const prevIndex = useRef(index);
+  useEffect(() => {
+    if (!isVisible) {
+      stopTravelSound();
+    } else {
+      playTravelSound(index);
+    }
+    prevIndex.current = index;
+  }, [index, isVisible]);
 
   const total = slides.length;
   const active = slides[index] ?? slides[0];
@@ -70,6 +278,7 @@ export function Hero() {
 
   return (
     <section
+      ref={heroRef}
       className="relative h-screen min-h-screen w-full overflow-hidden bg-ink-900"
       aria-roledescription="carousel"
       aria-label="Featured destinations"

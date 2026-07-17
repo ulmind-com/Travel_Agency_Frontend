@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bookmark, CalendarCheck, Compass, Heart, Image, Images, LayoutGrid, LogOut, MapPin, Shield, Sparkles, Trophy, User, Users, Settings } from "lucide-react";
+import { Activity, BarChart3, Bookmark, BrainCircuit, CalendarCheck, Compass, CreditCard, FileArchive, FileBarChart2, Headset, Heart, Image, Images, LayoutGrid, LifeBuoy, LogOut, Map, MapPin, Megaphone, QrCode, ScrollText, Shield, ShieldCheck, Sparkles, TrendingUp, Trophy, User, UserCog, Users, Settings, BarChart } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -10,7 +10,36 @@ const ITEMS = [
   { to: "/account/bookings", label: "Bookings", icon: CalendarCheck },
   { to: "/account/wishlist", label: "Wishlist", icon: Heart },
   { to: "/account/travelers", label: "Travelers", icon: Users },
+  { to: "/account/documents", label: "My Documents", icon: FileArchive },
+  { to: "/account/support", label: "Support", icon: LifeBuoy },
   { to: "/account/profile", label: "Profile", icon: Bookmark },
+];
+
+const ADMIN_OPS_ITEMS = [
+  { to: "/account/admin", label: "Dashboard", icon: BarChart },
+  { to: "/account/admin/users", label: "Users & Customers", icon: Users },
+  { to: "/account/admin/crm", label: "Customer Intelligence", icon: BrainCircuit },
+  { to: "/account/admin/bookings", label: "All Bookings", icon: CalendarCheck },
+  { to: "/account/admin/payments", label: "Payments", icon: CreditCard },
+  { to: "/account/admin/qr", label: "QR Management", icon: QrCode },
+  { to: "/account/admin/support", label: "Support Center", icon: Headset },
+  { to: "/account/admin/operations", label: "Operations & Staff", icon: UserCog },
+  { to: "/account/admin/marketing", label: "Marketing CRM", icon: Megaphone },
+  { to: "/account/admin/documents", label: "Document Vault", icon: FileArchive },
+  { to: "/account/admin/map", label: "Operations Map", icon: Map },
+];
+
+const ADMIN_ANALYTICS_ITEMS = [
+  { to: "/account/admin/analytics", label: "Package Analytics", icon: BarChart3 },
+  { to: "/account/admin/revenue", label: "Revenue Analytics", icon: TrendingUp },
+  { to: "/account/admin/reports", label: "Report Center", icon: FileBarChart2 },
+];
+
+// SUPER_ADMIN-only surfaces
+const SUPER_ADMIN_ITEMS = [
+  { to: "/account/admin/security", label: "Security Center", icon: ShieldCheck },
+  { to: "/account/admin/audit", label: "Audit Logs", icon: ScrollText },
+  { to: "/account/admin/monitoring", label: "System Monitoring", icon: Activity },
 ];
 
 const ADMIN_ITEMS = [
@@ -21,12 +50,13 @@ const ADMIN_ITEMS = [
   { to: "/account/admin/popular-tours", label: "Popular tours", icon: Sparkles },
   { to: "/account/admin/recent-gallery", label: "Recent gallery", icon: Images },
   { to: "/account/admin/achievements", label: "Achievements", icon: Trophy },
+  { to: "/account/admin/blogs", label: "Luxury Journal", icon: ScrollText },
   { to: "/account/admin/settings", label: "Site Settings", icon: Settings },
 ];
 
 export function AccountSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { isAdmin, user, logout } = useAuth();
+  const { isAdmin, isSuperAdmin, user, logout } = useAuth();
 
   useEffect(() => {
     // Automatically scroll the active sidebar link into view if it is not visible
@@ -43,7 +73,8 @@ export function AccountSidebar() {
     <div className="lg:space-y-6">
       {/* Mobile: horizontal chip rail combining everything */}
       <nav className="no-scrollbar -mx-4 flex snap-x snap-mandatory flex-row gap-2 overflow-x-auto px-4 pb-4 lg:hidden">
-        {[...ITEMS, ...(isAdmin ? ADMIN_ITEMS : [])].map((it) => {
+        {[...ITEMS, ...(isAdmin ? [...ADMIN_OPS_ITEMS, ...ADMIN_ANALYTICS_ITEMS,
+          ...(isSuperAdmin ? SUPER_ADMIN_ITEMS : []), ...ADMIN_ITEMS] : [])].map((it) => {
           const active = pathname === it.to;
           const Icon = it.icon;
           return (
@@ -76,6 +107,16 @@ export function AccountSidebar() {
               </span>
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-ink-900/10 to-transparent" />
             </div>
+            <SidebarGroup label="Operations" items={ADMIN_OPS_ITEMS} pathname={pathname} />
+            <div className="h-4" />
+            <SidebarGroup label="Analytics & Reports" items={ADMIN_ANALYTICS_ITEMS} pathname={pathname} />
+            {isSuperAdmin && (
+              <>
+                <div className="h-4" />
+                <SidebarGroup label="Platform Control" items={SUPER_ADMIN_ITEMS} pathname={pathname} />
+              </>
+            )}
+            <div className="h-4" />
             <SidebarGroup label="Content Studio" items={ADMIN_ITEMS} pathname={pathname} />
           </>
         )}

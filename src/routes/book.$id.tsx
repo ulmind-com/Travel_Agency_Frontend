@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -32,13 +32,14 @@ import { useAuth } from "@/lib/auth-context";
 import { bookingsService } from "@/services/bookings.service";
 import { inventoryService } from "@/services/inventory.service";
 import { paymentsService } from "@/services/payments.service";
+import { AuthModal } from "@/components/auth/auth-modal";
 
 const SearchSchema = z.object({
   date: z.string().optional(),
   guests: z.coerce.number().int().min(1).max(20).default(2),
 });
 
-export const Route = createFileRoute("/_authenticated/book/$id")({
+export const Route = createFileRoute("/book/$id")({
   validateSearch: (s) => SearchSchema.parse(s),
   head: () => ({
     meta: [
@@ -59,6 +60,7 @@ function BookingPage() {
   const navigate = useNavigate();
   const { data: pkg } = useSuspenseQuery(packageDetailQuery(id));
   const { user } = useAuth();
+  const qc = useQueryClient();
 
   const [date, setDate] = useState<string>(search.date ?? "");
   const [guests, setGuests] = useState<number>(search.guests ?? 2);
@@ -87,6 +89,7 @@ function BookingPage() {
   const [step, setStep] = useState<Step>("details");
   const [submitting, setSubmitting] = useState(false);
   const [lockCountdown, setLockCountdown] = useState(0);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const price = pkg.discounted_price ?? pkg.base_price;
   const tax = (price * (pkg.tax_percent ?? 0)) / 100;
@@ -108,6 +111,10 @@ function BookingPage() {
   }, [lockCountdown]);
 
   const handleBook = async () => {
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
     if (!date) {
       toast.error("Choose a travel date to continue");
       return;
@@ -188,6 +195,7 @@ function BookingPage() {
             });
             setStep("done");
             toast.success("Booking confirmed! 🎉");
+            qc.invalidateQueries({ queryKey: ["bookings"] });
             setTimeout(() => {
               navigate({
                 to: "/book/success/$bookingId",
@@ -598,6 +606,14 @@ function BookingPage() {
           </aside>
         </div>
       </Container>
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+        onSuccess={() => {
+          setShowAuthModal(false);
+          // Optional: We can auto-trigger handleBook here or just let them click again
+        }} 
+      />
     </div>
   );
 }

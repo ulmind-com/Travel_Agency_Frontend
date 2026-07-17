@@ -2,7 +2,11 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 
 import { AccountSidebar } from "@/components/account/sidebar";
+import { NotificationBell } from "@/components/admin/notifications/NotificationCenter";
+import { GlobalSearchTrigger } from "@/components/admin/crm/CommandPalette";
 import { Container } from "@/components/layout/container";
+import { useAuth } from "@/lib/auth-context";
+import { useAdminEvents } from "@/hooks/useAdminEvents";
 import { authMeQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/account")({
@@ -19,6 +23,10 @@ function AccountLayout() {
   const { data: me } = useSuspenseQuery(authMeQuery());
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdminRoute = pathname.startsWith("/account/admin");
+  const { isAdmin } = useAuth();
+  // Unified realtime stream: notification bell, toasts, live activity feed,
+  // QR / payments / bookings query invalidation — one SSE connection.
+  useAdminEvents(isAdmin);
   return (
     <div className="pt-20 pb-16 sm:pt-24 sm:pb-24">
       <Container>
@@ -31,12 +39,16 @@ function AccountLayout() {
               {isAdminRoute ? "Content Studio" : `Welcome, ${me.name.split(" ")[0]}.`}
             </h1>
           </div>
-          {isAdminRoute && (
-            <div className="hidden items-center gap-2 rounded-full border border-ink-900/10 bg-white/70 px-4 py-2 text-[11px] uppercase tracking-widest text-ink-900/60 shadow-sm backdrop-blur lg:inline-flex">
-              <span className="size-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
-              Live preview synced
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            {isAdminRoute && (
+              <div className="hidden items-center gap-2 rounded-full border border-ink-900/10 bg-white/70 px-4 py-2 text-[11px] uppercase tracking-widest text-ink-900/60 shadow-sm backdrop-blur lg:inline-flex">
+                <span className="size-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                Live preview synced
+              </div>
+            )}
+            {isAdmin && <GlobalSearchTrigger />}
+            {isAdmin && <NotificationBell />}
+          </div>
         </div>
         <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
           <aside data-lenis-prevent="true" className="admin-sidebar-sticky sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">

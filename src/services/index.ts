@@ -6,6 +6,7 @@ export { inventoryService } from "./inventory.service";
 export { paymentsService } from "./payments.service";
 export { reviewsService } from "./reviews.service";
 export { travelersService } from "./travelers.service";
+export { adminService } from "./admin.service";
 export { recommendationsService } from "./recommendations.service";
 export { waitlistService } from "./waitlist.service";
 export { mediaService } from "./media.service";
