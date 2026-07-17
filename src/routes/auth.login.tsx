@@ -9,6 +9,7 @@ import { AuthShell } from "@/components/auth/auth-shell";
 import { apiErrorMessage } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { authService } from "@/services/auth.service";
+import { GoogleLoadingOverlay } from "@/components/auth/google-loading-overlay";
 
 const SearchSchema = z.object({ redirect: z.string().optional() });
 
@@ -49,6 +50,7 @@ function LoginPage() {
   const [method, setMethod] = useState<"TOTP" | "EMAIL_OTP" | "RECOVERY_CODE">("TOTP");
   const [code, setCode] = useState("");
   const [verifying, setVerifying] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const onSubmit = async (values: LoginValues) => {
     try {
@@ -141,7 +143,9 @@ function LoginPage() {
       <div className="mb-6 flex flex-col gap-4">
         <button
           type="button"
+          disabled={isGoogleLoading}
           onClick={async () => {
+            setIsGoogleLoading(true);
             try {
               await authService.loginWithGoogle();
               await refresh();
@@ -149,9 +153,10 @@ function LoginPage() {
               navigate({ to: redirect ?? "/account" });
             } catch (err) {
               toast.error(apiErrorMessage(err, "Google sign-in failed"));
+              setIsGoogleLoading(false);
             }
           }}
-          className="flex w-full items-center justify-center gap-3 rounded-full border border-cream-50/20 bg-cream-50/[0.03] py-3.5 text-sm font-medium text-cream-50 transition-colors hover:bg-cream-50/10"
+          className="flex w-full items-center justify-center gap-3 rounded-full border border-cream-50/20 bg-cream-50/[0.03] py-3.5 text-sm font-medium text-cream-50 transition-colors hover:bg-cream-50/10 disabled:opacity-50"
         >
           <svg className="size-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -200,6 +205,7 @@ function LoginPage() {
           </Link>
         </p>
       </form>
+      <GoogleLoadingOverlay isVisible={isGoogleLoading} />
     </AuthShell>
   );
 }
