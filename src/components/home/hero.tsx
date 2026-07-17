@@ -26,18 +26,9 @@ let soundEnabled = (() => {
   return saved !== "off";
 })();
 
-// Track first user interaction to unlock audio autoplay.
-if (typeof window !== "undefined") {
-  const markInteracted = () => {
-    userHasInteracted = true;
-    window.removeEventListener("click", markInteracted);
-    window.removeEventListener("touchstart", markInteracted);
-    window.removeEventListener("keydown", markInteracted);
-  };
-  window.addEventListener("click", markInteracted, { once: true });
-  window.addEventListener("touchstart", markInteracted, { once: true });
-  window.addEventListener("keydown", markInteracted, { once: true });
-}
+// First-interaction unlock is handled inside the Hero component (see the
+// `hasInteracted` state) so that flipping it re-renders and immediately plays
+// the current slide's sound, instead of waiting for the next slide change.
 
 export const stopTravelSound = () => {
   if (currentAudio) {
@@ -287,6 +278,26 @@ export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [isSoundOn, setIsSoundOn] = useState(soundEnabled);
+  const [hasInteracted, setHasInteracted] = useState(userHasInteracted);
+
+  // Browsers block audio until the user interacts with the page. Listen for the
+  // first gesture and flip React state so the play effect below re-runs and the
+  // current slide's sound starts right away (not on the next slide change).
+  useEffect(() => {
+    if (hasInteracted) return;
+    const unlock = () => {
+      userHasInteracted = true;
+      setHasInteracted(true);
+    };
+    window.addEventListener("click", unlock, { once: true });
+    window.addEventListener("touchstart", unlock, { once: true });
+    window.addEventListener("keydown", unlock, { once: true });
+    return () => {
+      window.removeEventListener("click", unlock);
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("keydown", unlock);
+    };
+  }, [hasInteracted]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -301,11 +312,11 @@ export function Hero() {
   useEffect(() => {
     if (!isVisible) {
       stopTravelSound();
-    } else if (isSoundOn) {
+    } else if (isSoundOn && hasInteracted) {
       playTravelSound(index);
     }
     prevIndex.current = index;
-  }, [index, isVisible, isSoundOn]);
+  }, [index, isVisible, isSoundOn, hasInteracted]);
 
   // Clean up on unmount
   useEffect(() => {
@@ -321,8 +332,9 @@ export function Hero() {
     if (!next) {
       stopTravelSound();
     } else {
-      // Mark interaction so audio can play
+      // Clicking the toggle is itself a user gesture — unlock and play now.
       userHasInteracted = true;
+      setHasInteracted(true);
       playTravelSound(index);
     }
   }, [isSoundOn, index]);
