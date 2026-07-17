@@ -1,5 +1,7 @@
 import { api, setToken } from "@/lib/api";
 import type { TokenResponse, UserResponse } from "@/types/api";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
 
 export type RegisterInput = {
   name: string;
@@ -69,6 +71,22 @@ export const authService = {
   /** Ask the server to email a one-time code for a pending 2FA challenge. */
   async request2faEmailOtp(pre_auth_token: string): Promise<{ status: string; to: string }> {
     const { data } = await api.post("/auth/2fa/email-otp", { pre_auth_token });
+    return data;
+  },
+
+  /** Login with Google using Firebase Auth */
+  async loginWithGoogle(): Promise<TokenResponse> {
+    if (!auth || !googleProvider) {
+      throw new Error("Google authentication is not configured.");
+    }
+    const result = await signInWithPopup(auth, googleProvider);
+    const idToken = await result.user.getIdToken();
+    
+    const { data } = await api.post<TokenResponse>("/auth/google", { id_token: idToken });
+    if (data.access_token) {
+      setToken(data.access_token);
+      submitFingerprint();
+    }
     return data;
   },
 
