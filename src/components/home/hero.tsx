@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Calendar, ChevronLeft, ChevronRight, MapPin, Users, Volume2, VolumeX } from "lucide-react";
+import { ArrowRight, Calendar, ChevronLeft, ChevronRight, MapPin, Users } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { LetterReveal } from "@/components/motion/letter-reveal";
@@ -63,9 +63,13 @@ const getNoiseBuffer = () => {
   return noiseBuffer;
 };
 
-const playTravelSound = (index: number) => {
+const playTravelSound = (index: number, force = false, onStarted?: () => void) => {
   if (typeof window === "undefined") return;
-  if (!soundEnabled || !userHasInteracted) return;
+  if (!soundEnabled) return;
+  // Browsers block audio-with-sound until the first gesture. `force` lets the
+  // on-mount attempt try anyway (works for returning visitors the browser
+  // trusts); if it's blocked, audio.play() rejects and we fall back silently.
+  if (!force && !userHasInteracted) return;
 
   stopTravelSound();
 
@@ -84,6 +88,10 @@ const playTravelSound = (index: number) => {
     currentAudio = audio;
 
     audio.play().then(() => {
+      // Playback started (possibly a forced autoplay that the browser allowed).
+      // Mark the page as unlocked so subsequent slides keep playing.
+      userHasInteracted = true;
+      onStarted?.();
       // Fade in smoothly
       const targetVolume = 0.6;
       const fadeStep = targetVolume / (AUDIO_FADE_DURATION / 30);
@@ -277,26 +285,35 @@ export function Hero() {
   const touchStartX = useRef<number | null>(null);
   const heroRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [isSoundOn, setIsSoundOn] = useState(soundEnabled);
   const [hasInteracted, setHasInteracted] = useState(userHasInteracted);
 
-  // Browsers block audio until the user interacts with the page. Listen for the
-  // first gesture and flip React state so the play effect below re-runs and the
-  // current slide's sound starts right away (not on the next slide change).
+  // Try true autoplay the moment the page loads. Browsers usually block
+  // audio-with-sound before any gesture, but they allow it for visitors they
+  // already trust — so returning users get music with zero interaction.
+  useEffect(() => {
+    if (hasInteracted || !soundEnabled) return;
+    playTravelSound(index, true, () => setHasInteracted(true));
+    // We only want this on first mount; slide changes are handled elsewhere.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // When the browser blocks that first attempt, start the music at the visitor's
+  // very first interaction of ANY kind — moving the mouse, scrolling, tapping,
+  // a key. This happens within moments of landing, so playback feels automatic
+  // and needs no deliberate click. Flipping React state re-runs the play effect
+  // below so the current slide's track starts immediately.
   useEffect(() => {
     if (hasInteracted) return;
     const unlock = () => {
       userHasInteracted = true;
       setHasInteracted(true);
     };
-    window.addEventListener("click", unlock, { once: true });
-    window.addEventListener("touchstart", unlock, { once: true });
-    window.addEventListener("keydown", unlock, { once: true });
-    return () => {
-      window.removeEventListener("click", unlock);
-      window.removeEventListener("touchstart", unlock);
-      window.removeEventListener("keydown", unlock);
-    };
+    const events = [
+      "pointerdown", "pointermove", "mousemove", "touchstart",
+      "keydown", "wheel", "scroll", "click",
+    ] as const;
+    events.forEach((e) => window.addEventListener(e, unlock, { once: true, passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, unlock));
   }, [hasInteracted]);
 
   useEffect(() => {
@@ -312,32 +329,16 @@ export function Hero() {
   useEffect(() => {
     if (!isVisible) {
       stopTravelSound();
-    } else if (isSoundOn && hasInteracted) {
+    } else if (soundEnabled && hasInteracted) {
       playTravelSound(index);
     }
     prevIndex.current = index;
-  }, [index, isVisible, isSoundOn, hasInteracted]);
+  }, [index, isVisible, hasInteracted]);
 
   // Clean up on unmount
   useEffect(() => {
     return () => stopTravelSound();
   }, []);
-
-  const toggleSound = useCallback(() => {
-    const next = !isSoundOn;
-    setIsSoundOn(next);
-    soundEnabled = next;
-    localStorage.setItem("ulmind:hero-sound", next ? "on" : "off");
-    
-    if (!next) {
-      stopTravelSound();
-    } else {
-      // Clicking the toggle is itself a user gesture — unlock and play now.
-      userHasInteracted = true;
-      setHasInteracted(true);
-      playTravelSound(index);
-    }
-  }, [isSoundOn, index]);
 
   const total = slides.length;
   const active = slides[index] ?? slides[0];
@@ -457,26 +458,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Sound toggle button */}
-      <button
-        type="button"
-        aria-label={isSoundOn ? "Mute slide audio" : "Enable slide audio"}
-        onClick={toggleSound}
-        className="absolute left-6 bottom-6 z-20 grid size-10 place-items-center rounded-full border border-cream-50/30 text-cream-50 backdrop-blur-md transition-all duration-300 hover:bg-cream-50/10 hover:border-cream-50/50 lg:left-10 lg:bottom-10"
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.span
-            key={isSoundOn ? "on" : "off"}
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {isSoundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
-          </motion.span>
-        </AnimatePresence>
-      </button>
 
       {/* Progress rail (right) */}
       <div className="pointer-events-none absolute right-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-3 lg:right-10 lg:flex">
