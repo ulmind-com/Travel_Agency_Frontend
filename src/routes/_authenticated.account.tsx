@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 
@@ -11,10 +12,7 @@ import { authMeQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
-    meta: [
-      { title: "Account · Ulmind Travel" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "Account · Ulmind Travel" }, { name: "robots", content: "noindex" }],
   }),
   component: AccountLayout,
 });
@@ -27,10 +25,19 @@ function AccountLayout() {
   // Unified realtime stream: notification bell, toasts, live activity feed,
   // QR / payments / bookings query invalidation — one SSE connection.
   useAdminEvents(isAdmin);
+
+  // App-shell (lg+): the content column scrolls internally while the sidebar
+  // rail stays fixed. Reset the content scroll to the top on route change so a
+  // new page never opens mid-scroll.
+  const contentRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [pathname]);
+
   return (
-    <div className="pt-20 pb-16 sm:pt-24 sm:pb-24">
-      <Container>
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 sm:mb-10">
+    <div className="pt-20 pb-16 sm:pt-24 sm:pb-24 lg:h-[100dvh] lg:overflow-hidden lg:pb-0">
+      <Container className="lg:flex lg:h-full lg:flex-col">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 sm:mb-10 lg:shrink-0">
           <div>
             <p className="text-[10px] uppercase tracking-[0.28em] text-ink-900/40 sm:text-[11px]">
               {isAdminRoute ? "Admin Studio" : `Member since ${new Date().getFullYear()}`}
@@ -50,11 +57,18 @@ function AccountLayout() {
             {isAdmin && <NotificationBell />}
           </div>
         </div>
-        <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
-          <aside data-lenis-prevent="true" className="admin-sidebar-sticky sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
+        <div className="grid gap-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
+          <aside
+            data-lenis-prevent="true"
+            className="admin-sidebar-sticky overflow-y-auto overscroll-contain pr-2 lg:h-full"
+          >
             <AccountSidebar />
           </aside>
-          <div className="min-w-0">
+          <div
+            ref={contentRef}
+            data-lenis-prevent="true"
+            className="min-w-0 overscroll-contain lg:h-full lg:overflow-y-auto lg:pb-10 lg:pr-1"
+          >
             <Outlet />
           </div>
         </div>
