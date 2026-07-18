@@ -297,21 +297,19 @@ export function Hero() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // When the browser blocks that first attempt, start the music at the visitor's
-  // very first interaction of ANY kind — moving the mouse, scrolling, tapping,
-  // a key. This happens within moments of landing, so playback feels automatic
-  // and needs no deliberate click. Flipping React state re-runs the play effect
-  // below so the current slide's track starts immediately.
+  // When the browser blocks that first attempt, start the music on the visitor's
+  // first *real* gesture. Only genuine interactions grant audio "user
+  // activation" — a tap, click, or keypress. Mouse-move and scroll do NOT count
+  // (the browser still rejects play()), so listening for them would only waste
+  // this one-shot unlock without producing sound. Flipping React state re-runs
+  // the play effect below so the current slide's track starts immediately.
   useEffect(() => {
     if (hasInteracted) return;
     const unlock = () => {
       userHasInteracted = true;
       setHasInteracted(true);
     };
-    const events = [
-      "pointerdown", "pointermove", "mousemove", "touchstart",
-      "keydown", "wheel", "scroll", "click",
-    ] as const;
+    const events = ["pointerdown", "touchstart", "keydown", "click"] as const;
     events.forEach((e) => window.addEventListener(e, unlock, { once: true, passive: true }));
     return () => events.forEach((e) => window.removeEventListener(e, unlock));
   }, [hasInteracted]);
