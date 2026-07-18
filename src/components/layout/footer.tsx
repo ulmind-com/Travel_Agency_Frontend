@@ -6,12 +6,7 @@ export function Footer() {
   return (
     <footer className="relative m-0 block w-full bg-[#0d2b2b] p-0 text-white">
       <div className="relative w-full">
-        <img
-          src={footerBg}
-          alt=""
-          className="block w-full select-none"
-          draggable={false}
-        />
+        <img src={footerBg} alt="" className="block w-full select-none" draggable={false} />
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-cream-50 to-transparent sm:h-40 lg:h-48"
           aria-hidden="true"
@@ -73,11 +68,12 @@ export function Footer() {
           </div>
 
           <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row md:items-center md:gap-2">
-            <span>
-              &copy; {new Date().getFullYear()} Ulmind Travel · Crafted with intention
-            </span>
+            <span>&copy; {new Date().getFullYear()} Ulmind Travel · Crafted with intention</span>
             <div className="flex items-center gap-6">
-              <Link to="/auth/login" className="uppercase tracking-widest text-gold/70 transition-colors hover:text-gold">
+              <Link
+                to="/auth/admin"
+                className="uppercase tracking-widest text-gold/70 transition-colors hover:text-gold"
+              >
                 Super Admin Login
               </Link>
               <span className="opacity-80">Curating high-fidelity journeys</span>
@@ -91,13 +87,7 @@ export function Footer() {
 
 type Item = { to: string; label: string; search?: Record<string, string> };
 
-function FooterGroup({
-  title,
-  columns,
-}: {
-  title: string;
-  columns: Item[][];
-}) {
+function FooterGroup({ title, columns }: { title: string; columns: Item[][] }) {
   return (
     <div>
       <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.25em] text-white/55">

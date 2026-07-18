@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 
 import { AccountSidebar } from "@/components/account/sidebar";
+import { AdminRouteTransition } from "@/components/admin/AdminRouteTransition";
 import { NotificationBell } from "@/components/admin/notifications/NotificationCenter";
 import { GlobalSearchTrigger } from "@/components/admin/crm/CommandPalette";
 import { Container } from "@/components/layout/container";
@@ -36,6 +37,7 @@ function AccountLayout() {
 
   return (
     <div className="pt-20 pb-16 sm:pt-24 sm:pb-24 lg:h-[100dvh] lg:overflow-hidden lg:pb-0">
+      <AdminRouteTransition pathname={pathname} />
       <Container className="lg:flex lg:h-full lg:flex-col">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4 sm:mb-10 lg:shrink-0">
           <div>

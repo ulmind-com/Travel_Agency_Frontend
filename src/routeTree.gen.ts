@@ -24,6 +24,7 @@ import { Route as BookIdRouteImport } from './routes/book.$id'
 import { Route as BlogsSlugRouteImport } from './routes/blogs.$slug'
 import { Route as AuthRegisterRouteImport } from './routes/auth.register'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
+import { Route as AuthAdminRouteImport } from './routes/auth.admin'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated.account'
 import { Route as AuthenticatedAccountIndexRouteImport } from './routes/_authenticated.account.index'
 import { Route as AuthenticatedAccountWishlistRouteImport } from './routes/_authenticated.account.wishlist'
@@ -134,6 +135,11 @@ const AuthRegisterRoute = AuthRegisterRouteImport.update({
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthAdminRoute = AuthAdminRouteImport.update({
+  id: '/auth/admin',
+  path: '/auth/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
@@ -366,6 +372,7 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/packages': typeof PackagesRouteWithChildren
   '/account': typeof AuthenticatedAccountRouteWithChildren
+  '/auth/admin': typeof AuthAdminRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/blogs/$slug': typeof BlogsSlugRoute
@@ -416,6 +423,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
+  '/auth/admin': typeof AuthAdminRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/blogs/$slug': typeof BlogsSlugRoute
@@ -471,6 +479,7 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/packages': typeof PackagesRouteWithChildren
   '/_authenticated/account': typeof AuthenticatedAccountRouteWithChildren
+  '/auth/admin': typeof AuthAdminRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/blogs/$slug': typeof BlogsSlugRoute
@@ -526,6 +535,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/packages'
     | '/account'
+    | '/auth/admin'
     | '/auth/login'
     | '/auth/register'
     | '/blogs/$slug'
@@ -576,6 +586,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/gallery'
+    | '/auth/admin'
     | '/auth/login'
     | '/auth/register'
     | '/blogs/$slug'
@@ -630,6 +641,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/packages'
     | '/_authenticated/account'
+    | '/auth/admin'
     | '/auth/login'
     | '/auth/register'
     | '/blogs/$slug'
@@ -684,6 +696,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
   PackagesRoute: typeof PackagesRouteWithChildren
+  AuthAdminRoute: typeof AuthAdminRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   BookIdRoute: typeof BookIdRoute
@@ -795,6 +808,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/admin': {
+      id: '/auth/admin'
+      path: '/auth/admin'
+      fullPath: '/auth/admin'
+      preLoaderRoute: typeof AuthAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/account': {
@@ -1230,6 +1250,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
   PackagesRoute: PackagesRouteWithChildren,
+  AuthAdminRoute: AuthAdminRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   BookIdRoute: BookIdRoute,
